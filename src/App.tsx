@@ -1110,9 +1110,16 @@ export default function App() {
   const [revisionSeconds, setRevisionSeconds] = useState(savedProgress?.revisionSeconds || 0);
   const [breakAlarm, setBreakAlarm] = useState(false);
   const [lastBreakMarker, setLastBreakMarker] = useState(savedProgress?.lastBreakMarker || 0);
+  const [subjectSlots, setSubjectSlots] = useState(savedProgress?.subjectSlots || Array(9).fill(""));
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
-  const selectedSubject = subjects.find((subject) => subject.id === selectedSubjectId) || subjects[0];
+  const visibleSubjects = useMemo(() => {
+    const pickedIds = subjectSlots.filter(Boolean);
+    if (pickedIds.length === 0) return subjects;
+    return subjects.filter((subject) => pickedIds.includes(subject.id));
+  }, [subjectSlots]);
+
+  const selectedSubject = visibleSubjects.find((subject) => subject.id === selectedSubjectId) || visibleSubjects[0] || subjects[0];
   const [selectedTopicId, setSelectedTopicId] = useState(savedProgress?.selectedTopicId || subjects[0].topics[0].id);
   const selectedTopic = selectedSubject.topics.find((topic) => topic.id === selectedTopicId) || selectedSubject.topics[0];
 
@@ -1170,11 +1177,12 @@ export default function App() {
       workMinutes,
       breakMinutes,
       revisionSeconds,
-      lastBreakMarker
+      lastBreakMarker,
+      subjectSlots
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker]);
+  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker, subjectSlots]);
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter((item, index) => answers[index] === item.answer).length;
@@ -1192,7 +1200,7 @@ export default function App() {
   const unlockedCount = allTopics.filter((topic) => unlocked[topic.id]).length;
   const totalProgress = Math.round((unlockedCount / allTopics.length) * 100);
   const subjectUnlockedCount = selectedSubject.topics.filter((topic) => unlocked[topic.id]).length;
-  const maxForgedInAnySubject = Math.max(...subjects.map((subject) => subject.topics.filter((topic) => unlocked[topic.id]).length));
+  const maxForgedInAnySubject = Math.max(...visibleSubjects.map((subject) => subject.topics.filter((topic) => unlocked[topic.id]).length));
   const activeTheme = themes.find((theme) => theme.id === activeThemeId && maxForgedInAnySubject >= theme.unlockAt) || themes[0];
 
   const recallPercentage = useMemo(() => {
@@ -1274,7 +1282,8 @@ export default function App() {
       workMinutes,
       breakMinutes,
       revisionSeconds,
-      lastBreakMarker
+      lastBreakMarker,
+      subjectSlots
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -1304,7 +1313,24 @@ export default function App() {
               <Flame className="h-10 w-10" />
             </div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-orange-300">Break unlocked</p>
-            <h2 className="mt-3 text-4xl font-black text-white">Anvil exploded.</h2>
+            <div className="real-alarm-clock mx-auto mb-6">
+              <div className="alarm-bell alarm-bell-left" />
+              <div className="alarm-bell alarm-bell-right" />
+              <div className="alarm-handle" />
+              <div className="alarm-face">
+                <div className="alarm-number alarm-12">12</div>
+                <div className="alarm-number alarm-3">3</div>
+                <div className="alarm-number alarm-6">6</div>
+                <div className="alarm-number alarm-9">9</div>
+                <div className="alarm-centre" />
+                <div className="alarm-hand alarm-hour" />
+                <div className="alarm-hand alarm-minute" />
+              </div>
+              <div className="alarm-leg alarm-leg-left" />
+              <div className="alarm-leg alarm-leg-right" />
+            </div>
+            <h2 className="mt-3 text-5xl font-black text-white md:text-6xl">BREAK TIME</h2>
+            <p className="mt-2 text-xl font-black uppercase tracking-[0.32em] text-orange-200">Alarm triggered</p>
             <p className="mt-3 text-zinc-300">
               You have revised for {workMinutes} minutes. Take a {breakMinutes} minute break, then come back and keep forging.
             </p>
@@ -1394,11 +1420,220 @@ export default function App() {
           box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.65);
         }
 
+        .mini-alarm-clock {
+          position: relative;
+          display: inline-flex;
+          height: 38px;
+          width: 38px;
+          align-items: center;
+          justify-content: center;
+          animation: alarm-small-ring 0.55s ease-in-out infinite;
+        }
+
+        .mini-alarm-face {
+          position: relative;
+          height: 30px;
+          width: 30px;
+          border-radius: 9999px;
+          border: 3px solid rgba(255, 235, 210, 0.95);
+          background: radial-gradient(circle, #fff7ed 0%, #fed7aa 72%, #fb923c 100%);
+          box-shadow: inset 0 0 0 2px rgba(124, 45, 18, 0.25), 0 0 18px rgba(251, 146, 60, 0.35);
+        }
+
+        .mini-alarm-bell {
+          position: absolute;
+          top: 1px;
+          height: 14px;
+          width: 16px;
+          border-radius: 16px 16px 5px 5px;
+          background: #fb923c;
+          border: 2px solid rgba(255, 237, 213, 0.85);
+        }
+
+        .mini-alarm-bell.left {
+          left: 2px;
+          transform: rotate(-28deg);
+        }
+
+        .mini-alarm-bell.right {
+          right: 2px;
+          transform: rotate(28deg);
+        }
+
+        .mini-alarm-hand {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 3px;
+          border-radius: 9999px;
+          background: #7c2d12;
+          transform-origin: bottom center;
+        }
+
+        .mini-alarm-hand.hour {
+          height: 8px;
+          transform: translate(-50%, -100%) rotate(310deg);
+        }
+
+        .mini-alarm-hand.minute {
+          height: 11px;
+          transform: translate(-50%, -100%) rotate(40deg);
+        }
+
+        @keyframes alarm-small-ring {
+          0%, 100% { transform: rotate(-4deg); }
+          50% { transform: rotate(4deg); }
+        }
+
+        .real-alarm-clock {
+          position: relative;
+          height: 210px;
+          width: 230px;
+          animation: real-alarm-ring 0.38s ease-in-out infinite;
+          filter: drop-shadow(0 24px 34px rgba(249, 115, 22, 0.34));
+        }
+
+        .alarm-face {
+          position: absolute;
+          left: 50%;
+          top: 52%;
+          height: 156px;
+          width: 156px;
+          transform: translate(-50%, -50%);
+          border-radius: 9999px;
+          border: 9px solid #fdba74;
+          background: radial-gradient(circle at 35% 30%, #ffffff 0%, #ffedd5 52%, #fed7aa 100%);
+          box-shadow: inset 0 0 0 5px rgba(124, 45, 18, 0.16), 0 0 42px rgba(251, 146, 60, 0.46);
+        }
+
+        .alarm-bell {
+          position: absolute;
+          top: 12px;
+          height: 62px;
+          width: 78px;
+          border-radius: 78px 78px 20px 20px;
+          border: 7px solid #ffedd5;
+          background: linear-gradient(135deg, #fb923c, #f97316);
+          box-shadow: 0 0 28px rgba(251, 146, 60, 0.5);
+        }
+
+        .alarm-bell-left {
+          left: 18px;
+          transform: rotate(-24deg);
+        }
+
+        .alarm-bell-right {
+          right: 18px;
+          transform: rotate(24deg);
+        }
+
+        .alarm-handle {
+          position: absolute;
+          left: 50%;
+          top: 12px;
+          height: 46px;
+          width: 86px;
+          transform: translateX(-50%);
+          border-top: 9px solid #ffedd5;
+          border-radius: 9999px 9999px 0 0;
+        }
+
+        .alarm-number {
+          position: absolute;
+          color: #7c2d12;
+          font-size: 18px;
+          font-weight: 1000;
+          line-height: 1;
+        }
+
+        .alarm-12 { left: 50%; top: 15px; transform: translateX(-50%); }
+        .alarm-3 { right: 18px; top: 50%; transform: translateY(-50%); }
+        .alarm-6 { left: 50%; bottom: 15px; transform: translateX(-50%); }
+        .alarm-9 { left: 18px; top: 50%; transform: translateY(-50%); }
+
+        .alarm-centre {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          height: 14px;
+          width: 14px;
+          transform: translate(-50%, -50%);
+          border-radius: 9999px;
+          background: #7c2d12;
+          z-index: 3;
+        }
+
+        .alarm-hand {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 7px;
+          border-radius: 9999px;
+          background: #7c2d12;
+          transform-origin: bottom center;
+          z-index: 2;
+        }
+
+        .alarm-hour {
+          height: 45px;
+          transform: translate(-50%, -100%) rotate(305deg);
+        }
+
+        .alarm-minute {
+          height: 62px;
+          transform: translate(-50%, -100%) rotate(38deg);
+        }
+
+        .alarm-leg {
+          position: absolute;
+          bottom: 2px;
+          height: 42px;
+          width: 12px;
+          border-radius: 9999px;
+          background: #ffedd5;
+        }
+
+        .alarm-leg-left {
+          left: 60px;
+          transform: rotate(28deg);
+        }
+
+        .alarm-leg-right {
+          right: 60px;
+          transform: rotate(-28deg);
+        }
+
+        @keyframes real-alarm-ring {
+          0%, 100% { transform: translateX(-5px) rotate(-4deg) scale(1); }
+          50% { transform: translateX(5px) rotate(4deg) scale(1.03); }
+        }
+
         .break-burst {
           background:
-            radial-gradient(circle at 50% 50%, rgba(255, 160, 60, 0.35), transparent 18%),
-            repeating-conic-gradient(from 0deg, rgba(255, 145, 40, 0.28) 0deg 8deg, transparent 8deg 18deg);
-          animation: break-explode 1.1s ease-out infinite alternate;
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.35), transparent 10%),
+            radial-gradient(circle at 50% 50%, rgba(255, 92, 28, 0.46), transparent 24%),
+            repeating-conic-gradient(from 0deg, rgba(255, 185, 60, 0.42) 0deg 7deg, transparent 7deg 16deg);
+          animation: break-explode 0.55s ease-out infinite alternate;
+        }
+
+        .break-burst::before,
+        .break-burst::after {
+          content: "";
+          position: absolute;
+          inset: -20%;
+          background: repeating-conic-gradient(from 25deg, rgba(255,255,255,0.18) 0deg 4deg, transparent 4deg 14deg);
+          animation: break-spin 1.1s linear infinite;
+        }
+
+        .break-burst::after {
+          animation-direction: reverse;
+          opacity: 0.45;
+        }
+
+        @keyframes break-spin {
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         @keyframes break-explode {
@@ -1668,7 +1903,7 @@ export default function App() {
                 <p className="text-xs font-bold uppercase tracking-widest text-orange-300">Choose Subject</p>
                 <p className="mt-1 text-sm text-zinc-500">Dashboard content changes to the selected subject.</p>
               </div>
-              {subjects.map((subject) => {
+              {visibleSubjects.map((subject) => {
                 const Icon = subject.icon;
                 const subjectUnlocked = subject.topics.filter((topic) => unlocked[topic.id]).length;
                 const isSelected = selectedSubject.id === subject.id;
@@ -1693,7 +1928,24 @@ export default function App() {
         <section className="grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
-              <Flame className="h-4 w-4" /> {view === "stages" ? `Revision clock: ${formattedRevisionTime}` : "100% to move on"}
+              {view === "stages" ? (
+              <span className="inline-flex items-center gap-3">
+                <span className="mini-alarm-clock">
+                  <span className="mini-alarm-bell left" />
+                  <span className="mini-alarm-bell right" />
+                  <span className="mini-alarm-face">
+                    <span className="mini-alarm-hand hour" />
+                    <span className="mini-alarm-hand minute" />
+                  </span>
+                </span>
+                <span className="flex flex-col leading-none">
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-orange-200/80">Revision clock</span>
+                  <span className="text-base font-black text-white">{formattedRevisionTime}</span>
+                </span>
+              </span>
+            ) : (
+              <><Flame className="h-4 w-4" /> 100% to move on</>
+            )}
             </div>
             <h1 className="text-4xl font-black tracking-tight md:text-7xl">
               Iron Forge <span className="text-orange-400">Method</span>
@@ -2033,6 +2285,49 @@ export default function App() {
                     <button onClick={() => { setSaveEnabled(false); setUsername(""); localStorage.removeItem(STORAGE_KEY); }} className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800">
                       Stop saving on this device
                     </button>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5 lg:col-span-2">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-3">
+                        <ListChecks className="h-6 w-6 text-orange-300" />
+                        <h3 className="text-2xl font-black text-white">Taskbar subject slots</h3>
+                      </div>
+                      <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+                        Pick up to 9 subjects to show in the taskbar. Empty slots do not show. If all slots are empty, every subject shows.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSubjectSlots(Array(9).fill(""))}
+                      className="rounded-2xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
+                    >
+                      Clear slots
+                    </button>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {subjectSlots.map((slotSubjectId, index) => (
+                      <label key={`slot-${index}`} className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4">
+                        <span className="text-xs font-black uppercase tracking-widest text-orange-300">Slot {index + 1}</span>
+                        <select
+                          value={slotSubjectId}
+                          onChange={(event) => {
+                            const nextSlots = [...subjectSlots];
+                            nextSlots[index] = event.target.value;
+                            setSubjectSlots(nextSlots);
+                            if (event.target.value) setSelectedSubjectId(event.target.value);
+                          }}
+                          className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-orange-400"
+                        >
+                          <option value="">Empty</option>
+                          {subjects.map((subject) => (
+                            <option key={subject.id} value={subject.id}>{subject.label}</option>
+                          ))}
+                        </select>
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
