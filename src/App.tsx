@@ -3,6 +3,303 @@ import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, D
 
 const subjects = [
   {
+    id: 'english-language',
+    title: 'English Language',
+    icon: BookOpen,
+    group: 'Year 10',
+    yearGroup: 'Year 10',
+    category: 'Year 10',
+    description:
+      'Year 10 Language — Section A non-fiction anthology, unseen comparison, writers’ ideas and perspectives.',
+    topics: [
+      makeTopic(
+        'lang-section-a-overview',
+        'Language Section A Overview',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'The End of Year Language exam is a condensed version of Section A.',
+          'It focuses on one non-fiction anthology text and one unseen non-fiction text.',
+          'Question 1 is quick comprehension and is worth 2 marks.',
+          'Question 2 asks you to summarise part of the unseen text in your own words and is worth 4 marks.',
+          'Question 3 asks what type of text something is and needs repeated points with evidence.',
+          'Question 4 is not in the End of Year exam.',
+          'Question 5 is the big comparison question and is worth 22 marks.'
+        ],
+        [
+          ['What section is the Language paper focused on?', 'Section A', ['Section A', 'Section B', 'Coursework', 'Speaking exam']],
+          ['What does Question 5 test?', 'Comparison between the unseen and anthology text', ['Comparison between the unseen and anthology text', 'Creative writing', 'Spelling only', 'Poetry comparison']],
+          ['Which question is not in the End of Year?', 'Question 4', ['Question 4', 'Question 1', 'Question 2', 'Question 5']]
+        ]
+      ),
+      makeTopic(
+        'lang-question-5-comparison',
+        'Question 5 Comparative Paragraph',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'Question 5 asks you to compare the unseen text with an anthology text.',
+          'You need to explore links and connections between writers’ ideas and perspectives.',
+          'A strong paragraph can follow PETALCPETAL: Point, Evidence, Technique, Analysis, Link, Comparative phrase, Point, Evidence, Technique, Analysis, Link.',
+          'Use comparison phrases such as similarly, equally, in contrast, however, alternatively and on the other hand.',
+          'Top answers compare both what the writers think and how they present it through language and structure.',
+          'Aim for a range of comparisons rather than only one obvious link.'
+        ],
+        [
+          ['What does AO3 focus on?', 'Links between writers’ ideas and perspectives', ['Links between writers’ ideas and perspectives', 'Only spelling', 'Only punctuation', 'Only context']],
+          ['Which phrase shows contrast?', 'However', ['However', 'Similarly', 'Equally', 'Both']],
+          ['What does PETAL help with?', 'Paragraph structure', ['Paragraph structure', 'Paragraph length only', 'Handwriting', 'Title choice']]
+        ]
+      ),
+      makeTopic(
+        'lang-danger-single-story',
+        'The Danger of a Single Story',
+        'Steel Forge',
+        'Not forged',
+        [
+          'Adichie explores how single stories create narrow and often damaging stereotypes.',
+          'She uses personal anecdotes to show how stories shaped her view of the world when she was younger.',
+          'The text argues that many stories matter because they can restore dignity and complexity to people.',
+          'A key idea is that reducing people to one story removes their humanity.',
+          'For comparison, link this text to ideas about perspective, identity, misunderstanding and power.'
+        ],
+        [
+          ['What is the main danger Adichie warns about?', 'Stereotypes from a single story', ['Stereotypes from a single story', 'Reading too slowly', 'Not travelling', 'Writing fiction']],
+          ['What method does Adichie often use?', 'Personal anecdote', ['Personal anecdote', 'Rhyming couplets', 'Stage directions', 'Dramatic monologue']],
+          ['What do many stories help to restore?', 'Dignity', ['Dignity', 'Silence', 'Confusion', 'Jealousy']]
+        ]
+      ),
+      makeTopic(
+        'lang-h-is-for-hawk',
+        'H is for Hawk',
+        'Steel Forge',
+        'Not forged',
+        [
+          'This text focuses on the writer’s intense connection with a hawk.',
+          'It often explores observation, control, nature and emotional tension.',
+          'The writer uses precise descriptive language to make the hawk seem powerful and difficult to fully control.',
+          'For comparison, link it to texts about nature, fear, identity, isolation or human control.',
+          'A good answer should explain how language creates the writer’s attitude towards the hawk.'
+        ],
+        [
+          ['What is the text mainly connected to?', 'Nature and control', ['Nature and control', 'War photography', 'School rules', 'Poetry rhyme']],
+          ['What should you analyse in this text?', 'Descriptive language', ['Descriptive language', 'Only punctuation', 'Only title', 'Only paragraph numbers']],
+          ['What does the hawk often seem?', 'Powerful', ['Powerful', 'Weak', 'Comic', 'Ordinary']]
+        ]
+      ),
+      makeTopic(
+        'lang-passage-to-africa',
+        'A Passage to Africa',
+        'Iron Forge',
+        'Not forged',
+        [
+          'Alagiah reflects on reporting famine in Somalia and the effect it has on him as a journalist.',
+          'The text explores suffering, guilt, pity, revulsion and human dignity.',
+          'The face and smile he remembers changes his understanding of the people he reports on.',
+          'The writer questions the relationship between journalist and subject.',
+          'For comparison, link it to texts about suffering, responsibility, perspective and how outsiders view others.'
+        ],
+        [
+          ['Where is the writer reporting from?', 'Somalia', ['Somalia', 'Nigeria', 'Bhutan', 'China']],
+          ['What does the remembered smile make him question?', 'The relationship between journalist and subject', ['The relationship between journalist and subject', 'His school life', 'The weather', 'A poem’s rhyme scheme']],
+          ['Which idea is central to the text?', 'Human dignity', ['Human dignity', 'Romantic love', 'Jealousy', 'Sport']]
+        ]
+      ),
+      makeTopic(
+        'lang-chinese-cinderella',
+        'Chinese Cinderella',
+        'Iron Forge',
+        'Not forged',
+        [
+          'Chinese Cinderella is autobiographical and focuses on childhood experience and family treatment.',
+          'The text can be linked to identity, memory, unfairness and emotional resilience.',
+          'Writers’ feelings are often shown through personal detail and reflection.',
+          'For comparison, link it to texts about childhood, being misunderstood, family expectations or disadvantage.',
+          'A strong answer should track how the writer’s feelings develop across the extract.'
+        ],
+        [
+          ['What type of writing is Chinese Cinderella?', 'Autobiographical', ['Autobiographical', 'A poem', 'A play', 'A newspaper report']],
+          ['Which theme fits the text?', 'Childhood and unfairness', ['Childhood and unfairness', 'War reporting', 'Space travel', 'Nature only']],
+          ['What should you track across the extract?', 'How the writer’s feelings develop', ['How the writer’s feelings develop', 'Only the first line', 'Only the title', 'Only punctuation marks']]
+        ]
+      ),
+      makeTopic(
+        'lang-explorers-daughter',
+        "The Explorer's Daughter",
+        'Steel Forge',
+        'Not forged',
+        [
+          'This text focuses on travel, landscape, culture and the writer’s perspective on the natural world.',
+          'It can explore the tension between admiration for nature and human exploitation of it.',
+          'The writer’s descriptive language is important because it presents place vividly.',
+          'For comparison, link it to texts about journeys, nature, cultural identity and human impact.',
+          'Good answers should connect language choices to the writer’s attitude.'
+        ],
+        [
+          ['Which idea is important in The Explorer’s Daughter?', 'Nature and human impact', ['Nature and human impact', 'Poetry comparison', 'Romantic jealousy', 'School exams']],
+          ['What type of language is useful to analyse?', 'Descriptive language', ['Descriptive language', 'Only dialogue', 'Only rhyme', 'Only stage directions']],
+          ['What should comparison focus on?', 'Writers’ attitudes', ['Writers’ attitudes', 'Font size', 'Page numbers', 'Only spelling']]
+        ]
+      ),
+      makeTopic(
+        'lang-bhutan',
+        'Beyond the Sky and the Earth',
+        'Iron Forge',
+        'Not forged',
+        [
+          'This text is about a journey into Bhutan and the writer’s response to a new place and culture.',
+          'It can be linked to travel, discovery, uncertainty and changing perspective.',
+          'The writer’s feelings may shift as they experience the unfamiliar setting.',
+          'For comparison, link it to texts about journeys, culture, identity or learning from experience.',
+          'A good paragraph should compare how both writers present their reactions to unfamiliar places.'
+        ],
+        [
+          ['Where is the journey into?', 'Bhutan', ['Bhutan', 'Somalia', 'Nigeria', 'England']],
+          ['Which theme fits this text?', 'Travel and changing perspective', ['Travel and changing perspective', 'War trauma only', 'Jealousy', 'Dramatic monologue']],
+          ['What should you compare?', 'How writers react to unfamiliar places', ['How writers react to unfamiliar places', 'Only the number of paragraphs', 'Only punctuation', 'Only the title']]
+        ]
+      ),
+      makeTopic(
+        'lang-young-dyslexic',
+        'Young and Dyslexic',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'Young and Dyslexic focuses on education, identity, difficulty and how people respond to challenges.',
+          'The text can be linked to being misunderstood and overcoming barriers.',
+          'A strong analysis should look at how the writer presents personal experience and perspective.',
+          'For comparison, link it to texts about childhood, identity, learning, resilience or social judgement.',
+          'Use precise evidence to show how the writer creates sympathy or challenges assumptions.'
+        ],
+        [
+          ['What is a key focus of Young and Dyslexic?', 'Education and identity', ['Education and identity', 'War and famine', 'Marriage', 'A tiger']],
+          ['Which idea links well to this text?', 'Overcoming barriers', ['Overcoming barriers', 'Romantic love', 'Violence only', 'Nature worship']],
+          ['What should evidence show?', 'The writer’s perspective', ['The writer’s perspective', 'Only page number', 'Only font choice', 'Only spelling']]
+        ]
+      )
+    ]
+  },
+  {
+    id: 'english-literature',
+    title: 'English Literature',
+    icon: BookOpen,
+    group: 'Year 10',
+    yearGroup: 'Year 10',
+    category: 'Year 10',
+    description:
+      'Year 10 Literature — poetry comparison, poem structure, themes, speakers and key techniques.',
+    topics: [
+      makeTopic(
+        'lit-my-last-duchess',
+        'My Last Duchess',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'The Duke shows a visitor a portrait of his dead wife and slowly reveals his controlling nature.',
+          'It is a dramatic monologue, so only the Duke’s version of events is heard.',
+          'Main ideas include power, control, jealousy, relationships and violence.',
+          'The poem presents male power as dangerous because the Duke treats his wife like an object.',
+          'The ending suggests the Duchess was removed because the Duke could not control her behaviour.'
+        ],
+        [
+          ['Who is the main speaker in the poem?', 'The Duke', ['The Duke', 'The Duchess', 'A soldier', 'A photographer']],
+          ['What form is the poem?', 'Dramatic monologue', ['Dramatic monologue', 'Sonnet', 'Ballad', 'Free verse']],
+          ['Which theme is strongest in the poem?', 'Power and control', ['Power and control', 'Nature', 'Childhood', 'Comedy']]
+        ]
+      ),
+      makeTopic(
+        'lit-the-tyger',
+        'The Tyger',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'The speaker questions who could create something as powerful and terrifying as the tiger.',
+          'The tiger is used to explore creation, power, danger and mystery.',
+          'The repeated questioning makes the poem feel intense and uncertain.',
+          'The poem contrasts beauty with violence because the tiger is impressive but frightening.',
+          'The ending repeats the opening idea, showing that the mystery has not been solved.'
+        ],
+        [
+          ['What is the poem mainly questioning?', 'Who created the tiger', ['Who created the tiger', 'Where the tiger lives', 'How to hunt the tiger', 'Why the tiger is asleep']],
+          ['Which theme fits The Tyger best?', 'Power and mystery', ['Power and mystery', 'Romantic love', 'War guilt', 'Old age']],
+          ['What does repeated questioning create?', 'Uncertainty', ['Uncertainty', 'A clear answer', 'A comic mood', 'A simple story']]
+        ]
+      ),
+      makeTopic(
+        'lit-la-belle-dame',
+        'La Belle Dame',
+        'Steel Forge',
+        'Not forged',
+        [
+          'A knight meets a mysterious woman and is left alone, weak and trapped by the memory of her.',
+          'The poem uses a ballad form, which makes it feel like an old supernatural story.',
+          'The woman appears beautiful but dangerous, linking love with control and suffering.',
+          'The knight’s physical state shows how badly he has been affected.',
+          'The ending is circular because he remains isolated and unchanged.'
+        ],
+        [
+          ['Who is the central male figure?', 'A knight', ['A knight', 'A duke', 'A photographer', 'A priest']],
+          ['What form does the poem use?', 'Ballad', ['Ballad', 'Sonnet', 'Dramatic monologue', 'Haiku']],
+          ['What mood best fits the poem?', 'Haunting', ['Haunting', 'Cheerful', 'Relaxed', 'Comic']]
+        ]
+      ),
+      makeTopic(
+        'lit-war-photographer',
+        'War Photographer',
+        'Steel Forge',
+        'Not forged',
+        [
+          'A photographer develops images from war zones and reflects on the suffering he has witnessed.',
+          'The poem contrasts the safety of ordinary life with the violence of conflict.',
+          'The speaker shows how people often look briefly at suffering and then move on.',
+          'The ordered structure reflects the photographer trying to control traumatic memories.',
+          'Main ideas include war, suffering, guilt, memory and public indifference.'
+        ],
+        [
+          ['What is the photographer doing?', 'Developing war photographs', ['Developing war photographs', 'Writing a love letter', 'Preparing for battle', 'Painting a portrait']],
+          ['Which contrast is important in the poem?', 'Safety and war', ['Safety and war', 'Summer and winter', 'Comedy and romance', 'Youth and sport']],
+          ['What does the poem criticise?', 'Public indifference', ['Public indifference', 'School rules', 'Romantic jealousy', 'Religious belief']]
+        ]
+      ),
+      makeTopic(
+        'lit-prayer-before-birth',
+        'Prayer Before Birth',
+        'Iron Forge',
+        'Not forged',
+        [
+          'An unborn speaker asks to be protected from the cruelty and corruption of the world.',
+          'The poem presents the world as threatening before the speaker has even entered it.',
+          'Repetition makes the voice sound desperate and urgent.',
+          'The poem explores innocence, fear, control, violence and human nature.',
+          'The speaker fears being shaped or destroyed by society.'
+        ],
+        [
+          ['Who is speaking in the poem?', 'An unborn child', ['An unborn child', 'A duke', 'A knight', 'A photographer']],
+          ['What does repetition create?', 'Urgency', ['Urgency', 'Comedy', 'Certainty', 'Silence']],
+          ['Which theme fits the poem?', 'Fear of human cruelty', ['Fear of human cruelty', 'Celebration of wealth', 'Romantic marriage', 'Sporting success']]
+        ]
+      ),
+      makeTopic(
+        'lit-sonnet-116',
+        'Sonnet 116',
+        'Iron Forge',
+        'Not forged',
+        [
+          'The speaker argues that true love is constant and does not change when circumstances change.',
+          'The poem is a sonnet, so its controlled form supports the idea of stable love.',
+          'Love is presented as strong, guiding and resistant to time.',
+          'The poem contrasts ideal love with weaker forms of love that alter or fade.',
+          'The final couplet strongly defends the speaker’s argument.'
+        ],
+        [
+          ['What is the poem mainly about?', 'Constant love', ['Constant love', 'War trauma', 'Jealous control', 'Supernatural danger']],
+          ['What form is Sonnet 116?', 'Sonnet', ['Sonnet', 'Ballad', 'Dramatic monologue', 'Epic']],
+          ['What does the poem say true love does?', 'It stays constant', ['It stays constant', 'It disappears quickly', 'It becomes violent', 'It depends on money']]
+        ]
+      )
+    ]
+  },
+  {
     id: "pe",
     title: "PE",
     icon: Dumbbell,
@@ -695,7 +992,7 @@ const subjects = [
         ["What does the gradient of a distance-time graph show?", "Speed", ["Speed", "Mass", "Force", "Energy"]],
         ["What does the gradient of a velocity-time graph show?", "Acceleration", ["Acceleration", "Density", "Pressure", "Weight"]],
         ["How do you find distance from a velocity-time graph?", "Area under the graph", ["Area under the graph", "Highest point only", "Lowest point only", "Gradient of a distance-time graph"]],
-        ["What is the equation for average speed?", "distance ÷ time", ["distance ÷ time", "mass × acceleration", "force ÷ area", "current × resistance"]],
+        ["What is the equation for average speed?", "distance ÷ time", ["distance ÷ time", "mass X acceleration", "force ÷ area", "current X resistance"]],
         ["Which equation links final velocity, initial velocity, acceleration and displacement?", "v² = u² + 2as", ["v² = u² + 2as", "F = ma", "W = mg", "V = IR"]]
       ]),
       makeTopic("phys-force-shape", "Forces and Shape", "Foundation Forge", "Not forged", [
@@ -712,11 +1009,11 @@ const subjects = [
         ["What is a force classified as?", "A vector quantity", ["A vector quantity", "A scalar quantity", "An energy store", "A circuit component"]]
       ]),
       makeTopic("phys-force-equations", "Force Equations", "Steel Forge", "Not forged", [
-        "Force = mass × acceleration, written as F = ma.",
-        "Weight = mass × gravitational field strength, written as W = mg.",
+        "Force = mass X acceleration, written as F = ma.",
+        "Weight = mass X gravitational field strength, written as W = mg.",
         "Pressure = force ÷ area, written as p = F ÷ A.",
         "Density = mass ÷ volume, written as ρ = m ÷ V.",
-        "Pressure difference in a liquid can be found using height × density × gravitational field strength."
+        "Pressure difference in a liquid can be found using height X density X gravitational field strength."
       ], [
         ["What is the equation for force?", "F = ma", ["F = ma", "V = IR", "E = QV", "p = F/A"]],
         ["What is the equation for weight?", "W = mg", ["W = mg", "F = ma", "v² = u² + 2as", "E = QV"]],
@@ -728,11 +1025,11 @@ const subjects = [
         "Energy stores include chemical, kinetic, gravitational, elastic, thermal, magnetic, electrostatic and nuclear.",
         "Energy can be transferred mechanically, electrically, by heating, or by radiation.",
         "Energy is conserved, meaning it cannot be created or destroyed, only transferred.",
-        "Efficiency = useful energy output ÷ total energy input × 100.",
+        "Efficiency = useful energy output ÷ total energy input X 100.",
         "Thermal energy transfer can happen by conduction, convection and radiation."
       ], [
         ["Which statement describes conservation of energy?", "Energy cannot be created or destroyed", ["Energy cannot be created or destroyed", "Energy disappears in machines", "Energy only exists in batteries", "Energy is always wasted"]],
-        ["What is the efficiency equation?", "useful energy output ÷ total energy input × 100", ["useful energy output ÷ total energy input × 100", "force × mass", "current × time", "distance ÷ time"]],
+        ["What is the efficiency equation?", "useful energy output ÷ total energy input X 100", ["useful energy output ÷ total energy input X 100", "force X mass", "current X time", "distance ÷ time"]],
         ["Name one method of thermal energy transfer.", "Conduction", ["Conduction", "Ionisation", "Fission only", "Condensation only"]],
         ["Which energy store is found in food and fuels?", "Chemical", ["Chemical", "Magnetic only", "Nuclear only", "Electrostatic only"]],
         ["What type of transfer happens in electrical circuits?", "Electrical transfer", ["Electrical transfer", "No transfer", "Only mechanical transfer", "Only sound transfer"]]
@@ -740,9 +1037,9 @@ const subjects = [
       makeTopic("phys-electricity", "Energy and Voltage in Circuits", "Bronze Forge", "Not forged", [
         "A series circuit is more appropriate for some applications, while parallel circuits allow components to work independently.",
         "Current depends on voltage and resistance.",
-        "Voltage = current × resistance, written as V = IR.",
-        "Charge = current × time, written as Q = It.",
-        "Energy transferred = charge × voltage, written as E = QV."
+        "Voltage = current X resistance, written as V = IR.",
+        "Charge = current X time, written as Q = It.",
+        "Energy transferred = charge X voltage, written as E = QV."
       ], [
         ["What is the equation linking voltage, current and resistance?", "V = IR", ["V = IR", "F = ma", "W = mg", "ρ = m/V"]],
         ["What is the equation linking charge, current and time?", "Q = It", ["Q = It", "E = mc²", "p = F/A", "v = u + at"]],
@@ -779,7 +1076,7 @@ const subjects = [
       makeTopic("phys-states-of-matter", "States of Matter and Gas Molecules", "Silver Forge", "Not forged", [
         "Heating a system changes the energy stored within it and can change its temperature or state.",
         "Specific heat capacity is the energy required to change the temperature of 1 kg of a substance by 1°C.",
-        "Change in thermal energy = mass × specific heat capacity × change in temperature.",
+        "Change in thermal energy = mass X specific heat capacity X change in temperature.",
         "Particles in gases move randomly and exert pressure on container walls.",
         "For a fixed mass of gas, pressure, volume and temperature are related."
       ], [
@@ -991,6 +1288,87 @@ const themes = [
     accent: "text-yellow-200",
     button: "bg-yellow-600 hover:bg-yellow-700",
     description: "Unlocked after forging 12 stages in a subject."
+  },
+  {
+    id: "valentine",
+    name: "Valentine Forge",
+    unlockAt: 15,
+    bg: "bg-rose-950",
+    panel: "bg-rose-950/70",
+    soft: "bg-pink-300/10",
+    border: "border-pink-300/50",
+    accent: "text-pink-200",
+    button: "bg-pink-600 hover:bg-pink-700",
+    description: "Unlocked after forging 15 stages in a subject."
+  },
+  {
+    id: "japan",
+    name: "Japan Forge",
+    unlockAt: 18,
+    unlockAction: "subjectSwitches5",
+    unlockTask: "Switch subjects 5 times using the Subjects menu.",
+    bg: "bg-red-950",
+    panel: "bg-red-950/65",
+    soft: "bg-red-300/10",
+    border: "border-red-200/50",
+    accent: "text-red-100",
+    button: "bg-red-600 hover:bg-red-700",
+    description: "Unlocked by switching subjects 5 times."
+  },
+  {
+    id: "cyber",
+    name: "Cyber Forge",
+    unlockAt: 21,
+    unlockAction: "dailyTestsStarted3",
+    unlockTask: "Start the Daily Test 3 times.",
+    bg: "bg-emerald-950",
+    panel: "bg-emerald-950/65",
+    soft: "bg-emerald-300/10",
+    border: "border-emerald-300/50",
+    accent: "text-emerald-200",
+    button: "bg-emerald-500 hover:bg-emerald-600",
+    description: "Unlocked by opening the Daily Test 3 times."
+  },
+  {
+    id: "arctic",
+    name: "Arctic Forge",
+    unlockAt: 24,
+    unlockAction: "revisionClockReset",
+    unlockTask: "Reset the revision clock once in Settings.",
+    bg: "bg-sky-950",
+    panel: "bg-sky-950/65",
+    soft: "bg-sky-200/10",
+    border: "border-sky-200/50",
+    accent: "text-sky-100",
+    button: "bg-sky-500 hover:bg-sky-600",
+    description: "Unlocked by resetting the revision clock."
+  },
+  {
+    id: "volcano",
+    name: "Volcano Forge",
+    unlockAt: 27,
+    unlockAction: "failedStageOnce",
+    unlockTask: "Fail any stage test once.",
+    bg: "bg-red-950",
+    panel: "bg-red-950/70",
+    soft: "bg-red-400/10",
+    border: "border-red-400/50",
+    accent: "text-red-200",
+    button: "bg-red-600 hover:bg-red-700",
+    description: "Unlocked by failing any stage test once."
+  },
+  {
+    id: "god",
+    name: "God Forge",
+    unlockAt: 100,
+    requiresRecall100: true,
+    bg: "bg-yellow-50",
+    panel: "bg-yellow-100/80",
+    soft: "bg-yellow-200/30",
+    border: "border-yellow-200/70",
+    accent: "text-yellow-700",
+    button: "bg-yellow-300 hover:bg-yellow-400",
+    description: "Only unlocked when your selected subject recall hits 100%."
   }
 ];
 
@@ -1160,8 +1538,8 @@ const generalContent = {
     {
       title: "Electricity Quick Core",
       points: [
-        "Current is the rate of flow of charge. Charge = current × time.",
-        "Voltage is energy transferred per unit charge. Energy = charge × voltage.",
+        "Current is the rate of flow of charge. Charge = current X time.",
+        "Voltage is energy transferred per unit charge. Energy = charge X voltage.",
         "Resistance affects current: increasing resistance lowers current if voltage stays the same.",
         "In parallel circuits, voltage across components is the same."
       ]
@@ -1382,6 +1760,36 @@ function CherryPetalsOverlay() {
 function OceanThemeBackground() {
   const bubbles = Array.from({ length: 16 }, (_, i) => i);
 
+  const fishBase = [
+    { top: "18%", size: 1, delay: "0s", duration: "18s", opacity: 0.58 },
+    { top: "31%", size: 0.78, delay: "4s", duration: "22s", opacity: 0.45 },
+    { top: "44%", size: 1.15, delay: "8s", duration: "20s", opacity: 0.5 },
+    { top: "62%", size: 0.86, delay: "2s", duration: "24s", opacity: 0.38 },
+    { top: "74%", size: 0.68, delay: "11s", duration: "21s", opacity: 0.34 }
+  ];
+
+  const fishColours = [
+    { body: "#7dd3fc", tail: "#38bdf8", shadow: "rgba(125, 211, 252, 0.35)" },
+    { body: "#86efac", tail: "#22c55e", shadow: "rgba(134, 239, 172, 0.35)" },
+    { body: "#f9a8d4", tail: "#ec4899", shadow: "rgba(249, 168, 212, 0.35)" },
+    { body: "#c4b5fd", tail: "#8b5cf6", shadow: "rgba(196, 181, 253, 0.35)" },
+    { body: "#fdba74", tail: "#f97316", shadow: "rgba(253, 186, 116, 0.35)" },
+    { body: "#fde68a", tail: "#eab308", shadow: "rgba(253, 230, 138, 0.35)" }
+  ];
+
+  const fish = useMemo(() => {
+    const rainbowIndex = Math.floor(Math.random() * fishBase.length);
+
+    return fishBase.map((item, i) => {
+      const colour = fishColours[Math.floor(Math.random() * fishColours.length)];
+      return {
+        ...item,
+        ...colour,
+        rainbow: i === rainbowIndex
+      };
+    });
+  }, []);
+
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 ocean-theme-sky" />
@@ -1391,6 +1799,27 @@ function OceanThemeBackground() {
       <div className="absolute right-[12%] top-[14%] h-72 w-72 rounded-full bg-blue-300/10 blur-3xl" />
       <div className="absolute bottom-[14%] left-[-8%] h-32 w-[120%] rounded-[100%] border-t border-cyan-200/18" />
       <div className="absolute bottom-[20%] left-[-12%] h-24 w-[130%] rounded-[100%] border-t border-sky-200/12" />
+
+      {fish.map((item, i) => (
+        <span
+          key={`fish-${i}`}
+          className={`ocean-fish absolute block ${item.rainbow ? "ocean-fish-rainbow" : ""}`}
+          style={{
+            top: item.top,
+            animationDelay: item.delay,
+            animationDuration: item.duration,
+            opacity: item.opacity,
+            transform: `scale(${item.size})`,
+            ["--fish-body" as any]: item.body,
+            ["--fish-tail" as any]: item.tail,
+            ["--fish-shadow" as any]: item.shadow
+          }}
+        >
+          <span className="ocean-fish-body" />
+          <span className="ocean-fish-tail" />
+          <span className="ocean-fish-eye" />
+        </span>
+      ))}
 
       {bubbles.map((_, i) => (
         <span
@@ -1412,6 +1841,10 @@ function OceanThemeBackground() {
 
 function RoyalThemeBackground() {
   const stars = Array.from({ length: 24 }, (_, i) => i);
+  const bolts = [
+    { side: "left", delay: "1.2s", duration: "8s" },
+    { side: "right", delay: "5.6s", duration: "10s" }
+  ];
 
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
@@ -1421,6 +1854,14 @@ function RoyalThemeBackground() {
       <div className="absolute bottom-[-12%] left-[30%] h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl" />
       <div className="absolute left-[4%] top-[18%] h-[70%] w-px bg-gradient-to-b from-transparent via-purple-200/20 to-transparent" />
       <div className="absolute right-[8%] top-[12%] h-[76%] w-px bg-gradient-to-b from-transparent via-fuchsia-200/16 to-transparent" />
+
+      {bolts.map((bolt, i) => (
+        <span
+          key={`royal-bolt-${i}`}
+          className={`royal-lightning royal-lightning-${bolt.side}`}
+          style={{ animationDelay: bolt.delay, animationDuration: bolt.duration }}
+        />
+      ))}
 
       {stars.map((_, i) => (
         <span
@@ -1441,6 +1882,7 @@ function RoyalThemeBackground() {
 
 function GoldThemeBackground() {
   const embers = Array.from({ length: 22 }, (_, i) => i);
+  const money = Array.from({ length: 14 }, (_, i) => i);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
@@ -1450,6 +1892,21 @@ function GoldThemeBackground() {
       <div className="absolute bottom-[-16%] left-[18%] h-[26rem] w-[64%] rounded-[100%] bg-amber-500/10 blur-3xl" />
       <div className="absolute inset-x-0 bottom-[26%] h-px bg-amber-200/18" />
       <div className="absolute inset-x-0 bottom-[24%] h-px bg-yellow-200/10" />
+
+      {money.map((_, i) => (
+        <span
+          key={`money-${i}`}
+          className="gold-money absolute flex items-center justify-center rounded-md border border-yellow-200/70 bg-yellow-300 text-[10px] font-black text-yellow-950 shadow-lg shadow-yellow-900/30"
+          style={{
+            left: `${4 + ((i * 13) % 92)}%`,
+            top: `${-18 - (i % 5) * 8}vh`,
+            animationDelay: `${i * 0.85}s`,
+            animationDuration: `${7 + (i % 4) * 1.4}s`
+          }}
+        >
+          £
+        </span>
+      ))}
 
       {embers.map((_, i) => (
         <span
@@ -1469,15 +1926,405 @@ function GoldThemeBackground() {
   );
 }
 
-function ThemeBackground({ activeThemeId }) {
+function GoldThiefOverlay({ mousePosition }) {
+  const [elapsedMs, setElapsedMs] = useState(0);
+  const [taskbarVisible, setTaskbarVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setElapsedMs((previous) => (previous + 30) % 15000);
+    }, 30);
+
+    function checkTaskbarVisible() {
+      setTaskbarVisible(window.scrollY < 92);
+    }
+
+    checkTaskbarVisible();
+    window.addEventListener("scroll", checkTaskbarVisible);
+
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("scroll", checkTaskbarVisible);
+    };
+  }, []);
+
+  const screenWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const taskbarBottom = 108;
+  const runDuration = 5200;
+  const isRunning = elapsedMs < runDuration;
+  const runProgress = Math.min(1, elapsedMs / runDuration);
+  const thiefX = isRunning ? -120 + runProgress * (screenWidth + 260) : -260;
+  const mouseBlocking = isRunning && taskbarVisible && mousePosition && mousePosition.y < taskbarBottom + 85 && Math.abs(mousePosition.x - thiefX) < 90;
+  const jumpY = mouseBlocking ? 34 : 0;
+
+  return (
+    <div
+      className="pointer-events-none fixed left-0 z-[31] h-28 w-screen overflow-visible"
+      style={{
+        top: taskbarBottom,
+        opacity: isRunning && taskbarVisible ? 1 : 0
+      }}
+    >
+      <div
+        className="gold-thief gold-thief-under-taskbar"
+        style={{
+          transform: `translateX(${thiefX}px) translateY(${jumpY}px) rotate(180deg) scaleX(-1) scale(0.62)`
+        }}
+      >
+        <div className="gold-thief-head">
+          <span className="gold-thief-mask" />
+          <span className="gold-thief-eye eye-left" />
+          <span className="gold-thief-eye eye-right" />
+        </div>
+        <div className="gold-thief-body">
+          <span className="gold-thief-bag">£</span>
+        </div>
+        <span className="gold-thief-leg leg-left" />
+        <span className="gold-thief-leg leg-right" />
+      </div>
+    </div>
+  );
+}
+
+function ValentineThemeBackground() {
+  const hearts = Array.from({ length: 20 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 valentine-theme-bg" />
+      <div className="absolute left-[12%] top-[14%] h-72 w-72 rounded-full bg-pink-300/18 blur-3xl" />
+      <div className="absolute right-[10%] top-[20%] h-80 w-80 rounded-full bg-rose-300/14 blur-3xl" />
+      {hearts.map((_, i) => (
+        <span
+          key={`heart-${i}`}
+          className="valentine-heart absolute"
+          style={{
+            left: `${4 + ((i * 17) % 92)}%`,
+            top: `${-12 - (i % 5) * 9}vh`,
+            animationDelay: `${i * 0.55}s`,
+            animationDuration: `${8 + (i % 5) * 1.3}s`
+          }}
+        >
+          ♥
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function JapanThemeBackground() {
+  const leaves = Array.from({ length: 26 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 japan-theme-bg" />
+      <div className="absolute left-1/2 top-24 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-red-800/95 shadow-2xl shadow-red-950/40" />
+
+      {leaves.map((_, i) => (
+        <span
+          key={`leaf-${i}`}
+          className="japan-leaf absolute"
+          style={{
+            left: `${5 + ((i * 7) % 90)}%`,
+            top: `${-20 - i * 8}px`,
+            animationDelay: `${i * 0.45}s`,
+            animationDuration: `${5.6 + (i % 5) * 0.65}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function JapanCarOverlay({ mousePosition, onJumpUnlock }) {
+  const [run, setRun] = useState({
+    active: false,
+    startTime: 0,
+    duration: 4200,
+    nextStart: Date.now() + 900,
+    x: -260,
+    blockedSince: null,
+    jumped: false
+  });
+
+  useEffect(() => {
+    let frameId;
+
+    function tick() {
+      const now = Date.now();
+      const screenWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
+
+      setRun((previous) => {
+        if (!previous.active) {
+          if (now >= previous.nextStart) {
+            return {
+              active: true,
+              startTime: now,
+              duration: 2400 + Math.random() * 2200,
+              nextStart: previous.nextStart,
+              x: -260,
+              blockedSince: null,
+              jumped: false
+            };
+          }
+          return previous;
+        }
+
+        const carCenterX = previous.x + 44;
+        const isMouseBlocking =
+          previous.active &&
+          mousePosition &&
+          mousePosition.y >= 34 &&
+          mousePosition.y <= 92 &&
+          Math.abs(mousePosition.x - carCenterX) < 52;
+
+        const blockedSince = isMouseBlocking ? previous.blockedSince || now : null;
+        const blockedLongEnough = blockedSince && now - blockedSince >= 5000;
+        if (blockedLongEnough && !previous.jumped) {
+          onJumpUnlock?.();
+        }
+
+        const shouldPause = isMouseBlocking && !blockedLongEnough;
+        const frozenStartTime = previous.startTime + ((previous.x + 260) / (screenWidth + 520)) * previous.duration;
+        const elapsed = Math.max(0, now - (shouldPause ? frozenStartTime : previous.startTime));
+        const progress = Math.min(1, elapsed / previous.duration);
+        const nextX = shouldPause ? previous.x : -260 + progress * (screenWidth + 520);
+
+        if (progress >= 1) {
+          return {
+            active: false,
+            startTime: 0,
+            duration: 4200,
+            nextStart: now + 2000 + Math.random() * 25000,
+            x: -260,
+            blockedSince: null,
+            jumped: false
+          };
+        }
+
+        return {
+          ...previous,
+          startTime: shouldPause ? frozenStartTime : previous.startTime,
+          x: nextX,
+          blockedSince,
+          jumped: previous.jumped || Boolean(blockedLongEnough)
+        };
+      });
+
+      frameId = requestAnimationFrame(tick);
+    }
+
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [mousePosition, onJumpUnlock]);
+
+  const blockedFor = run.blockedSince ? Date.now() - run.blockedSince : 0;
+  const burnout = run.active && run.blockedSince && blockedFor < 5000;
+  const jumping = run.active && run.blockedSince && blockedFor >= 5000;
+  const jumpY = jumping ? 18 : 0;
+
+  return (
+    <div className="pointer-events-none fixed left-0 top-[42px] z-[31] h-16 w-screen overflow-visible">
+      <div
+        className={`japan-supra-run ${burnout ? "japan-supra-burnout" : ""} ${jumping ? "japan-supra-jumping" : ""}`}
+        style={{
+          transform: `translateX(${run.x}px) translateY(${jumpY}px)`,
+          opacity: run.active ? 1 : 0
+        }}
+      >
+        {burnout && (
+          <div className="japan-smoke-pack">
+            <span className="japan-smoke smoke-one" />
+            <span className="japan-smoke smoke-two" />
+            <span className="japan-smoke smoke-three" />
+            <span className="japan-smoke smoke-four" />
+          </div>
+        )}
+        <div className="japan-supra-hanger">
+          <div className="japan-supra">
+            <div className="japan-supra-green-splash splash-one" />
+            <div className="japan-supra-green-splash splash-two" />
+            <div className="japan-supra-wing" />
+            <div className="japan-supra-roof" />
+            <div className="japan-supra-window front" />
+            <div className="japan-supra-window rear" />
+            <div className="japan-supra-door-line" />
+            <div className="japan-supra-graphic" />
+            <div className="japan-supra-light front" />
+            <div className="japan-supra-light rear" />
+            <div className="japan-supra-wheel wheel-front" />
+            <div className="japan-supra-wheel wheel-rear" />
+            <div className="japan-supra-skirt" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CyberThemeBackground() {
+  const codeRain = Array.from({ length: 26 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 cyber-theme-bg" />
+      <div className="absolute inset-0 cyber-grid" />
+      {codeRain.map((_, i) => (
+        <span
+          key={`code-${i}`}
+          className="cyber-code absolute font-mono text-xs font-black text-emerald-300/45"
+          style={{
+            left: `${2 + i * 4}%`,
+            top: `${-25 - (i % 6) * 12}vh`,
+            animationDelay: `${i * 0.32}s`,
+            animationDuration: `${6 + (i % 5) * 0.8}s`
+          }}
+        >
+          {i % 3 === 0 ? "101" : i % 3 === 1 ? "011" : "IFM"}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ArcticThemeBackground() {
+  const snow = Array.from({ length: 32 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 arctic-theme-bg" />
+      <div className="absolute bottom-[-8%] left-[-10%] h-40 w-[120%] rounded-[100%] bg-white/18 blur-xl" />
+      {snow.map((_, i) => (
+        <span
+          key={`snow-${i}`}
+          className="arctic-snow absolute block rounded-full bg-white/80"
+          style={{
+            left: `${2 + ((i * 11) % 96)}%`,
+            top: `${-10 - (i % 7) * 8}vh`,
+            width: `${3 + (i % 4)}px`,
+            height: `${3 + (i % 4)}px`,
+            animationDelay: `${i * 0.35}s`,
+            animationDuration: `${8 + (i % 6) * 1.2}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function VolcanoThemeBackground() {
+  const sparks = Array.from({ length: 26 }, (_, i) => i);
+  const eruptionParticles = Array.from({ length: 70 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 volcano-theme-bg" />
+      <div className="absolute bottom-[-14%] left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-[100%] bg-red-600/22 blur-3xl" />
+      <div className="absolute bottom-0 left-1/2 h-64 w-64 -translate-x-1/2 volcano-mountain" />
+
+      <div className="volcano-eruption-core absolute left-1/2 top-1/2" />
+      <div className="volcano-eruption-shockwave absolute left-1/2 top-1/2" />
+      {eruptionParticles.map((_, i) => {
+        const angle = (i / eruptionParticles.length) * Math.PI * 2;
+        const distance = 360 + (i % 8) * 72;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+        return (
+          <span
+            key={`eruption-particle-${i}`}
+            className="volcano-eruption-particle absolute left-1/2 top-1/2 block rounded-full"
+            style={{
+              ["--eruption-x" as any]: `${x}px`,
+              ["--eruption-y" as any]: `${y}px`,
+              ["--eruption-delay" as any]: `${i * 0.025}s`,
+              width: `${8 + (i % 5) * 4}px`,
+              height: `${8 + (i % 5) * 4}px`
+            }}
+          />
+        );
+      })}
+
+      {sparks.map((_, i) => (
+        <span
+          key={`spark-${i}`}
+          className="volcano-spark absolute block rounded-full bg-orange-300"
+          style={{
+            left: `${38 + ((i * 7) % 24)}%`,
+            bottom: `${12 + (i % 4) * 2}%`,
+            width: `${4 + (i % 3)}px`,
+            height: `${4 + (i % 3)}px`,
+            animationDelay: `${i * 0.22}s`,
+            animationDuration: `${4 + (i % 5) * 0.7}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function GodThemeBackground() {
+  const rays = Array.from({ length: 16 }, (_, i) => i);
+  const doves = Array.from({ length: 7 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 god-theme-bg" />
+
+      <div className="absolute left-[6%] top-[14%] h-28 w-52 rounded-full bg-white/35 blur-2xl" />
+      <div className="absolute right-[10%] top-[18%] h-24 w-44 rounded-full bg-sky-100/30 blur-2xl" />
+      <div className="absolute left-[18%] bottom-[18%] h-24 w-48 rounded-full bg-white/20 blur-2xl" />
+
+      <div className="absolute left-1/2 top-[16%] -translate-x-1/2 god-sun-wrap">
+        {rays.map((_, i) => (
+          <span
+            key={`god-ray-${i}`}
+            className="god-rotating-ray"
+            style={{ transform: `rotate(${i * 22.5}deg)` }}
+          />
+        ))}
+        <div className="god-sun-core" />
+      </div>
+
+      {doves.map((_, i) => (
+        <div
+          key={`god-dove-${i}`}
+          className="god-dove"
+          style={{
+            top: `${12 + (i % 4) * 14}%`,
+            animationDelay: `${i * 4.6}s`,
+            animationDuration: `${18 + (i % 3) * 3}s`
+          }}
+        >
+          <span className="god-dove-wing left" />
+          <span className="god-dove-body" />
+          <span className="god-dove-wing right" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ThemeBackground({ activeThemeId, volcanoEruptionKey }) {
   if (activeThemeId === "cherry") return <CherryBlossomBackground />;
   if (activeThemeId === "ocean") return <OceanThemeBackground />;
   if (activeThemeId === "royal") return <RoyalThemeBackground />;
   if (activeThemeId === "gold") return <GoldThemeBackground />;
+  if (activeThemeId === "valentine") return <ValentineThemeBackground />;
+  if (activeThemeId === "japan") return <JapanThemeBackground />;
+  if (activeThemeId === "cyber") return <CyberThemeBackground />;
+  if (activeThemeId === "arctic") return <ArcticThemeBackground />;
+  if (activeThemeId === "volcano") return <VolcanoThemeBackground key={volcanoEruptionKey} />;
+  if (activeThemeId === "god") return <GodThemeBackground />;
   return null;
 }
 
 function AchievementCard({ theme, unlocked, onSelect, selected }) {
+  const lockedLabel = theme.requiresRecall100
+    ? "Unlock at 100% recall"
+    : theme.unlockTask
+      ? "Secret unlock"
+      : `Unlock at ${theme.unlockAt} stages`;
+
   return (
     <button
       onClick={() => unlocked && onSelect(theme.id)}
@@ -1485,9 +2332,9 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={`text-sm font-bold uppercase tracking-widest ${unlocked ? theme.accent : "text-zinc-500"}`}>{unlocked ? "Unlocked" : `Unlock at ${theme.unlockAt} stages`}</p>
+          <p className={`text-sm font-bold uppercase tracking-widest ${unlocked ? theme.accent : "text-zinc-500"}`}>{unlocked ? "Unlocked" : lockedLabel}</p>
           <h3 className="mt-1 text-xl font-black text-white">{theme.name}</h3>
-          <p className="mt-2 text-sm text-zinc-400">{theme.description}</p>
+          <p className="mt-2 text-sm text-zinc-400">{unlocked || !theme.unlockTask ? theme.description : theme.unlockTask}</p>
         </div>
         {unlocked ? <Medal className={`h-6 w-6 ${theme.accent}`} /> : <Lock className="h-6 w-6 text-zinc-500" />}
       </div>
@@ -1633,6 +2480,7 @@ export default function App() {
   const [usernameInput, setUsernameInput] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(savedProgress?.saveEnabled ?? false);
   const [showSavePrompt, setShowSavePrompt] = useState(!savedProgress);
+  const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(false);
   const [workMinutes, setWorkMinutes] = useState(savedProgress?.workMinutes || 30);
   const [breakMinutes, setBreakMinutes] = useState(savedProgress?.breakMinutes || 5);
   const [revisionSeconds, setRevisionSeconds] = useState(savedProgress?.revisionSeconds || 0);
@@ -1643,6 +2491,13 @@ export default function App() {
   const [selectedTopicId, setSelectedTopicId] = useState(savedProgress?.selectedTopicId || subjects[0].topics[0].id);
   const [superTestAnswers, setSuperTestAnswers] = useState({});
   const [superTestSubmitted, setSuperTestSubmitted] = useState(false);
+  const [themeUnlockCodeOpen, setThemeUnlockCodeOpen] = useState(false);
+  const [themeUnlockCode, setThemeUnlockCode] = useState("");
+  const [allThemesUnlocked, setAllThemesUnlocked] = useState(savedProgress?.allThemesUnlocked || false);
+  const [themeActions, setThemeActions] = useState(savedProgress?.themeActions || {});
+  const [themeUnlockError, setThemeUnlockError] = useState("");
+  const [mousePosition, setMousePosition] = useState({ x: -999, y: -999 });
+  const [volcanoEruptionKey, setVolcanoEruptionKey] = useState(0);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
   const visibleSubjects = useMemo(() => {
@@ -1669,6 +2524,15 @@ export default function App() {
   const selectedTopic = sectionTopics.find((topic) => topic.id === selectedTopicId) || sectionTopics[0] || selectedSubject.topics[0];
 
   const [view, setView] = useState("home");
+
+  useEffect(() => {
+    if (view !== "home") {
+      setShowSubjectSetupPrompt(false);
+    }
+    if (view !== "settings") {
+      setThemeUnlockCodeOpen(false);
+    }
+  }, [view]);
   const [stageTab, setStageTab] = useState("test");
   const [activeThemeId, setActiveThemeId] = useState(savedProgress?.activeThemeId || "forge");
   const [subjectsOpen, setSubjectsOpen] = useState(false);
@@ -1759,11 +2623,13 @@ export default function App() {
       revisionSeconds,
       lastBreakMarker,
       subjectSlots,
-      selectedSection
+      selectedSection,
+      allThemesUnlocked,
+      themeActions
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker, subjectSlots, selectedSection]);
+  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker, subjectSlots, selectedSection, allThemesUnlocked, themeActions]);
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter((item, index) => answers[index] === item.answer).length;
@@ -1782,7 +2648,6 @@ export default function App() {
   const totalProgress = Math.round((unlockedCount / allTopics.length) * 100);
   const subjectUnlockedCount = sectionTopics.filter((topic) => unlocked[topic.id]).length;
   const maxForgedInAnySubject = Math.max(...visibleSubjects.map((subject) => subject.topics.filter((topic) => unlocked[topic.id]).length));
-  const activeTheme = themes.find((theme) => theme.id === activeThemeId && maxForgedInAnySubject >= theme.unlockAt) || themes[0];
 
   const recallPercentage = useMemo(() => {
     const unlockedInSubject = sectionTopics.filter((topic) => unlocked[topic.id]).length;
@@ -1792,7 +2657,29 @@ export default function App() {
     return unlockScore;
   }, [sectionTopics, unlocked, dailySubmitted, dailyScore, submitted, score]);
 
+  function unlockThemeAction(actionKey) {
+    if (!actionKey) return;
+    setThemeActions((previous) => ({ ...previous, [actionKey]: true }));
+  }
+
+  function incrementThemeAction(actionKey) {
+    if (!actionKey) return;
+    setThemeActions((previous) => ({ ...previous, [actionKey]: (previous[actionKey] || 0) + 1 }));
+  }
+
+  function isThemeUnlocked(theme) {
+    if (allThemesUnlocked) return true;
+    if (theme.requiresRecall100) return recallPercentage === 100;
+    if (theme.unlockAction === "dailyTestsStarted3") return (themeActions.dailyTestsStarted3 || 0) >= 3;
+    if (theme.unlockAction === "subjectSwitches5") return (themeActions.subjectSwitches5 || 0) >= 5;
+    if (theme.unlockAction) return Boolean(themeActions[theme.unlockAction]);
+    return maxForgedInAnySubject >= theme.unlockAt;
+  }
+
+  const activeTheme = themes.find((theme) => theme.id === activeThemeId && isThemeUnlocked(theme)) || themes[0];
+
   function changeSubject(subject) {
+    incrementThemeAction("subjectSwitches5");
     setSelectedSubjectId(subject.id);
     const firstUnlockedTopic = subject.topics.find((topic) => unlocked[topic.id]) || subject.topics[0];
     setSelectedTopicId(firstUnlockedTopic.id);
@@ -1804,6 +2691,7 @@ export default function App() {
   }
 
   function switchSubject(subject) {
+    incrementThemeAction("subjectSwitches5");
     setSelectedSubjectId(subject.id);
     const firstUnlockedTopic = subject.topics.find((topic) => unlocked[topic.id]) || subject.topics[0];
     setSelectedTopicId(firstUnlockedTopic.id);
@@ -1818,6 +2706,9 @@ export default function App() {
   function openTopic(topic) {
     if (!unlocked[topic.id]) return;
     setSelectedTopicId(topic.id);
+    if (activeThemeId === "volcano") {
+      setVolcanoEruptionKey((previous) => previous + 1);
+    }
     setAnswers({});
     setSubmitted(false);
     setStageTab("test");
@@ -1830,6 +2721,9 @@ export default function App() {
     if (score === 100 && nextTopic) {
       setUnlocked((prev) => ({ ...prev, [nextTopic.id]: true }));
     }
+    if (score < 100) {
+      unlockThemeAction("failedStageOnce");
+    }
   }
 
   function resetQuiz() {
@@ -1838,6 +2732,7 @@ export default function App() {
   }
 
   function startDailyTest() {
+    incrementThemeAction("dailyTestsStarted3");
     setDailyAnswers({});
     setDailySubmitted(false);
     setView("daily");
@@ -1865,28 +2760,85 @@ export default function App() {
       revisionSeconds,
       lastBreakMarker,
       subjectSlots,
-      selectedSection
+      selectedSection,
+      allThemesUnlocked
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     setUsername(cleanName);
     setSaveEnabled(true);
     setShowSavePrompt(false);
+    setShowSubjectSetupPrompt(true);
   }
 
   function skipSavingProgress() {
     setSaveEnabled(false);
     setShowSavePrompt(false);
+    setShowSubjectSetupPrompt(true);
   }
 
   return (
     <div
+      onMouseMove={(event) => setMousePosition({ x: event.clientX, y: event.clientY })}
       className={`relative min-h-screen overflow-hidden ${activeTheme.bg} text-zinc-100 ${
-        activeThemeId === "cherry" ? "cherry-theme" : ""
+        activeThemeId === "cherry" ? "cherry-theme" : activeThemeId === "ocean" ? "ocean-theme" : activeThemeId === "royal" ? "royal-theme" : activeThemeId === "gold" ? "gold-theme" : activeThemeId === "valentine" ? "valentine-theme" : activeThemeId === "japan" ? "japan-theme" : activeThemeId === "cyber" ? "cyber-theme" : activeThemeId === "arctic" ? "arctic-theme" : activeThemeId === "volcano" ? "volcano-theme" : activeThemeId === "god" ? "god-theme" : ""
       }`}
     >
-      <ThemeBackground activeThemeId={activeThemeId} />
+      <ThemeBackground activeThemeId={activeThemeId} volcanoEruptionKey={volcanoEruptionKey} />
       {activeThemeId === "cherry" && <CherryPetalsOverlay />}
+      {activeThemeId === "gold" && <GoldThiefOverlay mousePosition={mousePosition} />}
+      {activeThemeId === "japan" && <JapanCarOverlay mousePosition={mousePosition} onJumpUnlock={() => unlockThemeAction("japanCarJumped")} />}
+      {themeUnlockCodeOpen && view === "settings" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black px-4 backdrop-blur-md" style={{ zIndex: 99999 }}>
+          <div className="w-full max-w-md rounded-3xl border border-orange-400/30 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+            <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">Creator access</p>
+            <h2 className="mt-2 text-3xl font-black text-white">Theme unlock code</h2>
+            <p className="mt-2 text-sm text-zinc-400">Enter the creator code to unlock every theme.</p>
+
+            <input
+              type="password"
+              value={themeUnlockCode}
+              onChange={(event) => {
+                setThemeUnlockCode(event.target.value);
+                setThemeUnlockError("");
+              }}
+              placeholder="Enter code..."
+              className="mt-5 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400"
+            />
+
+            {themeUnlockError && <p className="mt-3 text-sm font-bold text-red-300">{themeUnlockError}</p>}
+
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <button
+                onClick={() => {
+                  setThemeUnlockCodeOpen(false);
+                  setThemeUnlockCode("");
+                  setThemeUnlockError("");
+                }}
+                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (themeUnlockCode === "Tilly2025!") {
+                    setAllThemesUnlocked(true);
+                    setThemeUnlockCodeOpen(false);
+                    setThemeUnlockCode("");
+                    setThemeUnlockError("");
+                  } else {
+                    setThemeUnlockError("Wrong code.");
+                  }
+                }}
+                className="rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600"
+              >
+                Unlock themes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {breakAlarm && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
           <div className="absolute inset-0 break-burst" />
@@ -1945,7 +2897,7 @@ export default function App() {
               className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
               aria-label="Skip saving progress"
             >
-              ×
+              X
             </button>
 
             <div className="mb-4 inline-flex rounded-2xl bg-orange-400/10 p-3 text-orange-300">
@@ -1984,6 +2936,71 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {showSubjectSetupPrompt && view === "home" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md" style={{ zIndex: 9999 }}>
+          <div className="relative max-h-[86vh] w-full max-w-3xl overflow-y-auto rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+            <button
+              onClick={() => setShowSubjectSetupPrompt(false)}
+              className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              aria-label="Close subject setup"
+            >
+              X
+            </button>
+
+            <div className="mb-4 inline-flex rounded-2xl bg-orange-400/10 p-3 text-orange-300">
+              <ListChecks className="h-7 w-7" />
+            </div>
+
+            <h2 className="text-3xl font-black text-white">Choose your subject slots</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+              Pick the subjects you want in your taskbar. This uses the same subject slots as Settings. Empty every slot to show every subject.
+            </p>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {subjectSlots.map((slotSubjectId, index) => (
+                <label key={`startup-slot-${index}`} className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4">
+                  <span className="text-xs font-black uppercase tracking-widest text-orange-300">Slot {index + 1}</span>
+                  <select
+                    value={slotSubjectId}
+                    onChange={(event) => {
+                      const nextSlots = [...subjectSlots];
+                      nextSlots[index] = event.target.value;
+                      setSubjectSlots(nextSlots);
+                      if (event.target.value) setSelectedSubjectId(event.target.value);
+                    }}
+                    className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white outline-none focus:border-orange-400"
+                  >
+                    <option value="">Empty</option>
+                    {subjects.map((subject) => (
+                      <option key={subject.id} value={subject.id}>{subject.title}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-between gap-3">
+              <button
+                onClick={() => setSubjectSlots(Array(9).fill(""))}
+                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800"
+              >
+                Show all subjects
+              </button>
+              <button
+                onClick={() => {
+                  const firstPickedSubject = subjectSlots.find(Boolean);
+                  if (firstPickedSubject) setSelectedSubjectId(firstPickedSubject);
+                  setShowSubjectSetupPrompt(false);
+                }}
+                className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600 active:scale-[0.99]"
+              >
+                Save subject setup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <style>{`
         :where(*, ::before, ::after) {
           border-color: rgb(39 39 42);
@@ -1999,7 +3016,114 @@ export default function App() {
         }
 
         button:focus-visible {
-          box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.65);
+          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.65);
+        }
+
+        .ocean-theme {
+          background: #dff6ff !important;
+          color: #0f3b57;
+        }
+
+        .ocean-theme .text-white,
+        .ocean-theme .text-zinc-100,
+        .ocean-theme .text-zinc-200 {
+          color: #0f3b57 !important;
+        }
+
+        .ocean-theme .text-zinc-300,
+        .ocean-theme .text-zinc-400,
+        .ocean-theme .text-zinc-500 {
+          color: rgba(15, 59, 87, 0.72) !important;
+        }
+
+        .ocean-theme .bg-black,
+        .ocean-theme .bg-black\/70,
+        .ocean-theme .bg-black\/78,
+        .ocean-theme .bg-zinc-950,
+        .ocean-theme .bg-zinc-950\/70,
+        .ocean-theme .bg-zinc-950\/72,
+        .ocean-theme .bg-zinc-950\/80,
+        .ocean-theme .bg-zinc-950\/84,
+        .ocean-theme .bg-zinc-950\/90,
+        .ocean-theme .bg-zinc-950\/92,
+        .ocean-theme .bg-zinc-900,
+        .ocean-theme .bg-zinc-900\/70,
+        .ocean-theme .bg-zinc-900\/80,
+        .ocean-theme .bg-zinc-900\/85 {
+          background-color: rgba(186, 230, 253, 0.92) !important;
+          backdrop-filter: blur(14px);
+        }
+
+        .ocean-theme .hover\:bg-zinc-800:hover,
+        .ocean-theme .hover\:bg-black\/80:hover {
+          background-color: rgba(147, 197, 253, 0.96) !important;
+        }
+
+        .ocean-theme .border-zinc-700,
+        .ocean-theme .border-zinc-800 {
+          border-color: rgba(59, 130, 246, 0.28) !important;
+        }
+
+        .ocean-theme .text-orange-100,
+        .ocean-theme .text-orange-200,
+        .ocean-theme .text-orange-300,
+        .ocean-theme .text-orange-400,
+        .ocean-theme .text-orange-500 {
+          color: #0284c7 !important;
+        }
+
+        .ocean-theme .bg-orange-400\/10,
+        .ocean-theme .bg-orange-400\/15,
+        .ocean-theme .bg-orange-400\/20,
+        .ocean-theme .bg-orange-500\/10,
+        .ocean-theme .bg-orange-500\/15,
+        .ocean-theme .bg-orange-500\/20,
+        .ocean-theme .bg-orange-500\/25 {
+          background-color: rgba(56, 189, 248, 0.18) !important;
+        }
+
+        .ocean-theme .bg-orange-500,
+        .ocean-theme .hover\:bg-orange-500:hover,
+        .ocean-theme .hover\:bg-orange-600:hover {
+          background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+          color: #eff8ff !important;
+        }
+
+        .ocean-theme .border-orange-300,
+        .ocean-theme .border-orange-300\/40,
+        .ocean-theme .border-orange-400\/30,
+        .ocean-theme .border-orange-400\/40,
+        .ocean-theme .border-orange-400\/80,
+        .ocean-theme .border-orange-500\/30 {
+          border-color: rgba(56, 189, 248, 0.42) !important;
+        }
+
+        .ocean-theme input,
+        .ocean-theme textarea,
+        .ocean-theme select {
+          background-color: rgba(224, 242, 254, 0.95) !important;
+          border-color: rgba(56, 189, 248, 0.3) !important;
+          color: #0f3b57 !important;
+        }
+
+        .ocean-theme input::placeholder,
+        .ocean-theme textarea::placeholder {
+          color: rgba(15, 59, 87, 0.45) !important;
+        }
+
+        .ocean-theme .shadow-orange-500\/20,
+        .ocean-theme .shadow-orange-950\/20,
+        .ocean-theme .shadow-orange-950\/30,
+        .ocean-theme .shadow-orange-950\/40,
+        .ocean-theme .shadow-orange-950\/50 {
+          box-shadow: 0 18px 44px rgba(56, 189, 248, 0.14) !important;
+        }
+
+        .ocean-theme-bg {
+          background:
+            radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 20%),
+            radial-gradient(circle at 80% 18%, rgba(125,211,252,0.28), transparent 22%),
+            linear-gradient(180deg, #e0f2fe 0%, #bae6fd 52%, #7dd3fc 100%);
         }
 
         .mini-alarm-clock {
@@ -2269,11 +3393,220 @@ export default function App() {
           animation-iteration-count: infinite;
         }
 
+        .ocean-fish {
+          left: -90px;
+          height: 28px;
+          width: 74px;
+          animation-name: fish-swim;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          filter: drop-shadow(0 0 12px var(--fish-shadow, rgba(125, 211, 252, 0.28)));
+        }
+
+        .ocean-fish-body {
+          position: absolute;
+          left: 14px;
+          top: 5px;
+          height: 20px;
+          width: 42px;
+          border-radius: 9999px 70% 70% 9999px;
+          background: linear-gradient(135deg, color-mix(in srgb, white 28%, var(--fish-body, #7dd3fc)), var(--fish-body, #7dd3fc));
+          border: 1px solid rgba(236, 254, 255, 0.55);
+        }
+
+        .ocean-fish-tail {
+          position: absolute;
+          left: 0;
+          top: 5px;
+          height: 20px;
+          width: 22px;
+          clip-path: polygon(100% 50%, 0 0, 25% 50%, 0 100%);
+          background: var(--fish-tail, #38bdf8);
+          animation: fish-tail-wiggle 0.55s ease-in-out infinite;
+          transform-origin: right center;
+        }
+
+        .ocean-fish-rainbow .ocean-fish-body {
+          background: linear-gradient(90deg, #ff4d4d, #ff9f1c, #ffe66d, #2ec4b6, #3a86ff, #a259ff, #ff4dcb);
+          background-size: 220% 100%;
+          animation: rainbow-fish-shift 2.8s linear infinite;
+        }
+
+        .ocean-fish-rainbow .ocean-fish-tail {
+          background: linear-gradient(180deg, #ff4d4d, #ff9f1c, #ffe66d, #2ec4b6, #3a86ff, #a259ff);
+          background-size: 100% 220%;
+          animation: fish-tail-wiggle 0.55s ease-in-out infinite, rainbow-fish-tail 2.2s linear infinite;
+        }
+
+        .ocean-fish-rainbow {
+          filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.35));
+        }
+
+        @keyframes rainbow-fish-shift {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+
+        @keyframes rainbow-fish-tail {
+          0% { background-position: 50% 0%; }
+          100% { background-position: 50% 100%; }
+        }
+
+        .ocean-fish-eye {
+          position: absolute;
+          right: 14px;
+          top: 10px;
+          height: 4px;
+          width: 4px;
+          border-radius: 9999px;
+          background: rgba(8, 47, 73, 0.85);
+        }
+
+        @keyframes fish-swim {
+          0% {
+            transform: translateX(-8vw) translateY(0px) scale(var(--fish-scale, 1));
+          }
+          28% {
+            transform: translateX(32vw) translateY(-12px) scale(var(--fish-scale, 1));
+          }
+          62% {
+            transform: translateX(72vw) translateY(10px) scale(var(--fish-scale, 1));
+          }
+          100% {
+            transform: translateX(112vw) translateY(-4px) scale(var(--fish-scale, 1));
+          }
+        }
+
+        @keyframes fish-tail-wiggle {
+          0%, 100% {
+            transform: rotate(-9deg);
+          }
+          50% {
+            transform: rotate(9deg);
+          }
+        }
+
+        .royal-theme {
+          color: #eadcff;
+        }
+
+        .royal-theme .text-white,
+        .royal-theme .text-zinc-100,
+        .royal-theme .text-zinc-200 {
+          color: #eadcff !important;
+        }
+
+        .royal-theme .text-zinc-300,
+        .royal-theme .text-zinc-400,
+        .royal-theme .text-zinc-500 {
+          color: rgba(226, 201, 255, 0.76) !important;
+        }
+
+        .royal-theme .text-orange-100,
+        .royal-theme .text-orange-200,
+        .royal-theme .text-orange-300,
+        .royal-theme .text-orange-400,
+        .royal-theme .text-orange-500 {
+          color: #c084fc !important;
+        }
+
+        .royal-theme .bg-orange-400\/10,
+        .royal-theme .bg-orange-400\/15,
+        .royal-theme .bg-orange-400\/20,
+        .royal-theme .bg-orange-500\/10,
+        .royal-theme .bg-orange-500\/15,
+        .royal-theme .bg-orange-500\/20,
+        .royal-theme .bg-orange-500\/25 {
+          background-color: rgba(168, 85, 247, 0.2) !important;
+        }
+
+        .royal-theme .bg-orange-500,
+        .royal-theme .hover\:bg-orange-600:hover,
+        .royal-theme .hover\:bg-orange-500:hover {
+          background: linear-gradient(135deg, #7c3aed, #c084fc) !important;
+          color: #f3e8ff !important;
+        }
+
+        .royal-theme .border-orange-300,
+        .royal-theme .border-orange-300\/40,
+        .royal-theme .border-orange-400\/30,
+        .royal-theme .border-orange-400\/40,
+        .royal-theme .border-orange-400\/80,
+        .royal-theme .border-orange-500\/30 {
+          border-color: rgba(192, 132, 252, 0.58) !important;
+        }
+
+        .royal-theme .shadow-orange-500\/20,
+        .royal-theme .shadow-orange-950\/20,
+        .royal-theme .shadow-orange-950\/30,
+        .royal-theme .shadow-orange-950\/40,
+        .royal-theme .shadow-orange-950\/50 {
+          box-shadow: 0 18px 45px rgba(168, 85, 247, 0.22) !important;
+        }
+
+        .royal-theme input,
+        .royal-theme textarea,
+        .royal-theme select {
+          border-color: rgba(192, 132, 252, 0.28) !important;
+          color: #eadcff !important;
+        }
+
+        .royal-theme input::placeholder,
+        .royal-theme textarea::placeholder {
+          color: rgba(226, 201, 255, 0.48) !important;
+        }
+
         .royal-theme-bg {
           background:
             radial-gradient(circle at 20% 12%, rgba(185, 120, 255, 0.20), transparent 24%),
             radial-gradient(circle at 82% 18%, rgba(255, 110, 210, 0.14), transparent 22%),
             linear-gradient(180deg, rgba(35, 18, 60, 0.96), rgba(13, 10, 26, 0.98));
+        }
+
+        .royal-lightning {
+          position: absolute;
+          top: -8vh;
+          height: 72vh;
+          width: 34vw;
+          opacity: 0;
+          filter: drop-shadow(0 0 16px rgba(233, 213, 255, 0.95)) drop-shadow(0 0 34px rgba(168, 85, 247, 0.7));
+          animation-name: royal-lightning-flash;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+
+        .royal-lightning::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, #ffffff, #d8b4fe 42%, transparent 78%);
+          clip-path: polygon(44% 0%, 58% 0%, 47% 24%, 63% 24%, 38% 58%, 53% 36%, 38% 36%);
+        }
+
+        .royal-lightning::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 18%, rgba(255,255,255,0.5), transparent 18%), radial-gradient(circle at 50% 36%, rgba(168,85,247,0.28), transparent 28%);
+          opacity: 0.7;
+        }
+
+        .royal-lightning-left {
+          left: -4vw;
+          transform: rotate(-16deg);
+        }
+
+        .royal-lightning-right {
+          right: -4vw;
+          transform: scaleX(-1) rotate(-16deg);
+        }
+
+        @keyframes royal-lightning-flash {
+          0%, 72%, 100% { opacity: 0; }
+          73% { opacity: 0.95; }
+          74% { opacity: 0.18; }
+          75% { opacity: 1; }
+          76.5% { opacity: 0; }
         }
 
         @keyframes royal-twinkle {
@@ -2295,11 +3628,192 @@ export default function App() {
           box-shadow: 0 0 12px rgba(235, 210, 255, 0.5);
         }
 
+        .gold-theme {
+          color: #fff7c2;
+        }
+
+        .gold-theme .text-white,
+        .gold-theme .text-zinc-100,
+        .gold-theme .text-zinc-200 {
+          color: #fff7c2 !important;
+        }
+
+        .gold-theme .text-zinc-300,
+        .gold-theme .text-zinc-400,
+        .gold-theme .text-zinc-500 {
+          color: rgba(254, 240, 138, 0.78) !important;
+        }
+
+        .gold-theme .text-orange-100,
+        .gold-theme .text-orange-200,
+        .gold-theme .text-orange-300,
+        .gold-theme .text-orange-400,
+        .gold-theme .text-orange-500 {
+          color: #fde047 !important;
+        }
+
+        .gold-theme .bg-orange-400\/10,
+        .gold-theme .bg-orange-400\/15,
+        .gold-theme .bg-orange-400\/20,
+        .gold-theme .bg-orange-500\/10,
+        .gold-theme .bg-orange-500\/15,
+        .gold-theme .bg-orange-500\/20,
+        .gold-theme .bg-orange-500\/25 {
+          background-color: rgba(250, 204, 21, 0.2) !important;
+        }
+
+        .gold-theme .bg-orange-500,
+        .gold-theme .hover\:bg-orange-600:hover,
+        .gold-theme .hover\:bg-orange-500:hover {
+          background: linear-gradient(135deg, #eab308, #fde047) !important;
+          color: #422006 !important;
+        }
+
+        .gold-theme .border-orange-300,
+        .gold-theme .border-orange-300\/40,
+        .gold-theme .border-orange-400\/30,
+        .gold-theme .border-orange-400\/40,
+        .gold-theme .border-orange-400\/80,
+        .gold-theme .border-orange-500\/30 {
+          border-color: rgba(253, 224, 71, 0.62) !important;
+        }
+
+        .gold-theme .shadow-orange-500\/20,
+        .gold-theme .shadow-orange-950\/20,
+        .gold-theme .shadow-orange-950\/30,
+        .gold-theme .shadow-orange-950\/40,
+        .gold-theme .shadow-orange-950\/50 {
+          box-shadow: 0 18px 45px rgba(234, 179, 8, 0.22) !important;
+        }
+
+        .gold-theme input,
+        .gold-theme textarea,
+        .gold-theme select {
+          border-color: rgba(253, 224, 71, 0.32) !important;
+          color: #fff7c2 !important;
+        }
+
+        .gold-theme input::placeholder,
+        .gold-theme textarea::placeholder {
+          color: rgba(254, 240, 138, 0.5) !important;
+        }
+
         .gold-theme-bg {
           background:
-            radial-gradient(circle at 18% 14%, rgba(255, 190, 80, 0.17), transparent 24%),
-            radial-gradient(circle at 84% 12%, rgba(255, 230, 130, 0.12), transparent 22%),
-            linear-gradient(180deg, rgba(38, 27, 12, 0.98), rgba(14, 11, 9, 0.98));
+            radial-gradient(circle at 18% 14%, rgba(255, 235, 120, 0.34), transparent 25%),
+            radial-gradient(circle at 84% 12%, rgba(255, 210, 45, 0.26), transparent 24%),
+            radial-gradient(circle at 50% 78%, rgba(234, 179, 8, 0.2), transparent 36%),
+            linear-gradient(180deg, rgba(122, 82, 5, 0.98), rgba(54, 34, 3, 0.99) 52%, rgba(22, 14, 4, 0.99));
+        }
+
+        .gold-money {
+          height: 24px;
+          width: 42px;
+          transform: rotate(-10deg);
+          animation-name: money-fall;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          box-shadow: 0 0 18px rgba(250, 204, 21, 0.36);
+        }
+
+        @keyframes money-fall {
+          0% { transform: translate3d(0, -8vh, 0) rotate(-18deg); opacity: 0; }
+          10% { opacity: 0.95; }
+          45% { transform: translate3d(24px, 48vh, 0) rotate(18deg); }
+          100% { transform: translate3d(-18px, 122vh, 0) rotate(380deg); opacity: 0; }
+        }
+
+        .gold-thief {
+          position: relative;
+          height: 56px;
+          width: 56px;
+          transition: transform 0.16s ease-out, opacity 0.18s ease-out;
+          filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.35));
+        }
+
+        .gold-thief-under-taskbar {
+          transform-origin: top center;
+        }
+
+        .gold-thief-head {
+          position: absolute;
+          left: 15px;
+          top: 0;
+          height: 22px;
+          width: 22px;
+          border-radius: 9999px;
+          background: #facc15;
+          border: 2px solid rgba(255, 247, 194, 0.7);
+        }
+
+        .gold-thief-mask {
+          position: absolute;
+          left: 2px;
+          top: 8px;
+          height: 7px;
+          width: 18px;
+          border-radius: 9999px;
+          background: #111827;
+        }
+
+        .gold-thief-eye {
+          position: absolute;
+          top: 10px;
+          height: 2px;
+          width: 2px;
+          border-radius: 9999px;
+          background: #fef3c7;
+          z-index: 2;
+        }
+
+        .gold-thief-eye.eye-left { left: 7px; }
+        .gold-thief-eye.eye-right { right: 7px; }
+
+        .gold-thief-body {
+          position: absolute;
+          left: 13px;
+          top: 24px;
+          height: 25px;
+          width: 27px;
+          border-radius: 14px 14px 18px 18px;
+          background: repeating-linear-gradient(90deg, #111827 0 8px, #fef3c7 8px 14px);
+          border: 2px solid rgba(255, 247, 194, 0.42);
+        }
+
+        .gold-thief-bag {
+          position: absolute;
+          right: -17px;
+          top: 3px;
+          height: 20px;
+          width: 19px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9999px 9999px 9999px 6px;
+          background: #78350f;
+          color: #fde68a;
+          font-size: 9px;
+          font-weight: 1000;
+          transform: rotate(12deg);
+        }
+
+        .gold-thief-leg {
+          position: absolute;
+          top: 48px;
+          height: 15px;
+          width: 5px;
+          border-radius: 9999px;
+          background: #111827;
+          transform-origin: top center;
+          animation: thief-legs 0.45s ease-in-out infinite;
+        }
+
+        .gold-thief-leg.leg-left { left: 19px; }
+        .gold-thief-leg.leg-right { left: 32px; animation-delay: 0.22s; }
+
+        @keyframes thief-legs {
+          0%, 100% { transform: rotate(25deg); }
+          50% { transform: rotate(-25deg); }
         }
 
         @keyframes ember-rise {
@@ -2321,6 +3835,814 @@ export default function App() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           box-shadow: 0 0 14px rgba(255, 190, 80, 0.65);
+        }
+
+        .valentine-theme {
+          color: #ffe4ef;
+        }
+
+        .valentine-theme .text-white,
+        .valentine-theme .text-zinc-100,
+        .valentine-theme .text-zinc-200 { color: #ffe4ef !important; }
+        .valentine-theme .text-zinc-300,
+        .valentine-theme .text-zinc-400,
+        .valentine-theme .text-zinc-500 { color: rgba(255, 205, 225, 0.78) !important; }
+        .valentine-theme .text-orange-100,
+        .valentine-theme .text-orange-200,
+        .valentine-theme .text-orange-300,
+        .valentine-theme .text-orange-400,
+        .valentine-theme .text-orange-500 { color: #f9a8d4 !important; }
+        .valentine-theme .bg-orange-500,
+        .valentine-theme .hover\:bg-orange-600:hover,
+        .valentine-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #db2777, #fb7185) !important; color: #fff1f2 !important; }
+        .valentine-theme .bg-orange-400\/10,
+        .valentine-theme .bg-orange-500\/10,
+        .valentine-theme .bg-orange-500\/15,
+        .valentine-theme .bg-orange-500\/20,
+        .valentine-theme .bg-orange-500\/25 { background-color: rgba(244, 114, 182, 0.18) !important; }
+        .valentine-theme .border-orange-300,
+        .valentine-theme .border-orange-400\/30,
+        .valentine-theme .border-orange-400\/40,
+        .valentine-theme .border-orange-500\/30 { border-color: rgba(249, 168, 212, 0.55) !important; }
+        .valentine-theme-bg { background: radial-gradient(circle at 20% 15%, rgba(251,113,133,.24), transparent 25%), radial-gradient(circle at 80% 20%, rgba(244,114,182,.2), transparent 28%), linear-gradient(180deg, #4c0519, #170711); }
+        .valentine-heart { color: rgba(255, 182, 213, 0.82); font-size: 22px; animation: valentine-fall linear infinite; text-shadow: 0 0 16px rgba(255, 120, 180, 0.45); }
+        @keyframes valentine-fall { 0% { transform: translateY(-12vh) rotate(0deg); opacity: 0; } 10% { opacity: .9; } 100% { transform: translateY(120vh) rotate(360deg); opacity: 0; } }
+
+        .japan-theme {
+          background: #030303 !important;
+          color: #f9c2cc;
+          font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Trebuchet MS", system-ui, sans-serif;
+          letter-spacing: 0.025em;
+        }
+
+        .japan-theme .text-white,
+        .japan-theme .text-zinc-100,
+        .japan-theme .text-zinc-200 {
+          color: #f9c2cc !important;
+          text-shadow: 0 0 14px rgba(185, 28, 28, 0.22);
+        }
+
+        .japan-theme .text-zinc-300,
+        .japan-theme .text-zinc-400,
+        .japan-theme .text-zinc-500 {
+          color: #ef9ca8 !important;
+        }
+
+        .japan-theme .bg-zinc-950,
+        .japan-theme .bg-zinc-900,
+        .japan-theme .bg-zinc-950\/70,
+        .japan-theme .bg-zinc-950\/72,
+        .japan-theme .bg-zinc-950\/80,
+        .japan-theme .bg-zinc-950\/84,
+        .japan-theme .bg-zinc-950\/90,
+        .japan-theme .bg-zinc-950\/92,
+        .japan-theme .bg-zinc-900\/70,
+        .japan-theme .bg-zinc-900\/80,
+        .japan-theme .bg-zinc-900\/85 {
+          background-color: rgba(6, 6, 6, 0.88) !important;
+          backdrop-filter: blur(16px);
+        }
+
+        .japan-theme .sticky.bg-zinc-950\/90,
+        .japan-theme .bg-black,
+        .japan-theme .bg-black\/70,
+        .japan-theme .bg-black\/78 {
+          background-color: rgba(3, 3, 3, 0.94) !important;
+        }
+
+        .japan-theme .hover\:bg-zinc-800:hover {
+          background-color: rgba(55, 8, 12, 0.96) !important;
+        }
+
+        .japan-theme .border-zinc-800,
+        .japan-theme .border-zinc-700 {
+          border-color: rgba(185, 28, 28, 0.38) !important;
+        }
+
+        .japan-theme .text-orange-100,
+        .japan-theme .text-orange-200,
+        .japan-theme .text-orange-300,
+        .japan-theme .text-orange-400,
+        .japan-theme .text-orange-500 {
+          color: #b91c1c !important;
+        }
+
+        .japan-theme .bg-orange-400\/10,
+        .japan-theme .bg-orange-400\/15,
+        .japan-theme .bg-orange-400\/20,
+        .japan-theme .bg-orange-500\/10,
+        .japan-theme .bg-orange-500\/15,
+        .japan-theme .bg-orange-500\/20,
+        .japan-theme .bg-orange-500\/25 {
+          background-color: rgba(185, 28, 28, 0.18) !important;
+        }
+
+        .japan-theme .bg-orange-500,
+        .japan-theme .hover\:bg-orange-600:hover,
+        .japan-theme .hover\:bg-orange-500:hover {
+          background: linear-gradient(135deg, #7f1d1d, #b91c1c, #ef4444) !important;
+          color: #ffe4e6 !important;
+        }
+
+        .japan-theme .border-orange-300,
+        .japan-theme .border-orange-300\/40,
+        .japan-theme .border-orange-400\/30,
+        .japan-theme .border-orange-400\/40,
+        .japan-theme .border-orange-400\/80,
+        .japan-theme .border-orange-500\/30 {
+          border-color: rgba(185, 28, 28, 0.7) !important;
+        }
+
+        .japan-theme input,
+        .japan-theme textarea,
+        .japan-theme select {
+          background-color: rgba(18, 5, 7, 0.96) !important;
+          border-color: rgba(185, 28, 28, 0.46) !important;
+          color: #f9c2cc !important;
+        }
+
+        .japan-theme input::placeholder,
+        .japan-theme textarea::placeholder {
+          color: rgba(249, 194, 204, 0.58) !important;
+        }
+
+        .japan-theme .shadow-orange-500\/20,
+        .japan-theme .shadow-orange-950\/20,
+        .japan-theme .shadow-orange-950\/30,
+        .japan-theme .shadow-orange-950\/40,
+        .japan-theme .shadow-orange-950\/50 {
+          box-shadow: 0 20px 55px rgba(185, 28, 28, 0.22) !important;
+        }
+
+        .japan-theme h1,
+        .japan-theme h2,
+        .japan-theme h3,
+        .japan-theme .font-black {
+          letter-spacing: 0.045em;
+        }
+
+        .japan-theme-bg {
+          background: #000000;
+        }
+
+        .japan-red-sun,
+        .japan-wave-lines,
+        .japan-vertical-text,
+        .japan-fuji,
+        .japan-pagoda,
+        .japan-cherry-branch,
+        .japan-blossom {
+          display: none !important;
+        }
+
+        .japan-leaf {
+          width: 12px;
+          height: 8px;
+          border-radius: 60% 40% 60% 40%;
+          background: linear-gradient(135deg, #b91c1c, #ef4444);
+          animation: japan-leaf-fall linear infinite;
+          box-shadow: 0 0 10px rgba(185, 28, 28, 0.42);
+        }
+
+        @keyframes japan-leaf-fall {
+          0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 0; }
+          8% { opacity: 1; }
+          100% { transform: translate3d(180px, 100vh, 0) rotate(520deg); opacity: 0.9; }
+        }
+
+        .japan-supra-run {
+          position: absolute;
+          left: 0;
+          top: 0;
+          transition: transform 0.08s linear, opacity 0.18s ease-out;
+        }
+
+        .japan-supra-burnout .japan-supra-wheel {
+          animation: japan-wheel-spin 0.18s linear infinite;
+        }
+
+        .japan-supra-jumping {
+          transition: transform 0.2s ease-out, opacity 0.18s ease-out;
+        }
+
+        .japan-smoke-pack {
+          position: absolute;
+          left: -24px;
+          top: 8px;
+          z-index: -1;
+        }
+
+        .japan-smoke {
+          position: absolute;
+          display: block;
+          height: 22px;
+          width: 22px;
+          border-radius: 9999px;
+          background: rgba(180, 180, 180, 0.86);
+          filter: blur(2.5px);
+          animation: japan-smoke-puff 0.9s ease-out infinite;
+        }
+
+        .japan-smoke.smoke-one { left: 0; top: 4px; animation-delay: 0s; }
+        .japan-smoke.smoke-two { left: -14px; top: 13px; height: 28px; width: 28px; animation-delay: 0.15s; }
+        .japan-smoke.smoke-three { left: -30px; top: 1px; height: 18px; width: 18px; animation-delay: 0.32s; }
+        .japan-smoke.smoke-four { left: -42px; top: 18px; height: 34px; width: 34px; animation-delay: 0.48s; }
+
+        @keyframes japan-smoke-puff {
+          0% { transform: translate3d(0, 0, 0) scale(0.4); opacity: 0; }
+          18% { opacity: 0.92; }
+          100% { transform: translate3d(-48px, -12px, 0) scale(1.9); opacity: 0; }
+        }
+
+        @keyframes japan-wheel-spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .japan-supra-hanger {
+          transform: scaleX(0.405) scaleY(0.27);
+          transform-origin: top center;
+        }
+
+        .japan-supra {
+          position: relative;
+          width: 210px;
+          height: 38px;
+          border-radius: 22px 58px 10px 12px;
+          background: linear-gradient(180deg, #ffb15f 0%, #ff7a18 34%, #f97316 56%, #b63a0a 100%);
+          box-shadow: 0 10px 18px rgba(249, 115, 22, 0.28), inset 0 -5px 10px rgba(0, 0, 0, 0.24);
+        }
+
+        .japan-supra-roof {
+          position: absolute;
+          left: 64px;
+          top: -20px;
+          width: 88px;
+          height: 28px;
+          border-radius: 32px 40px 7px 7px;
+          background: linear-gradient(180deg, #ffbd74 0%, #f97316 100%);
+          clip-path: polygon(10% 100%, 30% 8%, 82% 12%, 100% 100%);
+        }
+
+        .japan-supra-window {
+          position: absolute;
+          top: -15px;
+          height: 17px;
+          background: linear-gradient(180deg, #e0f2fe, #64748b 78%);
+          border: 2px solid rgba(255, 255, 255, 0.38);
+          transform: skewX(-17deg);
+        }
+
+        .japan-supra-window.front { left: 106px; width: 34px; border-radius: 5px 12px 4px 3px; }
+        .japan-supra-window.rear { left: 72px; width: 29px; border-radius: 13px 5px 3px 3px; }
+
+        .japan-supra::before {
+          content: "";
+          position: absolute;
+          right: 10px;
+          top: 8px;
+          height: 10px;
+          width: 46px;
+          border-radius: 999px;
+          background: rgba(255, 247, 237, 0.25);
+          transform: skewX(-20deg);
+        }
+
+        .japan-supra-door-line {
+          position: absolute;
+          left: 94px;
+          top: 7px;
+          height: 26px;
+          width: 2px;
+          background: rgba(124, 45, 18, 0.55);
+          transform: skewX(-10deg);
+        }
+
+        .japan-supra-graphic {
+          position: absolute;
+          left: 66px;
+          top: 14px;
+          width: 88px;
+          height: 10px;
+          border-top: 3px solid rgba(248, 250, 252, 0.75);
+          border-bottom: 2px solid rgba(30, 41, 59, 0.7);
+          transform: skewX(-18deg);
+        }
+
+        .japan-supra-green-splash {
+          display: none;
+        }
+
+        .japan-supra-light {
+          position: absolute;
+          top: 16px;
+          width: 11px;
+          height: 6px;
+          border-radius: 4px;
+        }
+
+        .japan-supra-light.front {
+          right: 6px;
+          background: #fff7ed;
+          box-shadow: 0 0 10px rgba(255, 247, 237, 0.76);
+        }
+
+        .japan-supra-light.rear {
+          left: 8px;
+          background: #7f1d1d;
+          box-shadow: 0 0 10px rgba(127, 29, 29, 0.58);
+        }
+
+        .japan-supra-wheel {
+          position: absolute;
+          bottom: -10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 999px;
+          background: #111827;
+          border: 4px solid #e5e7eb;
+          box-shadow: inset 0 0 0 4px #4b5563;
+        }
+
+        .japan-supra-wheel::after {
+          content: "";
+          position: absolute;
+          inset: 5px;
+          border-radius: 999px;
+          background: conic-gradient(from 0deg, #f8fafc 0 12%, #6b7280 12% 20%, #f8fafc 20% 32%, #6b7280 32% 40%, #f8fafc 40% 52%, #6b7280 52% 60%, #f8fafc 60% 72%, #6b7280 72% 80%, #f8fafc 80% 92%, #6b7280 92% 100%);
+        }
+
+        .japan-supra-wheel.wheel-front { right: 24px; }
+        .japan-supra-wheel.wheel-rear { left: 28px; }
+
+        .japan-supra-wing {
+          position: absolute;
+          left: -10px;
+          top: -29px;
+          width: 66px;
+          height: 9px;
+          border-radius: 3px;
+          background: #111827;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
+          transform: skewX(-14deg);
+        }
+
+        .japan-supra-wing::before,
+        .japan-supra-wing::after {
+          content: "";
+          position: absolute;
+          bottom: -18px;
+          width: 5px;
+          height: 19px;
+          background: #e5e7eb;
+        }
+
+        .japan-supra-wing::before { left: 12px; }
+        .japan-supra-wing::after { right: 12px; }
+
+        .japan-supra-skirt {
+          position: absolute;
+          left: 22px;
+          right: 12px;
+          bottom: 3px;
+          height: 5px;
+          border-radius: 999px;
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes japan-supra-drive {
+          0% { transform: translateX(-180px); opacity: 0; }
+          5% { opacity: 1; }
+          88% { opacity: 1; }
+          100% { transform: translateX(calc(100vw + 220px)); opacity: 0; }
+        }
+
+        .cyber-gameboy-clock {
+          position: relative;
+          display: inline-block;
+          height: 58px;
+          width: 82px;
+          border-radius: 12px 12px 18px 12px;
+          border: 3px solid rgba(16, 185, 129, 0.85);
+          background: linear-gradient(180deg, #064e3b, #022c22 64%, #020617);
+          box-shadow: 0 0 18px rgba(52, 211, 153, 0.32), inset 0 0 0 2px rgba(209, 250, 229, 0.08);
+          animation: cyber-gameboy-glow 1.8s ease-in-out infinite;
+        }
+
+        .cyber-gameboy-screen {
+          position: absolute;
+          left: 10px;
+          top: 8px;
+          height: 28px;
+          width: 50px;
+          border-radius: 6px;
+          border: 2px solid rgba(6, 78, 59, 0.9);
+          background: linear-gradient(180deg, #bbf7d0, #4ade80);
+          box-shadow: inset 0 0 8px rgba(2, 44, 34, 0.45), 0 0 10px rgba(74, 222, 128, 0.45);
+          overflow: hidden;
+        }
+
+        .cyber-gameboy-screen::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: repeating-linear-gradient(0deg, rgba(2, 44, 34, 0.18) 0 1px, transparent 1px 4px);
+          opacity: 0.55;
+        }
+
+        .cyber-gameboy-label {
+          position: absolute;
+          left: 4px;
+          top: 2px;
+          z-index: 1;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 5px;
+          font-weight: 1000;
+          letter-spacing: 0.08em;
+          color: #064e3b;
+        }
+
+        .cyber-gameboy-time {
+          position: absolute;
+          left: 4px;
+          top: 11px;
+          z-index: 1;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 11px;
+          font-weight: 1000;
+          letter-spacing: -0.04em;
+          color: #022c22;
+        }
+
+        .cyber-gameboy-speaker {
+          position: absolute;
+          right: 9px;
+          top: 10px;
+          height: 24px;
+          width: 10px;
+          background: repeating-linear-gradient(90deg, rgba(209, 250, 229, 0.34) 0 2px, transparent 2px 4px);
+          border-radius: 999px;
+          transform: rotate(-12deg);
+        }
+
+        .cyber-gameboy-dpad {
+          position: absolute;
+          left: 12px;
+          bottom: 9px;
+          height: 14px;
+          width: 14px;
+        }
+
+        .cyber-gameboy-dpad span:first-child,
+        .cyber-gameboy-dpad span:last-child {
+          position: absolute;
+          border-radius: 3px;
+          background: #020617;
+          box-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
+        }
+
+        .cyber-gameboy-dpad span:first-child {
+          left: 5px;
+          top: 0;
+          height: 14px;
+          width: 4px;
+        }
+
+        .cyber-gameboy-dpad span:last-child {
+          left: 0;
+          top: 5px;
+          height: 4px;
+          width: 14px;
+        }
+
+        .cyber-gameboy-buttons {
+          position: absolute;
+          right: 10px;
+          bottom: 11px;
+          display: flex;
+          gap: 5px;
+          transform: rotate(-18deg);
+        }
+
+        .cyber-gameboy-buttons span {
+          height: 8px;
+          width: 8px;
+          border-radius: 999px;
+          background: #34d399;
+          box-shadow: 0 0 8px rgba(52, 211, 153, 0.75);
+        }
+
+        @keyframes cyber-gameboy-glow {
+          0%, 100% { transform: translateY(0); filter: brightness(1); }
+          50% { transform: translateY(-1px); filter: brightness(1.14); }
+        }
+
+        .cyber-theme { color: #d1fae5; }
+        .cyber-theme .text-white,
+        .cyber-theme .text-zinc-100,
+        .cyber-theme .text-zinc-200 { color: #d1fae5 !important; }
+        .cyber-theme .text-zinc-300,
+        .cyber-theme .text-zinc-400,
+        .cyber-theme .text-zinc-500 { color: rgba(167, 243, 208, 0.75) !important; }
+        .cyber-theme .text-orange-100,
+        .cyber-theme .text-orange-200,
+        .cyber-theme .text-orange-300,
+        .cyber-theme .text-orange-400,
+        .cyber-theme .text-orange-500 { color: #6ee7b7 !important; }
+        .cyber-theme .bg-orange-500,
+        .cyber-theme .hover\:bg-orange-600:hover,
+        .cyber-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #059669, #34d399) !important; color: #022c22 !important; }
+        .cyber-theme-bg { background: radial-gradient(circle at 50% 20%, rgba(16,185,129,.18), transparent 30%), linear-gradient(180deg, #011b13, #020617); }
+        .cyber-grid { background-image: linear-gradient(rgba(52,211,153,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,.1) 1px, transparent 1px); background-size: 46px 46px; }
+        .cyber-code { animation: cyber-rain linear infinite; text-shadow: 0 0 12px rgba(52,211,153,.55); }
+        @keyframes cyber-rain { 0% { transform: translateY(-20vh); opacity: 0; } 10% { opacity: .9; } 100% { transform: translateY(130vh); opacity: 0; } }
+
+        .arctic-theme { color: #eff6ff; }
+        .arctic-theme .text-white,
+        .arctic-theme .text-zinc-100,
+        .arctic-theme .text-zinc-200 { color: #eff6ff !important; }
+        .arctic-theme .text-zinc-300,
+        .arctic-theme .text-zinc-400,
+        .arctic-theme .text-zinc-500 { color: rgba(219, 234, 254, 0.76) !important; }
+        .arctic-theme .text-orange-100,
+        .arctic-theme .text-orange-200,
+        .arctic-theme .text-orange-300,
+        .arctic-theme .text-orange-400,
+        .arctic-theme .text-orange-500 { color: #bae6fd !important; }
+        .arctic-theme .bg-orange-500,
+        .arctic-theme .hover\:bg-orange-600:hover,
+        .arctic-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #0ea5e9, #e0f2fe) !important; color: #082f49 !important; }
+        .arctic-theme-bg { background: radial-gradient(circle at 20% 18%, rgba(186,230,253,.28), transparent 25%), linear-gradient(180deg, #082f49, #020617); }
+        .arctic-snow { animation: arctic-snow linear infinite; filter: drop-shadow(0 0 8px rgba(255,255,255,.55)); }
+        @keyframes arctic-snow { 0% { transform: translateY(-12vh); opacity: 0; } 12% { opacity: .9; } 100% { transform: translateY(120vh) translateX(22px); opacity: 0; } }
+
+        .volcano-theme { color: #fee2e2; }
+        .volcano-theme .text-white,
+        .volcano-theme .text-zinc-100,
+        .volcano-theme .text-zinc-200 { color: #fee2e2 !important; }
+        .volcano-theme .text-zinc-300,
+        .volcano-theme .text-zinc-400,
+        .volcano-theme .text-zinc-500 { color: rgba(254, 202, 202, 0.78) !important; }
+        .volcano-theme .text-orange-100,
+        .volcano-theme .text-orange-200,
+        .volcano-theme .text-orange-300,
+        .volcano-theme .text-orange-400,
+        .volcano-theme .text-orange-500 { color: #fb7185 !important; }
+        .volcano-theme .bg-orange-500,
+        .volcano-theme .hover\:bg-orange-600:hover,
+        .volcano-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #dc2626, #fb923c) !important; color: #fff7ed !important; }
+        .volcano-theme-bg { background: radial-gradient(circle at 50% 80%, rgba(239,68,68,.32), transparent 34%), linear-gradient(180deg, #2b0505, #09090b); }
+        .volcano-mountain { clip-path: polygon(50% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #7f1d1d, #111827); }
+        .volcano-spark { animation: volcano-spark linear infinite; box-shadow: 0 0 14px rgba(251, 146, 60, .75); }
+        @keyframes volcano-spark { 0% { transform: translateY(0) scale(0.7); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(-92vh) translateX(28px) scale(0.25); opacity: 0; } }
+
+        .volcano-eruption-core {
+          height: 70px;
+          width: 70px;
+          margin-left: -35px;
+          margin-top: -35px;
+          border-radius: 9999px;
+          background: radial-gradient(circle, #fff7ed 0%, #fb923c 32%, #dc2626 62%, transparent 72%);
+          box-shadow: 0 0 0 rgba(251, 146, 60, 0);
+          animation: volcano-centre-eruption 60s ease-out infinite;
+        }
+
+        .volcano-eruption-shockwave {
+          height: 42px;
+          width: 42px;
+          margin-left: -21px;
+          margin-top: -21px;
+          border-radius: 9999px;
+          border: 2px solid rgba(251, 146, 60, 0.9);
+          animation: volcano-shockwave 60s ease-out infinite;
+        }
+
+        .volcano-eruption-particle {
+          background: radial-gradient(circle, #fff7ed 0%, #fb923c 38%, #dc2626 78%);
+          box-shadow: 0 0 26px rgba(251, 146, 60, 0.95), 0 0 54px rgba(220, 38, 38, 0.58);
+          opacity: 0;
+          animation: volcano-eruption-particle 60s cubic-bezier(.12,.78,.18,1) infinite;
+          animation-delay: var(--eruption-delay);
+        }
+
+        @keyframes volcano-centre-eruption {
+          0% { transform: scale(1); opacity: 1; box-shadow: 0 0 60px rgba(251, 146, 60, 0.95), 0 0 140px rgba(220, 38, 38, 0.52); }
+          3% { transform: scale(3.6); opacity: 0.58; box-shadow: 0 0 140px rgba(251, 146, 60, 0.85), 0 0 260px rgba(220, 38, 38, 0.55); }
+          5%, 92%, 100% { transform: scale(0.1); opacity: 0; box-shadow: 0 0 0 rgba(251, 146, 60, 0); }
+          93% { transform: scale(1); opacity: 1; box-shadow: 0 0 60px rgba(251, 146, 60, 0.95), 0 0 140px rgba(220, 38, 38, 0.52); }
+          96% { transform: scale(3.6); opacity: 0.58; box-shadow: 0 0 140px rgba(251, 146, 60, 0.85), 0 0 260px rgba(220, 38, 38, 0.55); }
+          98% { transform: scale(0.15); opacity: 0; }
+        }
+
+        @keyframes volcano-shockwave {
+          0% { transform: scale(1); opacity: 0.9; }
+          4% { transform: scale(38); opacity: 0; }
+          5%, 92%, 100% { transform: scale(0.2); opacity: 0; }
+          93% { transform: scale(1); opacity: 0.9; }
+          97% { transform: scale(38); opacity: 0; }
+        }
+
+        @keyframes volcano-eruption-particle {
+          0% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(1); opacity: 1; }
+          4% { transform: translate(-50%, -50%) translate3d(var(--eruption-x), var(--eruption-y), 0) scale(0.95); opacity: 0.95; }
+          6%, 92%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.4); opacity: 0; }
+          93% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(1); opacity: 1; }
+          97% { transform: translate(-50%, -50%) translate3d(var(--eruption-x), var(--eruption-y), 0) scale(0.95); opacity: 0.95; }
+          99% { transform: translate(-50%, -50%) translate3d(calc(var(--eruption-x) * 1.32), calc(var(--eruption-y) * 1.32), 0) scale(0.15); opacity: 0; }
+        }
+
+        .god-theme {
+          background: #f8f3e8 !important;
+          color: #6b4f34;
+        }
+
+        .god-theme .bg-zinc-950,
+        .god-theme .bg-zinc-900,
+        .god-theme .bg-zinc-950\/70,
+        .god-theme .bg-zinc-950\/80,
+        .god-theme .bg-zinc-900\/80,
+        .god-theme .bg-zinc-900\/85,
+        .god-theme .bg-black,
+        .god-theme .bg-black\/70,
+        .god-theme .bg-black\/78 {
+          background-color: rgba(249, 244, 232, 0.9) !important;
+          backdrop-filter: blur(14px);
+        }
+
+        .god-theme .text-white,
+        .god-theme .text-zinc-100,
+        .god-theme .text-zinc-200 {
+          color: #6b4f34 !important;
+        }
+
+        .god-theme .text-zinc-300,
+        .god-theme .text-zinc-400,
+        .god-theme .text-zinc-500 {
+          color: rgba(107, 79, 52, 0.74) !important;
+        }
+
+        .god-theme .text-orange-100,
+        .god-theme .text-orange-200,
+        .god-theme .text-orange-300,
+        .god-theme .text-orange-400,
+        .god-theme .text-orange-500 {
+          color: #8bb7d8 !important;
+        }
+
+        .god-theme .bg-orange-500,
+        .god-theme .hover\:bg-orange-600:hover,
+        .god-theme .hover\:bg-orange-500:hover {
+          background: linear-gradient(135deg, #d9ccb8, #8bb7d8) !important;
+          color: #4e3823 !important;
+        }
+
+        .god-theme .bg-orange-400\/10,
+        .god-theme .bg-orange-500\/10,
+        .god-theme .bg-orange-500\/15,
+        .god-theme .bg-orange-500\/20,
+        .god-theme .bg-orange-500\/25 {
+          background-color: rgba(139, 183, 216, 0.16) !important;
+        }
+
+        .god-theme .border-orange-300,
+        .god-theme .border-orange-300\/40,
+        .god-theme .border-orange-400\/30,
+        .god-theme .border-orange-400\/40,
+        .god-theme .border-orange-400\/80,
+        .god-theme .border-orange-500\/30,
+        .god-theme .border-zinc-700,
+        .god-theme .border-zinc-800 {
+          border-color: rgba(107, 79, 52, 0.22) !important;
+        }
+
+        .god-theme input,
+        .god-theme textarea,
+        .god-theme select {
+          background-color: rgba(255, 251, 243, 0.95) !important;
+          color: #6b4f34 !important;
+          border-color: rgba(107, 79, 52, 0.2) !important;
+        }
+
+        .god-theme input::placeholder,
+        .god-theme textarea::placeholder {
+          color: rgba(107, 79, 52, 0.48) !important;
+        }
+
+        .god-theme .shadow-orange-500\/20,
+        .god-theme .shadow-orange-950\/20,
+        .god-theme .shadow-orange-950\/30,
+        .god-theme .shadow-orange-950\/40,
+        .god-theme .shadow-orange-950\/50 {
+          box-shadow: 0 18px 44px rgba(107, 79, 52, 0.12) !important;
+        }
+
+        .god-theme-bg {
+          background:
+            radial-gradient(circle at 50% 16%, rgba(255, 252, 244, 0.85), transparent 16%),
+            radial-gradient(circle at 50% 28%, rgba(139, 183, 216, 0.18), transparent 34%),
+            linear-gradient(180deg, #fffdf8 0%, #f8f3e8 52%, #efe5d3 100%);
+        }
+
+        .god-sun-wrap {
+          position: relative;
+          width: 150px;
+          height: 150px;
+          animation: god-sun-spin 26s linear infinite;
+        }
+
+        .god-sun-core {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 82px;
+          height: 82px;
+          transform: translate(-50%, -50%);
+          border-radius: 9999px;
+          background: radial-gradient(circle, #fffdf8 0%, #f3ead8 48%, #d9ccb8 100%);
+          box-shadow: 0 0 40px rgba(255, 252, 244, 0.9), 0 0 90px rgba(217, 204, 184, 0.65);
+        }
+
+        .god-rotating-ray {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 8px;
+          height: 72px;
+          margin-left: -4px;
+          margin-top: -72px;
+          transform-origin: center 72px;
+          border-radius: 999px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(217,204,184,0.15));
+          animation: god-ray-float 5.2s ease-in-out infinite;
+        }
+
+        .god-rotating-ray:nth-child(odd) {
+          height: 82px;
+          margin-top: -82px;
+          transform-origin: center 82px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(139,183,216,0.12));
+        }
+
+        @keyframes god-ray-float {
+          0%, 100% { opacity: 0.45; filter: blur(0px); }
+          50% { opacity: 0.9; filter: blur(0.5px); }
+        }
+
+        @keyframes god-sun-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        .god-dove {
+          position: absolute;
+          left: -16%;
+          width: 54px;
+          height: 28px;
+          animation: god-dove-fly linear infinite;
+          opacity: 0;
+        }
+
+        .god-dove-body {
+          position: absolute;
+          left: 20px;
+          top: 10px;
+          width: 18px;
+          height: 10px;
+          border-radius: 999px;
+          background: #fffdf8;
+          box-shadow: 0 0 10px rgba(255,255,255,0.45);
+        }
+
+        .god-dove-wing {
+          position: absolute;
+          top: 4px;
+          width: 22px;
+          height: 12px;
+          border-radius: 100% 100% 20% 20%;
+          background: linear-gradient(180deg, #ffffff, #dbeafe);
+          animation: god-wing-flap 1s ease-in-out infinite;
+        }
+
+        .god-dove-wing.left {
+          left: 4px;
+          transform-origin: right center;
+        }
+
+        .god-dove-wing.right {
+          right: 4px;
+          transform-origin: left center;
+        }
+
+        @keyframes god-wing-flap {
+          0%, 100% { transform: rotate(10deg) translateY(0); }
+          50% { transform: rotate(-18deg) translateY(-4px); }
+        }
+
+        @keyframes god-dove-fly {
+          0% { transform: translateX(0) translateY(0) scale(0.88); opacity: 0; }
+          6% { opacity: 0.95; }
+          50% { transform: translateX(60vw) translateY(-18px) scale(1); opacity: 0.95; }
+          94% { opacity: 0.95; }
+          100% { transform: translateX(124vw) translateY(8px) scale(0.92); opacity: 0; }
         }
 
         .cherry-clean-sky {
@@ -2492,9 +4814,19 @@ export default function App() {
             >
               {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
             </button>
-            <span className="rounded-full border border-zinc-800 bg-zinc-950/70 px-2 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
+            <button
+              onClick={() => {
+                if (view === "settings") {
+                  setThemeUnlockCodeOpen(true);
+                  setThemeUnlockCode("");
+                  setThemeUnlockError("");
+                }
+              }}
+              className="rounded-full border border-zinc-800 bg-zinc-950/60 px-2 py-1 text-[8px] font-black uppercase tracking-[0.06em] text-zinc-500 hover:border-orange-400/40 hover:text-orange-200"
+              title={view === "settings" ? "Open creator code" : "Creator mark"}
+            >
               made by tbam
-            </span>
+            </button>
           </div>
           </div>
 
@@ -2531,14 +4863,32 @@ export default function App() {
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
               {view === "stages" ? (
               <span className="inline-flex items-center gap-3">
-                <span className="mini-alarm-clock">
-                  <span className="mini-alarm-bell left" />
-                  <span className="mini-alarm-bell right" />
-                  <span className="mini-alarm-face">
-                    <span className="mini-alarm-hand hour" />
-                    <span className="mini-alarm-hand minute" />
+                {activeThemeId === "cyber" ? (
+                  <span className="cyber-gameboy-clock">
+                    <span className="cyber-gameboy-speaker" />
+                    <span className="cyber-gameboy-screen">
+                      <span className="cyber-gameboy-label">REVISION OS</span>
+                      <span className="cyber-gameboy-time">{formattedRevisionTime}</span>
+                    </span>
+                    <span className="cyber-gameboy-dpad">
+                      <span />
+                      <span />
+                    </span>
+                    <span className="cyber-gameboy-buttons">
+                      <span />
+                      <span />
+                    </span>
                   </span>
-                </span>
+                ) : (
+                  <span className="mini-alarm-clock">
+                    <span className="mini-alarm-bell left" />
+                    <span className="mini-alarm-bell right" />
+                    <span className="mini-alarm-face">
+                      <span className="mini-alarm-hand hour" />
+                      <span className="mini-alarm-hand minute" />
+                    </span>
+                  </span>
+                )}
                 <span className="flex flex-col leading-none">
                   <span className="text-[10px] uppercase tracking-[0.22em] text-orange-200/80">Revision clock</span>
                   <span className="text-base font-black text-white">{formattedRevisionTime}</span>
@@ -2631,11 +4981,11 @@ export default function App() {
                     </div>
                     <p className="mt-2 text-sm leading-6 text-zinc-400">Themes earned by forging stages with 100%.</p>
                   </div>
-                  <button onClick={() => setView("themes")} className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10">View →</button>
+                  <button onClick={() => setView("themes")} className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10">View -</button>
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {themes.filter((theme) => maxForgedInAnySubject >= theme.unlockAt).map((theme) => (
+                  {themes.filter((theme) => isThemeUnlocked(theme)).map((theme) => (
                     <button
                       key={theme.id}
                       onClick={() => setActiveThemeId(theme.id)}
@@ -2647,7 +4997,7 @@ export default function App() {
                 </div>
 
                 <p className="mt-4 text-xs font-bold uppercase tracking-widest text-zinc-500">
-                  Next unlock: {themes.find((theme) => maxForgedInAnySubject < theme.unlockAt)?.name || "All themes unlocked"}
+                  Next unlock: {themes.find((theme) => !isThemeUnlocked(theme))?.name || "All themes unlocked"}
                 </p>
               </div>
             </div>
@@ -2678,7 +5028,7 @@ export default function App() {
                     <h3 className="text-2xl font-black text-white">General Knowledge Hub</h3>
                   </div>
                   <p className="mt-2 max-w-md text-sm leading-6 text-zinc-400">Browse notes, key concepts and explanations across the whole subject before you test.</p>
-                  <div className="mt-4 inline-flex rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200">Explore Notes →</div>
+                  <div className="mt-4 inline-flex rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200">Explore Notes -</div>
                 </div>
                 <div className="absolute -right-8 bottom-0 hidden h-36 w-36 rotate-12 rounded-3xl border border-orange-400/20 bg-orange-400/10 md:block" />
               </button>
@@ -2690,7 +5040,7 @@ export default function App() {
                   <h3 className="text-2xl font-black text-white">Year 10 EOYs</h3>
                   <p className="mt-1 text-sm text-zinc-400">Focused learning. One stage at a time.</p>
                 </div>
-                <button onClick={goToStages} className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10">View All Stages →</button>
+                <button onClick={goToStages} className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10">View All Stages -</button>
               </div>
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {selectedSubject.topics.slice(0, 6).map((topic, index) => {
@@ -2728,7 +5078,7 @@ export default function App() {
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {themes.map((theme) => (
-                <AchievementCard key={theme.id} theme={theme} unlocked={maxForgedInAnySubject >= theme.unlockAt} selected={activeTheme.id === theme.id} onSelect={setActiveThemeId} />
+                <AchievementCard key={theme.id} theme={theme} unlocked={isThemeUnlocked(theme)} selected={activeTheme.id === theme.id} onSelect={setActiveThemeId} />
               ))}
             </div>
           </section>
@@ -2956,7 +5306,7 @@ export default function App() {
                     </label>
                   </div>
 
-                  <button onClick={() => { setRevisionSeconds(0); setLastBreakMarker(0); setBreakAlarm(false); }} className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800">
+                  <button onClick={() => { setRevisionSeconds(0); setLastBreakMarker(0); setBreakAlarm(false); unlockThemeAction("revisionClockReset"); }} className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800">
                     Reset revision clock
                   </button>
                 </div>
