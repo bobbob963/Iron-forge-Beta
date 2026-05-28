@@ -863,6 +863,13 @@ function QuizBlock({ questions, answers, setAnswers, submitted, titlePrefix = ""
 
 const STORAGE_KEY = "ironForgeProgressV1";
 
+const defaultUnlockedStages = {
+  "pe-skeletal-structure": true,
+  "pe-synovial-structure": true,
+  "bio-aerobic-respiration": true,
+  "dt-cam": true
+};
+
 function loadSavedProgress() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -892,7 +899,7 @@ export default function App() {
   const [submitted, setSubmitted] = useState(false);
   const [dailyAnswers, setDailyAnswers] = useState({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
-  const [unlocked, setUnlocked] = useState(savedProgress?.unlocked || { "pe-skeletal-structure": true, "pe-synovial-structure": true, "bio-aerobic-respiration": true });
+  const [unlocked, setUnlocked] = useState({ ...defaultUnlockedStages, ...(savedProgress?.unlocked || {}) });
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const dailyQuestions = useMemo(() => getDailyQuestions(selectedSubject, 8), [selectedSubject]);
