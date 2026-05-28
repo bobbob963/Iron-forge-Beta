@@ -1082,6 +1082,7 @@ function makeTopic(id, title, level, status, notes, rawQuestions) {
   return {
     id,
     title,
+    section: "Year 10 EOYs",
     level,
     status,
     notes,
@@ -1331,8 +1332,7 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
   );
 }
 
-function GeneralHub({ selectedSubject }) {
-  const sections = generalContent[selectedSubject.id] || [];
+function GeneralHub({ selectedSubject, sections = [] }) {
   return (
     <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
       <div className="flex items-center gap-2">
@@ -1475,6 +1475,10 @@ export default function App() {
   const [breakAlarm, setBreakAlarm] = useState(false);
   const [lastBreakMarker, setLastBreakMarker] = useState(savedProgress?.lastBreakMarker || 0);
   const [subjectSlots, setSubjectSlots] = useState(savedProgress?.subjectSlots || Array(9).fill(""));
+  const [selectedSection, setSelectedSection] = useState(savedProgress?.selectedSection || "Year 10 EOYs");
+  const [selectedTopicId, setSelectedTopicId] = useState(savedProgress?.selectedTopicId || subjects[0].topics[0].id);
+  const [superTestAnswers, setSuperTestAnswers] = useState({});
+  const [superTestSubmitted, setSuperTestSubmitted] = useState(false);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
   const visibleSubjects = useMemo(() => {
@@ -1484,8 +1488,21 @@ export default function App() {
   }, [subjectSlots]);
 
   const selectedSubject = visibleSubjects.find((subject) => subject.id === selectedSubjectId) || visibleSubjects[0] || subjects[0];
-  const [selectedTopicId, setSelectedTopicId] = useState(savedProgress?.selectedTopicId || subjects[0].topics[0].id);
-  const selectedTopic = selectedSubject.topics.find((topic) => topic.id === selectedTopicId) || selectedSubject.topics[0];
+
+  const subjectSections = ["Year 10 EOYs", "Year 11"];
+
+  const sectionTopics = useMemo(() => {
+    return selectedSubject.topics.filter((topic) => topic.section === selectedSection);
+  }, [selectedSubject, selectedSection]);
+
+  const sectionGeneralContent = selectedSection === "Year 10 EOYs" ? generalContent[selectedSubject.id] || [] : [];
+
+  useEffect(() => {
+    if (sectionTopics.length > 0 && !sectionTopics.some((topic) => topic.id === selectedTopicId)) {
+      setSelectedTopicId(sectionTopics[0].id);
+    }
+  }, [selectedSubjectId, selectedSection, sectionTopics, selectedTopicId]);
+  const selectedTopic = sectionTopics.find((topic) => topic.id === selectedTopicId) || sectionTopics[0] || selectedSubject.topics[0];
 
   const [view, setView] = useState("home");
   const [stageTab, setStageTab] = useState("test");
@@ -1498,7 +1515,42 @@ export default function App() {
   const [unlocked, setUnlocked] = useState({ ...defaultUnlockedStages, ...(savedProgress?.unlocked || {}) });
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
-  const dailyQuestions = useMemo(() => getDailyQuestions(selectedSubject, 8), [selectedSubject]);
+  const sectionSubject = useMemo(() => ({ ...selectedSubject, topics: sectionTopics }), [selectedSubject, sectionTopics]);
+
+  const dailyQuestions = useMemo(() => getDailyQuestions(sectionSubject, 8), [sectionSubject]);
+
+  const subjectSuperTestReady = sectionTopics.length > 0 && sectionTopics.every((topic) => unlocked[topic.id]);
+
+  const superTestQuestions = useMemo(() => {
+    return sectionTopics
+      .flatMap((topic) => topic.questions.map((question) => ({ ...question, topicTitle: topic.title })))
+      .slice(0, 12);
+  }, [sectionTopics]);
+
+  function openSuperTest() {
+    setSuperTestAnswers({});
+    setSuperTestSubmitted(false);
+    setView("superTest");
+  }
+
+  function resetSelectedSubjectProgress() {
+    const firstTopicId = sectionTopics[0]?.id;
+    const nextUnlocked = { ...unlocked };
+
+    sectionTopics.forEach((topic) => {
+      delete nextUnlocked[topic.id];
+    });
+
+    if (firstTopicId) {
+      nextUnlocked[firstTopicId] = true;
+      setSelectedTopicId(firstTopicId);
+    }
+
+    setUnlocked(nextUnlocked);
+    setSuperTestAnswers({});
+    setSuperTestSubmitted(false);
+    setView("stages");
+  }
 
   const formattedRevisionTime = useMemo(() => {
     const minutes = Math.floor(revisionSeconds / 60);
@@ -1542,11 +1594,12 @@ export default function App() {
       breakMinutes,
       revisionSeconds,
       lastBreakMarker,
-      subjectSlots
+      subjectSlots,
+      selectedSection
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker, subjectSlots]);
+  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker, subjectSlots, selectedSection]);
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter((item, index) => answers[index] === item.answer).length;
@@ -1558,22 +1611,22 @@ export default function App() {
     return dailyQuestions.length ? Math.round((correct / dailyQuestions.length) * 100) : 0;
   }, [dailyAnswers, dailyQuestions]);
 
-  const subjectTopicIndex = selectedSubject.topics.findIndex((topic) => topic.id === selectedTopic.id);
-  const nextTopic = selectedSubject.topics[subjectTopicIndex + 1];
+  const subjectTopicIndex = sectionTopics.findIndex((topic) => topic.id === selectedTopic.id);
+  const nextTopic = sectionTopics[subjectTopicIndex + 1];
   const passed = submitted && score === 100;
   const unlockedCount = allTopics.filter((topic) => unlocked[topic.id]).length;
   const totalProgress = Math.round((unlockedCount / allTopics.length) * 100);
-  const subjectUnlockedCount = selectedSubject.topics.filter((topic) => unlocked[topic.id]).length;
+  const subjectUnlockedCount = sectionTopics.filter((topic) => unlocked[topic.id]).length;
   const maxForgedInAnySubject = Math.max(...visibleSubjects.map((subject) => subject.topics.filter((topic) => unlocked[topic.id]).length));
   const activeTheme = themes.find((theme) => theme.id === activeThemeId && maxForgedInAnySubject >= theme.unlockAt) || themes[0];
 
   const recallPercentage = useMemo(() => {
-    const unlockedInSubject = selectedSubject.topics.filter((topic) => unlocked[topic.id]).length;
-    const unlockScore = Math.round((unlockedInSubject / selectedSubject.topics.length) * 100);
+    const unlockedInSubject = sectionTopics.filter((topic) => unlocked[topic.id]).length;
+    const unlockScore = sectionTopics.length ? Math.round((unlockedInSubject / sectionTopics.length) * 100) : 0;
     if (dailySubmitted) return Math.round((unlockScore + dailyScore) / 2);
     if (submitted) return Math.round((unlockScore + score) / 2);
     return unlockScore;
-  }, [selectedSubject, unlocked, dailySubmitted, dailyScore, submitted, score]);
+  }, [sectionTopics, unlocked, dailySubmitted, dailyScore, submitted, score]);
 
   function changeSubject(subject) {
     setSelectedSubjectId(subject.id);
@@ -1647,7 +1700,8 @@ export default function App() {
       breakMinutes,
       revisionSeconds,
       lastBreakMarker,
-      subjectSlots
+      subjectSlots,
+      selectedSection
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -2250,6 +2304,20 @@ export default function App() {
           <button onClick={startDailyTest} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "daily" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Shuffle className="h-4 w-4" /> Daily</button>
           <button onClick={() => setView("themes")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "themes" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Palette className="h-4 w-4" /> Themes</button>
           <button onClick={() => setView("settings")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "settings" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Settings className="h-4 w-4" /> Settings</button>
+          <select
+            value={selectedSection}
+            onChange={(event) => setSelectedSection(event.target.value)}
+            className="inline-flex shrink-0 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-black text-zinc-200 outline-none focus:border-orange-400"
+          >
+            {subjectSections.map((section) => (
+              <option key={section} value={section}>{section}</option>
+            ))}
+          </select>
+          {subjectSuperTestReady && (
+            <button onClick={openSuperTest} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-black ${view === "superTest" ? activeTheme.button + " text-white" : "border border-orange-400/40 bg-orange-500/15 text-orange-200 hover:bg-orange-500/25"}`}>
+              <Trophy className="h-4 w-4" /> Super Test
+            </button>
+          )}
           <button
             onClick={() => {
               setUsernameInput(username || "");
@@ -2352,7 +2420,28 @@ export default function App() {
                           <Icon className="h-8 w-8" />
                         </div>
                         <div>
-                          <p className="text-xs font-black uppercase tracking-[0.3em] text-orange-200">Selected Subject</p>
+                          <p className="text-xs font-black uppercase tracking-[0.28em] text-orange-200">Selected Subject</p>
+                  <div
+                    className="mt-4 max-w-sm"
+                    onClick={(event) => event.stopPropagation()}
+                    onMouseDown={(event) => event.stopPropagation()}
+                  >
+                    <label className="mb-2 block text-xs font-black uppercase tracking-[0.24em] text-pink-100/90">Section</label>
+                    <select
+                      value={selectedSection}
+                      onClick={(event) => event.stopPropagation()}
+                      onMouseDown={(event) => event.stopPropagation()}
+                      onChange={(event) => {
+                        event.stopPropagation();
+                        setSelectedSection(event.target.value);
+                      }}
+                      className="w-full rounded-2xl border border-pink-200/30 bg-zinc-950/70 px-4 py-3 text-sm font-black text-white outline-none backdrop-blur-md focus:border-pink-200"
+                    >
+                      {subjectSections.map((section) => (
+                        <option key={section} value={section}>{section}</option>
+                      ))}
+                    </select>
+                  </div>
                           <h2 className="mt-1 text-2xl font-black text-white">{subject.title}</h2>
                           <p className="mt-1 max-w-xs text-sm leading-6 text-zinc-400">{subject.description}</p>
                           <p className="mt-3 text-sm font-black text-orange-200">{subjectUnlocked}/{subject.topics.length} stages unlocked</p>
@@ -2429,7 +2518,7 @@ export default function App() {
             <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-2xl font-black text-white">Stage Preview</h3>
+                  <h3 className="text-2xl font-black text-white">Year 10 EOYs</h3>
                   <p className="mt-1 text-sm text-zinc-400">Focused learning. One stage at a time.</p>
                 </div>
                 <button onClick={goToStages} className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10">View All Stages →</button>
@@ -2455,7 +2544,7 @@ export default function App() {
 
         {view === "general" && (
           <section className="mt-6">
-            <GeneralHub selectedSubject={selectedSubject} />
+            <GeneralHub selectedSubject={selectedSubject} sections={sectionGeneralContent} />
           </section>
         )}
 
@@ -2502,7 +2591,7 @@ export default function App() {
 
             <h2 className="flex items-center gap-2 text-2xl font-black text-white"><Hammer className="h-6 w-6 text-orange-400" /> {selectedSubject.title} Stages</h2>
 
-            {selectedSubject.topics.map((topic) => {
+            {sectionTopics.map((topic) => {
               const isLocked = !unlocked[topic.id];
               const isSelected = selectedTopic.id === topic.id;
               return (
@@ -2595,6 +2684,74 @@ export default function App() {
             )}
           </main>
         </section>}
+
+        {view === "superTest" && (
+          <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+            <div className="rounded-3xl border border-orange-400/30 bg-zinc-900/85 p-6 shadow-2xl shadow-orange-950/30">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">Final Forge</p>
+                  <h2 className="mt-2 text-4xl font-black text-white">{selectedSubject.title} Super Test</h2>
+                  <p className="mt-2 max-w-2xl text-zinc-400">
+                    This is the written-answer test for the whole subject. Write your answers properly, then submit to compare them with the suggested answers.
+                  </p>
+                </div>
+                <button onClick={() => setView("stages")} className="rounded-2xl border border-zinc-700 bg-zinc-950 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800">
+                  Back to stages
+                </button>
+              </div>
+
+              <div className="mt-8 space-y-5">
+                {superTestQuestions.map((question, index) => (
+                  <div key={`super-${index}`} className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-xs font-black uppercase tracking-[0.22em] text-orange-300">Question {index + 1}</p>
+                      <p className="rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-xs font-bold text-zinc-400">{question.topicTitle}</p>
+                    </div>
+                    <h3 className="mt-3 text-xl font-black text-white">{question.q}</h3>
+                    <textarea
+                      value={superTestAnswers[index] || ""}
+                      onChange={(event) => setSuperTestAnswers({ ...superTestAnswers, [index]: event.target.value })}
+                      disabled={superTestSubmitted}
+                      placeholder="Write your answer here..."
+                      className="mt-4 min-h-28 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400 disabled:opacity-70"
+                    />
+                    {superTestSubmitted && (
+                      <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                        <p className="text-xs font-black uppercase tracking-widest text-emerald-300">Suggested answer</p>
+                        <p className="mt-1 font-bold text-emerald-100">{question.answer}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+                {!superTestSubmitted ? (
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-2xl font-black text-white">Ready to submit?</h3>
+                      <p className="mt-1 text-sm text-zinc-400">After submitting, you will see the suggested answers and the reset-progress option.</p>
+                    </div>
+                    <button onClick={() => setSuperTestSubmitted(true)} className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600">
+                      Submit super test
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-2xl font-black text-white">Subject completed.</h3>
+                      <p className="mt-1 text-sm text-zinc-400">You can now reset this subject and re-forge it from the beginning.</p>
+                    </div>
+                    <button onClick={resetSelectedSubjectProgress} className="rounded-2xl border border-red-400/40 bg-red-500/15 px-6 py-3 font-black text-red-100 hover:bg-red-500/25">
+                      Reset {selectedSubject.title} progress
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         {view === "settings" && (
           <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
