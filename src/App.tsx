@@ -1,6 +1,5 @@
-import { Analytics } from "@vercel/analytics/react";
-import React, { useMemo, useState } from "react";
-import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown, Check, X } from "lucide-react";
 
 const subjects = [
   {
@@ -657,17 +656,32 @@ function QuizBlock({ questions, answers, setAnswers, submitted, titlePrefix = ""
           <div className="mt-3 grid gap-2">
             {item.options.map((option) => {
               const chosen = answers[index] === option;
-              const correct = submitted && option === item.answer;
-              const wrong = submitted && chosen && option !== item.answer;
+              const isCorrectAnswer = option === item.answer;
+              const showCorrect = submitted && isCorrectAnswer;
+              const showWrong = submitted && chosen && !isCorrectAnswer;
+              const neutralChosen = chosen && !submitted;
+
               return (
                 <button
                   key={option}
                   onClick={() => !submitted && setAnswers((prev) => ({ ...prev, [index]: option }))}
-                  className={`rounded-xl border px-3 py-3 text-left text-sm transition active:scale-[0.99] ${
-                    chosen ? "border-orange-400 bg-orange-400/10 text-white" : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
-                  } ${correct ? "border-green-400 bg-green-400/10 text-green-200" : ""} ${wrong ? "border-red-400 bg-red-400/10 text-red-200" : ""}`}
+                  className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left text-sm transition active:scale-[0.99] ${
+                    neutralChosen ? "border-orange-400 bg-orange-400/10 text-white" : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
+                  } ${showCorrect ? "border-green-400 bg-green-400/15 text-green-100" : ""} ${showWrong ? "border-red-400 bg-red-400/15 text-red-100" : ""}`}
                 >
-                  {option}
+                  <span>{option}</span>
+
+                  {showCorrect && (
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500/20 text-green-300">
+                      <Check className="h-4 w-4" />
+                    </span>
+                  )}
+
+                  {showWrong && (
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-red-300">
+                      <X className="h-4 w-4" />
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -678,24 +692,56 @@ function QuizBlock({ questions, answers, setAnswers, submitted, titlePrefix = ""
   );
 }
 
+const STORAGE_KEY = "ironForgeProgressV1";
+
+function loadSavedProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
-  const [selectedSubjectId, setSelectedSubjectId] = useState(subjects[0].id);
+  const savedProgress = typeof window !== "undefined" ? loadSavedProgress() : null;
+  const [username, setUsername] = useState(savedProgress?.username || "");
+  const [usernameInput, setUsernameInput] = useState("");
+  const [saveEnabled, setSaveEnabled] = useState(savedProgress?.saveEnabled ?? false);
+  const [showSavePrompt, setShowSavePrompt] = useState(!savedProgress);
+
+  const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
   const selectedSubject = subjects.find((subject) => subject.id === selectedSubjectId) || subjects[0];
-  const [selectedTopicId, setSelectedTopicId] = useState(subjects[0].topics[0].id);
+  const [selectedTopicId, setSelectedTopicId] = useState(savedProgress?.selectedTopicId || subjects[0].topics[0].id);
   const selectedTopic = selectedSubject.topics.find((topic) => topic.id === selectedTopicId) || selectedSubject.topics[0];
 
   const [view, setView] = useState("home");
   const [stageTab, setStageTab] = useState("test");
-  const [activeThemeId, setActiveThemeId] = useState("forge");
+  const [activeThemeId, setActiveThemeId] = useState(savedProgress?.activeThemeId || "forge");
   const [subjectsOpen, setSubjectsOpen] = useState(false);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [dailyAnswers, setDailyAnswers] = useState({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
-  const [unlocked, setUnlocked] = useState({ "pe-skeletal-structure": true, "pe-synovial-structure": true, "bio-aerobic-respiration": true });
+  const [unlocked, setUnlocked] = useState(savedProgress?.unlocked || { "pe-skeletal-structure": true, "pe-synovial-structure": true, "bio-aerobic-respiration": true });
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const dailyQuestions = useMemo(() => getDailyQuestions(selectedSubject, 8), [selectedSubject]);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+
+    const progress = {
+      username,
+      saveEnabled,
+      selectedSubjectId,
+      selectedTopicId,
+      activeThemeId,
+      unlocked
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked]);
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter((item, index) => answers[index] === item.answer).length;
@@ -781,8 +827,78 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function startSavingProgress() {
+    const cleanName = usernameInput.trim() || "Student";
+
+    const progress = {
+      username: cleanName,
+      saveEnabled: true,
+      selectedSubjectId,
+      selectedTopicId,
+      activeThemeId,
+      unlocked
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    setUsername(cleanName);
+    setSaveEnabled(true);
+    setShowSavePrompt(false);
+  }
+
+  function skipSavingProgress() {
+    setSaveEnabled(false);
+    setShowSavePrompt(false);
+  }
+
   return (
     <div className={`min-h-screen ${activeTheme.bg} text-zinc-100`}>
+      {showSavePrompt && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+            <button
+              onClick={skipSavingProgress}
+              className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              aria-label="Skip saving progress"
+            >
+              ×
+            </button>
+
+            <div className="mb-4 inline-flex rounded-2xl bg-orange-400/10 p-3 text-orange-300">
+              <ShieldCheck className="h-7 w-7" />
+            </div>
+
+            <h2 className="text-3xl font-black text-white">Save your progress?</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-400">
+              Enter a username so this device can remember your unlocked stages, selected theme and subject progress.
+            </p>
+
+            <label className="mt-5 block text-xs font-bold uppercase tracking-widest text-orange-300">Username</label>
+            <input
+              value={usernameInput}
+              onChange={(event) => setUsernameInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") startSavingProgress();
+              }}
+              placeholder="e.g. Teddy"
+              className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-orange-400"
+            />
+
+            <button
+              onClick={startSavingProgress}
+              className="mt-5 w-full rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600 active:scale-[0.99]"
+            >
+              Start Saving
+            </button>
+
+            <button
+              onClick={skipSavingProgress}
+              className="mt-3 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
+            >
+              Continue without saving
+            </button>
+          </div>
+        </div>
+      )}
       <style>{`
         :where(*, ::before, ::after) {
           border-color: rgb(39 39 42);
@@ -812,6 +928,9 @@ export default function App() {
           <button onClick={goToStages} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "stages" || view === "topic" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Hammer className="h-4 w-4" /> Stages</button>
           <button onClick={startDailyTest} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "daily" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Shuffle className="h-4 w-4" /> Daily</button>
           <button onClick={() => setView("themes")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "themes" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Palette className="h-4 w-4" /> Themes</button>
+          <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400">
+            {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
+          </div>
           </div>
 
           {subjectsOpen && (
@@ -1131,7 +1250,6 @@ export default function App() {
           </main>
         </section>}
       </div>
-      <Analytics />
     </div>
   );
 }
