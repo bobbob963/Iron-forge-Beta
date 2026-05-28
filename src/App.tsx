@@ -555,6 +555,131 @@ const subjects = [
     ]
   },
   {
+    id: "chemistry",
+    title: "Chemistry",
+    icon: Microscope,
+    description: "Chemistry — bonding, crude oil, energetics and chemical tests.",
+    topics: [
+      makeTopic("chem-electronic-configuration", "Electronic Configuration and Ions", "Foundation Forge", "Not forged", [
+        "Electronic configuration shows how electrons are arranged in shells around the nucleus.",
+        "Calcium has electronic configuration 2,8,8,2.",
+        "Atoms form ions by losing or gaining electrons to get a full outer shell.",
+        "Metal atoms usually lose electrons to form positive ions.",
+        "Non-metal atoms usually gain electrons to form negative ions."
+      ], [
+        ["What is the electronic configuration of calcium?", "2,8,8,2", ["2,8,8,2", "2,8,5", "2,7", "2,8,6"]],
+        ["How do metals usually form ions?", "They lose electrons", ["They lose electrons", "They gain electrons", "They lose protons", "They gain neutrons"]],
+        ["What charge does a metal ion usually have?", "Positive", ["Positive", "Negative", "Neutral", "No charge possible"]],
+        ["How do non-metals usually form ions?", "They gain electrons", ["They gain electrons", "They lose electrons", "They gain protons", "They lose neutrons"]],
+        ["Why do atoms form ions?", "To get a full outer shell", ["To get a full outer shell", "To remove the nucleus", "To become larger only", "To change into a compound automatically"]]
+      ]),
+      makeTopic("chem-covalent-bonding", "Covalent Bonding", "Foundation Forge", "Not forged", [
+        "Covalent bonding happens when non-metal atoms share pairs of electrons.",
+        "Hydrogen sulfide, phosphine and chloromethane can be shown using dot-and-cross diagrams.",
+        "Shared electrons count towards the outer shell of both bonded atoms.",
+        "A single covalent bond is one shared pair of electrons.",
+        "Dot-and-cross diagrams help show which atom each electron came from."
+      ], [
+        ["What happens in covalent bonding?", "Atoms share pairs of electrons", ["Atoms share pairs of electrons", "Atoms transfer protons", "Metals lose electrons to a sea", "Neutrons are exchanged"]],
+        ["What type of elements usually form covalent bonds?", "Non-metals", ["Non-metals", "Metals only", "Noble gases only", "Transition metals only"]],
+        ["What is one single covalent bond?", "One shared pair of electrons", ["One shared pair of electrons", "Two lost protons", "One gained neutron", "A metal lattice"]],
+        ["Why are dot-and-cross diagrams useful?", "They show outer electrons and shared pairs", ["They show outer electrons and shared pairs", "They show boiling points only", "They show speed", "They show pressure"]],
+        ["In a covalent bond, the shared electrons count towards which atoms?", "Both bonded atoms", ["Both bonded atoms", "Only the larger atom", "Only the smaller atom", "Neither atom"]]
+      ]),
+      makeTopic("chem-ionic-bonding", "Ionic Bonding", "Steel Forge", "Not forged", [
+        "Ionic bonding happens when electrons are transferred from a metal to a non-metal.",
+        "Lithium fluoride forms when lithium loses one electron and fluorine gains one electron.",
+        "Magnesium fluoride forms MgF₂ because magnesium loses two electrons and two fluorine atoms each gain one.",
+        "Positive and negative ions attract strongly to form an ionic compound.",
+        "Ionic compounds are shown with square brackets and charges around the ions."
+      ], [
+        ["What happens in ionic bonding?", "Electrons are transferred", ["Electrons are transferred", "Electrons are shared only", "Protons are shared", "Neutrons are removed"]],
+        ["Which type of atom usually loses electrons in ionic bonding?", "Metal", ["Metal", "Non-metal", "Noble gas", "Halogen only"]],
+        ["What charge does lithium form in lithium fluoride?", "+1", ["+1", "-1", "+2", "0"]],
+        ["What is the formula of magnesium fluoride?", "MgF₂", ["MgF₂", "MgF", "Mg₂F", "Mg₂F₂"]],
+        ["Why do ionic compounds hold together?", "Oppositely charged ions attract", ["Oppositely charged ions attract", "They have no charge", "They repel each other", "They contain only gases"]]
+      ]),
+      makeTopic("chem-crude-oil", "Crude Oil", "Steel Forge", "Not forged", [
+        "Crude oil is a mixture of hydrocarbons.",
+        "Fractional distillation separates crude oil into fractions with different boiling points.",
+        "Main fractions include refinery gases, gasoline, kerosene, diesel, fuel oil and bitumen.",
+        "Complete combustion of hydrocarbons produces carbon dioxide and water.",
+        "Incomplete combustion can produce carbon monoxide, which is poisonous because it reduces the blood's ability to carry oxygen."
+      ], [
+        ["What is crude oil a mixture of?", "Hydrocarbons", ["Hydrocarbons", "Salts", "Metals", "Noble gases"]],
+        ["What process separates crude oil into fractions?", "Fractional distillation", ["Fractional distillation", "Electrolysis", "Filtration", "Crystallisation"]],
+        ["What are the products of complete combustion of hydrocarbons?", "Carbon dioxide and water", ["Carbon dioxide and water", "Hydrogen and oxygen", "Salt and water", "Carbon monoxide only"]],
+        ["Why is carbon monoxide dangerous?", "It reduces the blood's ability to carry oxygen", ["It reduces the blood's ability to carry oxygen", "It is completely harmless", "It turns limewater cloudy only", "It makes fuels burn faster"]],
+        ["Why is cracking needed?", "To make shorter useful hydrocarbons from long-chain hydrocarbons", ["To make shorter useful hydrocarbons from long-chain hydrocarbons", "To remove all carbon", "To make crude oil from water", "To stop combustion"]]
+      ]),
+      makeTopic("chem-energetics", "Heat, Temperature and Energetics", "Bronze Forge", "Not forged", [
+        "Heat is a type of energy, while temperature is a measure of hotness linked to average kinetic energy.",
+        "Exothermic reactions give out heat energy.",
+        "Endothermic reactions take in energy.",
+        "A negative ΔH means an exothermic change and a positive ΔH means an endothermic change.",
+        "Energy level diagrams show the energy change during exothermic and endothermic reactions."
+      ], [
+        ["What is temperature linked to?", "Average kinetic energy", ["Average kinetic energy", "Mass only", "Number of protons", "Volume only"]],
+        ["What type of reaction gives out heat energy?", "Exothermic", ["Exothermic", "Endothermic", "Neutral only", "Ionic only"]],
+        ["What type of reaction takes in energy?", "Endothermic", ["Endothermic", "Exothermic", "Combustion only", "Precipitation only"]],
+        ["What does a negative ΔH mean?", "Exothermic change", ["Exothermic change", "Endothermic change", "No reaction", "A gas test"]],
+        ["What can energy level diagrams show?", "Energy changes in reactions", ["Energy changes in reactions", "Atomic number only", "Flame colours only", "Crude oil fractions only"]]
+      ]),
+      makeTopic("chem-gas-tests", "Gas Tests", "Bronze Forge", "Not forged", [
+        "Hydrogen gas makes a squeaky pop with a lit splint.",
+        "Oxygen relights a glowing splint.",
+        "Chlorine bleaches damp litmus paper.",
+        "Ammonia turns damp red litmus paper blue and has a pungent smell.",
+        "Carbon dioxide turns limewater cloudy due to calcium carbonate forming."
+      ], [
+        ["What is the test for hydrogen gas?", "Squeaky pop with a lit splint", ["Squeaky pop with a lit splint", "Relights a glowing splint", "Turns limewater cloudy", "Bleaches damp litmus"]],
+        ["What gas relights a glowing splint?", "Oxygen", ["Oxygen", "Hydrogen", "Carbon dioxide", "Ammonia"]],
+        ["What is the test for chlorine gas?", "Bleaches damp litmus paper", ["Bleaches damp litmus paper", "Turns limewater cloudy", "Squeaky pop", "Turns red litmus blue"]],
+        ["What gas turns damp red litmus paper blue?", "Ammonia", ["Ammonia", "Oxygen", "Hydrogen", "Carbon dioxide"]],
+        ["What does carbon dioxide do to limewater?", "Turns it cloudy", ["Turns it cloudy", "Relights it", "Bleaches it", "Makes a squeaky pop"]]
+      ]),
+      makeTopic("chem-flame-tests", "Flame Tests", "Silver Forge", "Not forged", [
+        "Flame tests use a sample on a nichrome wire placed into a roaring blue flame.",
+        "The yellow safety flame is not used because it is difficult to see the colour change.",
+        "Lithium ions give a crimson red flame.",
+        "Sodium ions give a yellow flame and potassium ions give a lilac flame.",
+        "Calcium ions give a brick red flame and copper ions give a blue-green flame."
+      ], [
+        ["What colour is lithium in a flame test?", "Crimson red", ["Crimson red", "Yellow", "Lilac", "Blue-green"]],
+        ["What colour is sodium in a flame test?", "Yellow", ["Yellow", "Crimson red", "Brick red", "Green"]],
+        ["What colour is potassium in a flame test?", "Lilac", ["Lilac", "Yellow", "Blue-green", "Brown"]],
+        ["What colour is calcium in a flame test?", "Brick red", ["Brick red", "Lilac", "Yellow", "White"]],
+        ["What colour is copper in a flame test?", "Blue-green", ["Blue-green", "Crimson red", "Lilac", "Yellow"]]
+      ]),
+      makeTopic("chem-cation-tests", "Cation Tests", "Silver Forge", "Not forged", [
+        "Ammonium ions are tested by warming with sodium hydroxide solution.",
+        "Ammonia gas turns damp red litmus paper blue and has a pungent smell.",
+        "Copper(II) ions form a blue precipitate with sodium hydroxide.",
+        "Iron(II) ions form a green precipitate with sodium hydroxide.",
+        "Iron(III) ions form a brown precipitate with sodium hydroxide."
+      ], [
+        ["How do you test for ammonium ions?", "Warm with sodium hydroxide solution", ["Warm with sodium hydroxide solution", "Add silver nitrate only", "Use limewater", "Use a glowing splint"]],
+        ["What does ammonia do to damp red litmus paper?", "Turns it blue", ["Turns it blue", "Bleaches it white", "Turns it cloudy", "Relights it"]],
+        ["What colour precipitate does Cu²⁺ form with sodium hydroxide?", "Blue", ["Blue", "Green", "Brown", "White"]],
+        ["What colour precipitate does Fe²⁺ form with sodium hydroxide?", "Green", ["Green", "Blue", "Brown", "Yellow"]],
+        ["What colour precipitate does Fe³⁺ form with sodium hydroxide?", "Brown", ["Brown", "Green", "Blue", "White"]]
+      ]),
+      makeTopic("chem-anion-tests", "Anion Tests", "Gold Forge", "Not forged", [
+        "Halide ions are tested using dilute nitric acid followed by silver nitrate solution.",
+        "Chloride ions form a white silver chloride precipitate.",
+        "Bromide ions form a cream silver bromide precipitate.",
+        "Iodide ions form a yellow silver iodide precipitate.",
+        "Sulfate ions form a dense white barium sulfate precipitate with barium chloride after acidifying. Carbonate ions produce carbon dioxide with dilute hydrochloric acid."
+      ], [
+        ["What colour precipitate do chloride ions form with silver nitrate?", "White", ["White", "Cream", "Yellow", "Blue"]],
+        ["What colour precipitate do bromide ions form with silver nitrate?", "Cream", ["Cream", "White", "Yellow", "Brown"]],
+        ["What colour precipitate do iodide ions form with silver nitrate?", "Yellow", ["Yellow", "White", "Cream", "Green"]],
+        ["What precipitate shows sulfate ions are present?", "Dense white barium sulfate", ["Dense white barium sulfate", "Blue copper hydroxide", "Brown iron hydroxide", "Yellow sodium chloride"]],
+        ["What gas is produced when carbonate ions react with dilute hydrochloric acid?", "Carbon dioxide", ["Carbon dioxide", "Hydrogen", "Oxygen", "Chlorine"]]
+      ])
+    ]
+  },
+  {
     id: "physics",
     title: "Physics",
     icon: Microscope,
@@ -954,6 +1079,44 @@ const generalContent = {
         "Bearings and lubrication reduce friction in mechanisms.",
         "Levers use a fulcrum, load and effort, with different classes depending on what is in the middle.",
         "Gears, rack and pinion, crank and piston, linkages, chains, sprockets, belts and pulleys transmit or convert motion."
+      ]
+    }
+  ],
+  chemistry: [
+    {
+      title: "Bonding Core",
+      points: [
+        "Covalent bonding means non-metal atoms share pairs of electrons.",
+        "Ionic bonding means electrons transfer from a metal to a non-metal.",
+        "Metals form positive ions by losing electrons; non-metals form negative ions by gaining electrons.",
+        "Dot-and-cross diagrams show outer shell electrons and where shared or transferred electrons come from."
+      ]
+    },
+    {
+      title: "Crude Oil Core",
+      points: [
+        "Crude oil is a mixture of hydrocarbons separated by fractional distillation.",
+        "Fractions include refinery gases, gasoline, kerosene, diesel, fuel oil and bitumen.",
+        "Complete combustion forms carbon dioxide and water.",
+        "Incomplete combustion can form poisonous carbon monoxide."
+      ]
+    },
+    {
+      title: "Energetics Core",
+      points: [
+        "Heat is energy; temperature is linked to average kinetic energy.",
+        "Exothermic reactions give out heat and have negative ΔH.",
+        "Endothermic reactions take in energy and have positive ΔH.",
+        "Energy level diagrams show whether the products have more or less energy than the reactants."
+      ]
+    },
+    {
+      title: "Chemical Tests Core",
+      points: [
+        "Hydrogen: squeaky pop. Oxygen: relights glowing splint. Chlorine: bleaches damp litmus. Carbon dioxide: turns limewater cloudy.",
+        "Flame tests: Li⁺ crimson red, Na⁺ yellow, K⁺ lilac, Ca²⁺ brick red, Cu²⁺ blue-green.",
+        "Cation tests with sodium hydroxide: Cu²⁺ blue, Fe²⁺ green, Fe³⁺ brown. NH₄⁺ gives ammonia when warmed with sodium hydroxide.",
+        "Halide tests with nitric acid and silver nitrate: Cl⁻ white, Br⁻ cream, I⁻ yellow."
       ]
     }
   ],
@@ -1443,7 +1606,8 @@ const defaultUnlockedStages = {
   "bio-aerobic-respiration": true,
   "dt-cam": true,
   "hist-german-unification-1848-50": true,
-  "phys-motion-position": true
+  "phys-motion-position": true,
+  "chem-electronic-configuration": true
 };
 
 function loadSavedProgress() {
@@ -2318,7 +2482,7 @@ export default function App() {
               <Trophy className="h-4 w-4" /> Super Test
             </button>
           )}
-          <div className="flex shrink-0 flex-col items-center gap-1">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               onClick={() => {
                 setUsernameInput(username || "");
@@ -2328,7 +2492,7 @@ export default function App() {
             >
               {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
             </button>
-            <span className="rounded-full border border-zinc-800 bg-zinc-950/70 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
+            <span className="rounded-full border border-zinc-800 bg-zinc-950/70 px-2 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
               made by tbam
             </span>
           </div>
