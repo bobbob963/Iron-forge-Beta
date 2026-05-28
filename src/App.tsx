@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown, Check, X } from "lucide-react";
+import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown, Check, X, Cpu } from "lucide-react";
 
 const subjects = [
   {
@@ -413,6 +413,146 @@ const subjects = [
         ["What do memory cells allow?", "A faster response next time", ["A faster response next time", "No immune response", "Less oxygen transport", "Mechanical digestion"]]
       ])
     ]
+  },
+  {
+    id: "dt",
+    title: "DT Theory",
+    icon: Cpu,
+    description: "Design Technology — CAM, electronics, structures and mechanisms.",
+    topics: [
+      makeTopic("dt-cam", "Computer Aided Manufacture", "Foundation Forge", "Not forged", [
+        "Computer Aided Manufacture means using computer-controlled machines to make products or parts.",
+        "Machines operated by computer can be more accurate and repeatable than hand production.",
+        "CAM is useful for batch production because the same design can be made again and again.",
+        "CAM can reduce human error and improve consistency.",
+        "A limitation is that CAM machinery can be expensive to set up."
+      ], [
+        ["What does CAM stand for?", "Computer Aided Manufacture", ["Computer Aided Manufacture", "Computer Added Material", "Controlled Automatic Motion", "Computer Aided Marketing"]],
+        ["Which one is a benefit of CAM?", "Accurate repeat production", ["Accurate repeat production", "Always cheaper to set up", "No need for electricity", "Only works by hand"]],
+        ["What type of machines are used in CAM?", "Computer-controlled machines", ["Computer-controlled machines", "Only hand tools", "Only natural materials", "Only levers"]]
+      ]),
+      makeTopic("dt-electronics-materials", "Electronics: Conductors and Insulators", "Foundation Forge", "Not forged", [
+        "Conductors allow electricity to flow through them easily.",
+        "Metals such as copper and aluminium are good conductors.",
+        "Insulators do not allow electricity to flow through them easily.",
+        "Plastics, rubber and ceramics are common insulating materials.",
+        "Insulators are used to make electrical products safer."
+      ], [
+        ["What does a conductor do?", "Allows electricity to flow", ["Allows electricity to flow", "Stops all movement", "Increases friction", "Stores only heat"]],
+        ["Which material is usually a good conductor?", "Copper", ["Copper", "Rubber", "Plastic", "Wood"]],
+        ["Why are insulators useful?", "They improve electrical safety", ["They improve electrical safety", "They always conduct better", "They make circuits faster only", "They remove the need for wires"]]
+      ]),
+      makeTopic("dt-systems-diagrams", "Systems Diagrams", "Steel Forge", "Not forged", [
+        "A system diagram shows input, process, output and feedback.",
+        "The input is the signal, energy or material that enters the system.",
+        "The process is what happens inside the system.",
+        "The output is what the system produces.",
+        "Feedback is information sent back to help control or improve the system."
+      ], [
+        ["What are the main parts of a systems diagram?", "Input, process, output and feedback", ["Input, process, output and feedback", "Mass, frame and shell", "Tension, compression and torsion", "Linear, rotary and reciprocating"]],
+        ["What is an output?", "What the system produces", ["What the system produces", "What enters the system", "The material cost", "The force only"]],
+        ["What does feedback do?", "Sends information back into the system", ["Sends information back into the system", "Removes the input", "Stops the circuit", "Changes volts into amps"]]
+      ]),
+      makeTopic("dt-circuit-symbols", "Circuit Symbols", "Steel Forge", "Not forged", [
+        "Circuit symbols are standard drawings used to represent components in a circuit.",
+        "They make circuit diagrams clearer and quicker to draw.",
+        "You need to recognise common symbols from the exam board sheet.",
+        "Examples include cell, battery, lamp, switch, resistor, LED and motor.",
+        "Circuit diagrams show how components are connected, not what the product physically looks like."
+      ], [
+        ["Why are circuit symbols used?", "To represent components clearly", ["To represent components clearly", "To decorate the product", "To calculate density", "To show only materials"]],
+        ["What does a circuit diagram show?", "How components are connected", ["How components are connected", "The exact product shape", "Only the packaging", "The mass of a structure"]],
+        ["Which one is an electronic component?", "Resistor", ["Resistor", "Fulcrum", "Beam", "Rack"]]
+      ]),
+      makeTopic("dt-units-prefixes", "Units and Prefixes", "Steel Forge", "Not forged", [
+        "Prefixes show the size of a unit, such as milli, micro, kilo and mega.",
+        "pico is 10^-12, nano is 10^-9, micro is 10^-6 and milli is 10^-3.",
+        "kilo is 10^3, mega is 10^6, giga is 10^9 and tera is 10^12.",
+        "V means volts, A means amps, W means watts, F means farads and Ω means ohms.",
+        "Correct units are important in electronics questions."
+      ], [
+        ["What does milli mean?", "10^-3", ["10^-3", "10^3", "10^-9", "10^9"]],
+        ["What does kilo mean?", "10^3", ["10^3", "10^-3", "10^-6", "10^12"]],
+        ["What unit is represented by Ω?", "Ohms", ["Ohms", "Volts", "Amps", "Watts"]]
+      ]),
+      makeTopic("dt-structures-types", "Types of Structure", "Bronze Forge", "Not forged", [
+        "A mass structure is solid and relies on its own weight and material strength.",
+        "A frame structure is made from joined members, such as beams or rods.",
+        "A shell structure has a thin outer skin that gives it strength and shape.",
+        "Natural structures occur in nature, such as trees or bones.",
+        "Man-made structures are designed and built by humans."
+      ], [
+        ["What is a frame structure made from?", "Joined members", ["Joined members", "Only liquid", "A single solid block", "Only gears"]],
+        ["What is a shell structure?", "A thin outer skin structure", ["A thin outer skin structure", "A solid heavy block", "A type of circuit", "A lever class"]],
+        ["Which one is natural?", "Bone", ["Bone", "Bridge", "Chair", "Gear train"]]
+      ]),
+      makeTopic("dt-forces", "Forces in Structures", "Bronze Forge", "Not forged", [
+        "Tension is a pulling force that stretches a material.",
+        "Compression is a pushing force that squashes a material.",
+        "Bending combines tension and compression as a material curves.",
+        "Torsion is a twisting force.",
+        "Shear is a force that tries to slide layers of material past each other."
+      ], [
+        ["What is tension?", "A pulling force", ["A pulling force", "A twisting force", "A sliding force", "A squashing force"]],
+        ["What is compression?", "A pushing or squashing force", ["A pushing or squashing force", "A pulling force", "A circuit symbol", "A type of gear"]],
+        ["What is torsion?", "A twisting force", ["A twisting force", "A pulling force", "A bending moment", "A friction type"]]
+      ]),
+      makeTopic("dt-motion-types", "Conversion of Motion", "Silver Forge", "Not forged", [
+        "Linear motion moves in a straight line.",
+        "Rotary motion moves in a circle around an axis.",
+        "Reciprocating motion moves backwards and forwards in a straight line.",
+        "Oscillating motion moves backwards and forwards in an arc.",
+        "Mechanisms often convert one type of motion into another."
+      ], [
+        ["What is rotary motion?", "Circular movement around an axis", ["Circular movement around an axis", "Straight line movement", "Back and forward in a line", "Back and forward in an arc"]],
+        ["What is reciprocating motion?", "Backwards and forwards in a straight line", ["Backwards and forwards in a straight line", "Circular motion", "Twisting force", "A type of structure"]],
+        ["What is oscillating motion?", "Backwards and forwards in an arc", ["Backwards and forwards in an arc", "Straight line movement", "A circuit output", "A unit prefix"]]
+      ]),
+      makeTopic("dt-friction", "Reduction of Friction", "Silver Forge", "Not forged", [
+        "Friction is a force that resists movement between surfaces.",
+        "Friction can cause heat, wear and energy loss.",
+        "Bearings reduce friction between moving parts.",
+        "Lubrication reduces friction by placing a slippery layer between surfaces.",
+        "Reducing friction can make mechanisms more efficient."
+      ], [
+        ["What does friction do?", "Resists movement", ["Resists movement", "Stores current", "Increases voltage", "Creates a shell structure"]],
+        ["Which component reduces friction?", "Bearings", ["Bearings", "Insulators", "Fulcrums", "Resistors"]],
+        ["What is lubrication used for?", "Reducing friction", ["Reducing friction", "Increasing shear", "Making circuits open", "Changing amps into volts"]]
+      ]),
+      makeTopic("dt-levers", "Levers", "Gold Forge", "Not forged", [
+        "Levers use a pivot point called a fulcrum.",
+        "In a first class lever, the fulcrum is in the middle.",
+        "In a second class lever, the load is in the middle.",
+        "In a third class lever, the effort is in the middle.",
+        "Levers can make it easier to move a load by giving mechanical advantage."
+      ], [
+        ["What is the pivot point of a lever called?", "Fulcrum", ["Fulcrum", "Load", "Effort", "Bearing"]],
+        ["In a first class lever, what is in the middle?", "Fulcrum", ["Fulcrum", "Load", "Effort", "Spring"]],
+        ["In a second class lever, what is in the middle?", "Load", ["Load", "Fulcrum", "Effort", "Rack"]]
+      ]),
+      makeTopic("dt-gear-trains", "Simple Gear Trains", "Gold Forge", "Not forged", [
+        "Gears transmit rotary motion from one shaft to another.",
+        "A small driver gear turning a larger driven gear reduces speed and increases torque.",
+        "A large driver gear turning a smaller driven gear increases speed and reduces torque.",
+        "Idler gears are used to change direction or transfer motion without changing the ratio.",
+        "Gear trains are used where controlled speed and torque are needed."
+      ], [
+        ["What happens when a small driver turns a larger driven gear?", "Speed reduces and torque increases", ["Speed reduces and torque increases", "Speed increases and torque reduces", "Both stop", "Only friction changes"]],
+        ["What happens when a large driver turns a smaller driven gear?", "Speed increases and torque reduces", ["Speed increases and torque reduces", "Speed reduces and torque increases", "No motion is transmitted", "It becomes linear motion only"]],
+        ["What can an idler gear be used for?", "Changing direction", ["Changing direction", "Insulating wires", "Reducing voltage", "Making a shell structure"]]
+      ]),
+      makeTopic("dt-mechanisms", "Common Mechanisms", "Master Forge", "Not forged", [
+        "Rack and pinion converts rotary motion into linear motion.",
+        "Crank and piston converts rotary motion and reciprocating motion.",
+        "Linkages transfer movement and can change the direction or type of motion.",
+        "Spur gears transmit motion from one shaft to another.",
+        "Chain and sprockets, and belts and pulleys, also transmit motion between shafts."
+      ], [
+        ["What does rack and pinion convert?", "Rotary motion into linear motion", ["Rotary motion into linear motion", "Electricity into heat", "Tension into compression", "Current into voltage"]],
+        ["What does a crank and piston involve?", "Rotary and reciprocating motion", ["Rotary and reciprocating motion", "Only insulation", "Only shell structures", "Only unit prefixes"]],
+        ["Which mechanism uses sprockets?", "Chain and sprockets", ["Chain and sprockets", "Belt and pulley", "Rack and pinion", "Lever"]]
+      ])
+    ]
   }
 ];
 
@@ -535,6 +675,35 @@ const generalContent = {
         "The heart pumps blood, arteries carry blood away, veins carry blood back, and capillaries allow exchange.",
         "Infectious diseases are caused by pathogens such as bacteria and viruses.",
         "White blood cells defend the body; antibodies are specific to antigens and memory cells give a faster second response."
+      ]
+    }
+  ],
+  dt: [
+    {
+      title: "CAM and Electronics",
+      points: [
+        "CAM uses computer-controlled machines to manufacture products accurately and repeatedly.",
+        "Conductors allow electricity to flow, while insulators resist electrical flow and improve safety.",
+        "Systems diagrams are built from input, process, output and feedback.",
+        "Circuit symbols represent components clearly in circuit diagrams."
+      ]
+    },
+    {
+      title: "Structures and Forces",
+      points: [
+        "Mass structures are solid, frame structures are made from joined members, and shell structures use a thin outer skin.",
+        "Natural structures occur in nature, while man-made structures are designed and built by humans.",
+        "Key forces include tension, compression, bending, torsion and shear.",
+        "Forces explain how and why structures fail or stay strong."
+      ]
+    },
+    {
+      title: "Mechanisms and Motion",
+      points: [
+        "Linear motion moves in a straight line, rotary motion moves in a circle, reciprocating motion moves back and forth, and oscillating motion moves in an arc.",
+        "Bearings and lubrication reduce friction in mechanisms.",
+        "Levers use a fulcrum, load and effort, with different classes depending on what is in the middle.",
+        "Gears, rack and pinion, crank and piston, linkages, chains, sprockets, belts and pulleys transmit or convert motion."
       ]
     }
   ]
