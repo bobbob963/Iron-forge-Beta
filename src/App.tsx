@@ -2500,11 +2500,7 @@ export default function App() {
   const [volcanoEruptionKey, setVolcanoEruptionKey] = useState(0);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
-  const visibleSubjects = useMemo(() => {
-    const pickedIds = subjectSlots.filter(Boolean);
-    if (pickedIds.length === 0) return subjects;
-    return subjects.filter((subject) => pickedIds.includes(subject.id));
-  }, [subjectSlots]);
+  const visibleSubjects = useMemo(() => subjects, []);
 
   const selectedSubject = visibleSubjects.find((subject) => subject.id === selectedSubjectId) || visibleSubjects[0] || subjects[0];
 
@@ -4775,10 +4771,25 @@ export default function App() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
+
+
+        .taskbar-solid {
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+          filter: none !important;
+          transform: translateZ(0);
+          isolation: isolate;
+        }
+
+        .taskbar-solid * {
+          filter: none !important;
+          text-shadow: none;
+        }
+
       `}</style>
 
       <div className="relative z-10">
-      <div className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/90 px-4 py-3 backdrop-blur">
+      <div className="taskbar-solid sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950 px-4 py-3 shadow-lg">
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-between gap-2 overflow-x-auto">
           <button onClick={() => setView("home")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "home" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Home className="h-4 w-4" /> Home</button>
@@ -5336,7 +5347,7 @@ export default function App() {
                         <h3 className="text-2xl font-black text-white">Taskbar subject slots</h3>
                       </div>
                       <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-                        Pick up to 9 subjects to show in the taskbar. Empty slots do not show. If all slots are empty, every subject shows.
+                        All subjects now show in the taskbar menu. These old slots are kept here only so previous saved settings do not break the app.
                       </p>
                     </div>
                     <button
@@ -5379,3 +5390,4 @@ export default function App() {
     </div>
   );
 }
+
