@@ -553,6 +553,256 @@ const subjects = [
         ["Which mechanism uses sprockets?", "Chain and sprockets", ["Chain and sprockets", "Belt and pulley", "Rack and pinion", "Lever"]]
       ])
     ]
+  },
+  {
+    id: "physics",
+    title: "Physics",
+    icon: Microscope,
+    description: "Physics — motion, forces, energy, electricity, radioactivity, space, states of matter and magnetism.",
+    topics: [
+      makeTopic("phys-motion-position", "Movement and Position", "Foundation Forge", "Not forged", [
+        "Distance-time graphs show how distance changes over time. The gradient gives speed.",
+        "Velocity-time graphs show how velocity changes over time. The gradient gives acceleration.",
+        "Distance travelled from a velocity-time graph is found from the area under the graph.",
+        "Average speed = distance ÷ time.",
+        "Acceleration = change in velocity ÷ time taken."
+      ], [
+        ["What does the gradient of a distance-time graph show?", "Speed", ["Speed", "Mass", "Force", "Energy"]],
+        ["What does the gradient of a velocity-time graph show?", "Acceleration", ["Acceleration", "Density", "Pressure", "Weight"]],
+        ["How do you find distance from a velocity-time graph?", "Area under the graph", ["Area under the graph", "Highest point only", "Lowest point only", "Gradient of a distance-time graph"]],
+        ["What is the equation for average speed?", "distance ÷ time", ["distance ÷ time", "mass × acceleration", "force ÷ area", "current × resistance"]],
+        ["Which equation links final velocity, initial velocity, acceleration and displacement?", "v² = u² + 2as", ["v² = u² + 2as", "F = ma", "W = mg", "V = IR"]]
+      ]),
+      makeTopic("phys-force-shape", "Forces and Shape", "Foundation Forge", "Not forged", [
+        "Scalar quantities have magnitude only, while vector quantities have magnitude and direction.",
+        "Forces are vector quantities and can be added or subtracted along a line.",
+        "Stopping distance is thinking distance plus braking distance.",
+        "Friction opposes motion.",
+        "Newton's third law states that forces come in equal and opposite pairs."
+      ], [
+        ["What is the difference between a scalar and a vector?", "A vector has magnitude and direction", ["A vector has magnitude and direction", "A scalar has direction only", "A vector has no size", "They are the same"]],
+        ["What is stopping distance made from?", "Thinking distance plus braking distance", ["Thinking distance plus braking distance", "Speed plus mass", "Force plus pressure", "Voltage plus current"]],
+        ["What force opposes motion?", "Friction", ["Friction", "Weight", "Current", "Radiation"]],
+        ["What is Newton's third law about?", "Equal and opposite forces", ["Equal and opposite forces", "Energy stores", "Density", "Half-life"]],
+        ["What is a force classified as?", "A vector quantity", ["A vector quantity", "A scalar quantity", "An energy store", "A circuit component"]]
+      ]),
+      makeTopic("phys-force-equations", "Force Equations", "Steel Forge", "Not forged", [
+        "Force = mass × acceleration, written as F = ma.",
+        "Weight = mass × gravitational field strength, written as W = mg.",
+        "Pressure = force ÷ area, written as p = F ÷ A.",
+        "Density = mass ÷ volume, written as ρ = m ÷ V.",
+        "Pressure difference in a liquid can be found using height × density × gravitational field strength."
+      ], [
+        ["What is the equation for force?", "F = ma", ["F = ma", "V = IR", "E = QV", "p = F/A"]],
+        ["What is the equation for weight?", "W = mg", ["W = mg", "F = ma", "v² = u² + 2as", "E = QV"]],
+        ["What is the equation for pressure?", "p = F/A", ["p = F/A", "V = IR", "Q = It", "ρ = m/V"]],
+        ["What is the equation for density?", "ρ = m/V", ["ρ = m/V", "W = mg", "F = ma", "V = IR"]],
+        ["What does gravitational field strength help calculate?", "Weight", ["Weight", "Current", "Voltage", "Half-life"]]
+      ]),
+      makeTopic("phys-energy-transfers", "Energy Sources and Transfers", "Steel Forge", "Not forged", [
+        "Energy stores include chemical, kinetic, gravitational, elastic, thermal, magnetic, electrostatic and nuclear.",
+        "Energy can be transferred mechanically, electrically, by heating, or by radiation.",
+        "Energy is conserved, meaning it cannot be created or destroyed, only transferred.",
+        "Efficiency = useful energy output ÷ total energy input × 100.",
+        "Thermal energy transfer can happen by conduction, convection and radiation."
+      ], [
+        ["Which statement describes conservation of energy?", "Energy cannot be created or destroyed", ["Energy cannot be created or destroyed", "Energy disappears in machines", "Energy only exists in batteries", "Energy is always wasted"]],
+        ["What is the efficiency equation?", "useful energy output ÷ total energy input × 100", ["useful energy output ÷ total energy input × 100", "force × mass", "current × time", "distance ÷ time"]],
+        ["Name one method of thermal energy transfer.", "Conduction", ["Conduction", "Ionisation", "Fission only", "Condensation only"]],
+        ["Which energy store is found in food and fuels?", "Chemical", ["Chemical", "Magnetic only", "Nuclear only", "Electrostatic only"]],
+        ["What type of transfer happens in electrical circuits?", "Electrical transfer", ["Electrical transfer", "No transfer", "Only mechanical transfer", "Only sound transfer"]]
+      ]),
+      makeTopic("phys-electricity", "Energy and Voltage in Circuits", "Bronze Forge", "Not forged", [
+        "A series circuit is more appropriate for some applications, while parallel circuits allow components to work independently.",
+        "Current depends on voltage and resistance.",
+        "Voltage = current × resistance, written as V = IR.",
+        "Charge = current × time, written as Q = It.",
+        "Energy transferred = charge × voltage, written as E = QV."
+      ], [
+        ["What is the equation linking voltage, current and resistance?", "V = IR", ["V = IR", "F = ma", "W = mg", "ρ = m/V"]],
+        ["What is the equation linking charge, current and time?", "Q = It", ["Q = It", "E = mc²", "p = F/A", "v = u + at"]],
+        ["What is the equation linking energy, charge and voltage?", "E = QV", ["E = QV", "V = IR", "F = ma", "W = mg"]],
+        ["What is the unit of charge?", "Coulomb", ["Coulomb", "Volt", "Newton", "Pascal"]],
+        ["What is the current through components in series like?", "The same through each component", ["The same through each component", "Zero in every component", "Always different", "Only in the battery"]]
+      ]),
+      makeTopic("phys-radioactivity", "Radioactivity", "Bronze Forge", "Not forged", [
+        "Atoms contain protons, neutrons and electrons.",
+        "Atomic number is the number of protons. Mass number is the number of protons plus neutrons.",
+        "Alpha, beta and gamma are ionising radiations emitted from unstable nuclei.",
+        "Activity decreases over time and is measured in becquerels.",
+        "Half-life is the time taken for the activity of a radioactive source to halve."
+      ], [
+        ["What particles are found in the nucleus?", "Protons and neutrons", ["Protons and neutrons", "Electrons only", "Photons only", "Alpha particles only"]],
+        ["What does atomic number tell you?", "Number of protons", ["Number of protons", "Number of shells", "Number of neutrons only", "Mass of the atom in kg"]],
+        ["What unit is activity measured in?", "Becquerels", ["Becquerels", "Newtons", "Volts", "Pascals"]],
+        ["What is half-life?", "Time for activity to halve", ["Time for activity to halve", "Time for mass to double", "Time for voltage to halve", "Time for speed to reach zero"]],
+        ["Which detector can detect ionising radiation?", "Geiger-Müller detector", ["Geiger-Müller detector", "Thermometer", "Ammeter only", "Ruler"]]
+      ]),
+      makeTopic("phys-astronomy-cosmology", "Astronomy and Cosmology", "Silver Forge", "Not forged", [
+        "The universe is made up of billions of galaxies, and each galaxy contains billions of stars.",
+        "Gravitational field strength varies on different planets.",
+        "The gravitational force causes orbits.",
+        "Orbital speed can be calculated using distance travelled per orbit divided by time period.",
+        "Red-shift of galaxies provides evidence for the expansion of the universe."
+      ], [
+        ["What force causes orbits?", "Gravity", ["Gravity", "Friction", "Static electricity", "Nuclear radiation"]],
+        ["What does red-shift show?", "The universe is expanding", ["The universe is expanding", "The universe is shrinking only", "Atoms have no nucleus", "Planets do not orbit"]],
+        ["What is a galaxy?", "A collection of billions of stars", ["A collection of billions of stars", "One single planet", "A type of radiation", "A circuit component"]],
+        ["What does a star's colour relate to?", "Surface temperature", ["Surface temperature", "Its mass only", "Its country", "Its voltage"]],
+        ["Which diagram shows star classification?", "HR diagram", ["HR diagram", "Circuit diagram", "Distance-time graph", "Free-body diagram"]]
+      ]),
+      makeTopic("phys-states-of-matter", "States of Matter and Gas Molecules", "Silver Forge", "Not forged", [
+        "Heating a system changes the energy stored within it and can change its temperature or state.",
+        "Specific heat capacity is the energy required to change the temperature of 1 kg of a substance by 1°C.",
+        "Change in thermal energy = mass × specific heat capacity × change in temperature.",
+        "Particles in gases move randomly and exert pressure on container walls.",
+        "For a fixed mass of gas, pressure, volume and temperature are related."
+      ], [
+        ["What is specific heat capacity?", "Energy needed to raise 1 kg by 1°C", ["Energy needed to raise 1 kg by 1°C", "Force per unit area", "Charge per second", "Mass per volume"]],
+        ["What is the equation for change in thermal energy?", "ΔE = mcΔT", ["ΔE = mcΔT", "V = IR", "F = ma", "Q = It"]],
+        ["What temperature is absolute zero?", "-273°C", ["-273°C", "0°C", "100°C", "273°C"]],
+        ["Why do gases exert pressure?", "Particles collide with container walls", ["Particles collide with container walls", "Particles stop moving", "Particles disappear", "Particles become radioactive"]],
+        ["What happens to gas molecule speed when temperature increases?", "Average speed increases", ["Average speed increases", "Average speed decreases", "Particles stop", "Pressure must become zero"]]
+      ]),
+      makeTopic("phys-magnetism-electromagnetism", "Magnetism and Electromagnetism", "Gold Forge", "Not forged", [
+        "Magnets repel and attract other magnets and magnetic substances.",
+        "Magnetic field lines show the direction and shape of a magnetic field.",
+        "An electric current in a conductor produces a magnetic field around it.",
+        "Electromagnets are made using coils of wire, current and often an iron core.",
+        "A current-carrying wire in a magnetic field experiences a force, which is used in motors and loudspeakers."
+      ], [
+        ["What do magnets do to other magnets?", "Attract or repel", ["Attract or repel", "Only heat them", "Only melt them", "Only ionise them"]],
+        ["What does an electric current produce around a wire?", "A magnetic field", ["A magnetic field", "A nuclear reaction", "A red-shift", "A vacuum"]],
+        ["What is often used inside an electromagnet to make it stronger?", "Iron core", ["Iron core", "Plastic core", "Glass core", "Wood core"]],
+        ["What device uses the force on a current-carrying wire in a magnetic field?", "Electric motor", ["Electric motor", "Geiger counter only", "Thermometer", "Barometer"]],
+        ["What rule predicts the direction of force on a wire?", "Left-hand rule", ["Left-hand rule", "Right-hand grip rule only", "Ohm's law", "Hooke's law"]]
+      ])
+    ]
+  },
+  {
+    id: "history",
+    title: "History",
+    icon: BookOpen,
+    description: "History — German Unification, Bismarck and the 1848 revolutions across Europe.",
+    topics: [
+      makeTopic("hist-german-unification-1848-50", "Why Germany Was Not Unified, 1848–50", "Foundation Forge", "Not forged", [
+        "After 1815, Germany was reorganised into 39 states in the German Confederation, dominated by Austria.",
+        "German nationalism grew after the Napoleonic Wars, but it was limited and heavily repressed by conservative rulers.",
+        "The Frankfurt Parliament aimed to unite Germany and create a liberal constitution, but it lacked real power, money and military support.",
+        "Frederick William IV refused the imperial crown because he would not accept a crown from an elected assembly.",
+        "Austria restored its influence by 1850 through the Punctuation of Olmütz, forcing Prussia to abandon the Erfurt Union."
+      ], [
+        ["How many states made up the German Confederation after 1815?", "39", ["39", "25", "12", "52"]],
+        ["Which power dominated the German Confederation after 1815?", "Austria", ["Austria", "France", "Britain", "Italy"]],
+        ["Why did the Frankfurt Parliament fail?", "It lacked army, money and support from rulers", ["It lacked army, money and support from rulers", "It was supported by Austria", "It had too much military power", "It wanted to keep Germany divided"]],
+        ["What crown did Frederick William IV refuse in 1849?", "The imperial crown of a united Germany", ["The imperial crown of a united Germany", "The Austrian crown", "The French crown", "The Russian crown"]],
+        ["What did the Punctuation of Olmütz do?", "Forced Prussia to back down and restored Austrian influence", ["Forced Prussia to back down and restored Austrian influence", "Created the German Empire", "Removed Austria from Germany", "Started the Franco-Prussian War"]]
+      ]),
+      makeTopic("hist-zollverein-nationalism", "German Nationalism and the Zollverein", "Foundation Forge", "Not forged", [
+        "The Zollverein was a customs union led by Prussia and established in 1834.",
+        "It removed internal tariffs and encouraged free trade between many German states.",
+        "It improved transport, railways and economic links, making German states more connected.",
+        "Austria was excluded from the Zollverein, which helped Prussia grow stronger economically.",
+        "Nationalist festivals such as Wartburg and Hambach showed that liberal and nationalist ideas continued despite repression."
+      ], [
+        ["What was the Zollverein?", "A Prussian-led customs union", ["A Prussian-led customs union", "An Austrian army", "A French parliament", "A failed Italian republic"]],
+        ["When was the Zollverein established?", "1834", ["1834", "1815", "1848", "1871"]],
+        ["Which major German power was excluded from the Zollverein?", "Austria", ["Austria", "Prussia", "Bavaria", "Saxony"]],
+        ["What did the Zollverein remove between member states?", "Internal tariffs", ["Internal tariffs", "All monarchies", "All armies", "All railways"]],
+        ["Which festival in 1832 showed growing nationalism?", "Hambach Festival", ["Hambach Festival", "Congress of Vienna", "Treaty of Prague", "Battle of Sedan"]]
+      ]),
+      makeTopic("hist-bismarck-austria-1866", "How Bismarck Defeated Austria in 1866", "Steel Forge", "Not forged", [
+        "Bismarck became Minister-President of Prussia in 1862 and used Realpolitik to strengthen Prussia.",
+        "Prussia's economy, railways and army reforms gave it a major advantage over Austria.",
+        "The Schleswig-Holstein issue increased tension between Austria and Prussia after joint control became difficult.",
+        "The Convention of Gastein split control: Austria managed Holstein and Prussia managed Schleswig.",
+        "Bismarck isolated Austria diplomatically by securing Italian support and keeping other powers neutral."
+      ], [
+        ["When was Bismarck appointed Minister-President of Prussia?", "1862", ["1862", "1848", "1866", "1871"]],
+        ["What type of politics did Bismarck use?", "Realpolitik", ["Realpolitik", "Communism", "Isolationism", "Absolutism only"]],
+        ["What did the Convention of Gastein do?", "Split control of Schleswig and Holstein", ["Split control of Schleswig and Holstein", "United Germany", "Gave Alsace-Lorraine to Germany", "Created the Frankfurt Parliament"]],
+        ["Which country allied with Prussia against Austria?", "Italy", ["Italy", "France", "Britain", "Russia"]],
+        ["Which battle showed Prussian superiority in 1866?", "Königgrätz", ["Königgrätz", "Sedan", "Waterloo", "Novara"]]
+      ]),
+      makeTopic("hist-bismarck-france-1870", "How Bismarck Defeated France in 1870", "Steel Forge", "Not forged", [
+        "After Austria's defeat, France felt humiliated because Prussia gained power while France gained little.",
+        "The Luxembourg Crisis increased tension between France and Prussia.",
+        "Bismarck used the Spanish Succession Crisis to provoke France into declaring war.",
+        "The edited Ems Telegram made the meeting between William I and the French ambassador appear more hostile.",
+        "The southern German states rallied behind Prussia, helping complete German unification."
+      ], [
+        ["What crisis did Bismarck use to provoke France?", "The Spanish Succession Crisis", ["The Spanish Succession Crisis", "The Crimean War", "The Punctuation of Olmütz", "The March Laws"]],
+        ["What did Bismarck edit to provoke France?", "The Ems Telegram", ["The Ems Telegram", "The Treaty of Prague", "The Carlsbad Decrees", "The Zollverein"]],
+        ["Which battle led to Napoleon III being captured?", "Sedan", ["Sedan", "Königgrätz", "Novara", "Sadowa"]],
+        ["What land did France lose after the Franco-Prussian War?", "Alsace-Lorraine", ["Alsace-Lorraine", "Schleswig", "Holstein", "Bavaria"]],
+        ["Why was the Franco-Prussian War important for unification?", "It united the southern German states behind Prussia", ["It united the southern German states behind Prussia", "It restored Austria's control", "It ended the Zollverein", "It made France part of Germany"]]
+      ]),
+      makeTopic("hist-bismarck-responsibility", "How Far Was Bismarck Responsible for German Unification?", "Bronze Forge", "Not forged", [
+        "One view is that Bismarck was a master planner who deliberately used war and diplomacy to unify Germany.",
+        "Another view is that Bismarck was an opportunist who reacted cleverly to events as they happened.",
+        "Bismarck used diplomacy to isolate Austria and France before war.",
+        "However, other factors mattered too, such as nationalism, the Zollverein, Prussian economic strength and military reform.",
+        "Von Roon strengthened the army, while von Moltke improved military strategy and railway mobilisation."
+      ], [
+        ["What were the three main views of Bismarck's role?", "Master planner, opportunist, or less important than other factors", ["Master planner, opportunist, or less important than other factors", "King, emperor and soldier", "Liberal, socialist and communist", "French, Austrian and Italian"]],
+        ["What speech showed Bismarck believed force would matter?", "Blood and Iron", ["Blood and Iron", "Peace and Freedom", "Crown from the Gutter", "March Laws"]],
+        ["Who reorganised and strengthened the Prussian army?", "Von Roon", ["Von Roon", "Metternich", "Louis Philippe", "Mazzini"]],
+        ["Who improved Prussian military strategy?", "Von Moltke", ["Von Moltke", "Guizot", "Charles Albert", "Kossuth"]],
+        ["Which economic factor helped German unification?", "The Zollverein", ["The Zollverein", "The June Days", "The Banquets", "The National Workshops"]]
+      ]),
+      makeTopic("hist-france-1848", "France in 1848", "Silver Forge", "Not forged", [
+        "A terrible corn harvest and economic problems caused food prices to surge in France.",
+        "The political system was seen as corrupt because only a tiny percentage of the population could vote.",
+        "Banquets were used as a way to discuss political reform despite restrictions on open political meetings.",
+        "In February 1848, protests escalated in Paris and Louis-Philippe abdicated on 24 February.",
+        "The June Days showed the failure of hopes for a more democratic and social republic."
+      ], [
+        ["What caused prices to surge in 1846?", "A terrible corn harvest", ["A terrible corn harvest", "A successful war", "The Zollverein", "The Ems Telegram"]],
+        ["Why was the French political system seen as corrupt?", "Only a small percentage could vote", ["Only a small percentage could vote", "Everyone could vote", "There was no king", "France had no newspapers"]],
+        ["What was the purpose of the banquets?", "To discuss political views and reforms", ["To discuss political views and reforms", "To crown Bismarck", "To start the Zollverein", "To elect the Pope"]],
+        ["When did Louis-Philippe abdicate?", "24 February 1848", ["24 February 1848", "18 March 1848", "3 April 1849", "1 August 1870"]],
+        ["Why were the June Days important?", "They marked the end of hopes for a democratic and social republic", ["They marked the end of hopes for a democratic and social republic", "They created the German Empire", "They defeated Austria", "They created the Zollverein"]]
+      ]),
+      makeTopic("hist-italy-1848", "Italy in 1848", "Silver Forge", "Not forged", [
+        "Italy was divided and partly controlled by Austria, especially Lombardy and Venetia.",
+        "Piedmont-Sardinia was ruled by Charles-Albert and became important in the revolutions.",
+        "The revolutions were encouraged by food price rises, liberal ideas and nationalism.",
+        "Piedmont led war against Austria but was defeated at Novara.",
+        "The revolutions failed because of weak coordination, divisions between groups and Austria's military superiority."
+      ], [
+        ["Which Italian states were under Austrian control?", "Lombardy and Venetia", ["Lombardy and Venetia", "Bavaria and Saxony", "Alsace and Lorraine", "Schleswig and Holstein"]],
+        ["Who ruled Piedmont-Sardinia?", "Charles-Albert", ["Charles-Albert", "Metternich", "Bismarck", "Louis Philippe"]],
+        ["What happened in January 1848 in Italy?", "The Sicilian uprising", ["The Sicilian uprising", "The Ems Telegram", "The Battle of Sedan", "The Punctuation of Olmütz"]],
+        ["Which Italian state was defeated at Novara?", "Piedmont", ["Piedmont", "Venice", "Prussia", "France"]],
+        ["Why did the Italian revolutions fail?", "Lack of unity and Austrian strength", ["Lack of unity and Austrian strength", "Too much support from Austria", "Germany was already united", "France had no role"]]
+      ]),
+      makeTopic("hist-germany-1848", "Germany in 1848", "Gold Forge", "Not forged", [
+        "The February Revolution in France helped spark revolution in the German states.",
+        "In Berlin, protests escalated and troops fired on demonstrators in March 1848.",
+        "The Frankfurt Parliament met in May 1848 and aimed to unite Germany, create a constitution and protect liberal rights.",
+        "The Parliament was dominated by middle-class professionals such as lawyers and professors.",
+        "It failed because it lacked an army, faced opposition from rulers and Frederick William IV refused the crown."
+      ], [
+        ["What sparked revolution in Germany in 1848?", "The February Revolution in France", ["The February Revolution in France", "The Treaty of Frankfurt", "The Battle of Sedan", "The Convention of Gastein"]],
+        ["When did the Frankfurt Parliament meet?", "May 1848", ["May 1848", "January 1848", "August 1849", "December 1871"]],
+        ["What were the Frankfurt Parliament's main goals?", "Unite Germany and create a liberal constitution", ["Unite Germany and create a liberal constitution", "Restore Austria completely", "Abolish all German states", "Make France stronger"]],
+        ["Who dominated the Frankfurt Parliament?", "Middle-class professionals", ["Middle-class professionals", "Peasants only", "Foreign kings", "Factory children"]],
+        ["What did many peasants gain during the revolution?", "Abolition of feudal dues", ["Abolition of feudal dues", "Control of Austria", "The French crown", "The Ems Telegram"]]
+      ]),
+      makeTopic("hist-austrian-empire-1848", "Austrian Empire in 1848", "Gold Forge", "Not forged", [
+        "The Austrian Empire was unstable because it contained many nationalities, languages and cultures.",
+        "It was ruled by the Habsburg family and controlled by Metternich's conservative system.",
+        "Nationalism, liberal demands, poor harvests and economic problems all helped cause revolt.",
+        "Different groups such as Hungarians, Czechs, Croats and Italians wanted different rights or power.",
+        "Metternich tried to keep control using censorship, spies, secret police and strict conservative rule."
+      ], [
+        ["Who ruled the Austrian Empire?", "The Habsburg family", ["The Habsburg family", "The Hohenzollerns", "The Bonapartes", "The Romanovs only"]],
+        ["Why was the Austrian Empire unstable?", "It had many nationalities, languages and cultures", ["It had many nationalities, languages and cultures", "It had no army", "It had no monarchy", "It was already united with Germany"]],
+        ["Who controlled Austria's conservative system before 1848?", "Metternich", ["Metternich", "Bismarck", "Mazzini", "Napoleon III"]],
+        ["Where did Metternich flee?", "England", ["England", "Prussia", "Italy", "Russia"]],
+        ["How did Metternich try to keep control?", "Censorship, spies and secret police", ["Censorship, spies and secret police", "Universal suffrage", "Free elections", "German unification"]]
+      ])
+    ]
   }
 ];
 
@@ -704,6 +954,118 @@ const generalContent = {
         "Bearings and lubrication reduce friction in mechanisms.",
         "Levers use a fulcrum, load and effort, with different classes depending on what is in the middle.",
         "Gears, rack and pinion, crank and piston, linkages, chains, sprockets, belts and pulleys transmit or convert motion."
+      ]
+    }
+  ],
+  physics: [
+    {
+      title: "Physics Equation Core",
+      points: [
+        "Motion: average speed = distance ÷ time; acceleration = change in velocity ÷ time taken; v² = u² + 2as.",
+        "Forces: F = ma, W = mg, pressure = force ÷ area, density = mass ÷ volume.",
+        "Electricity: V = IR, Q = It, E = QV.",
+        "Thermal physics: ΔE = mcΔT."
+      ]
+    },
+    {
+      title: "Graph Skills",
+      points: [
+        "Distance-time graph gradient gives speed. A flat line means the object is stationary.",
+        "Velocity-time graph gradient gives acceleration. A horizontal line means constant velocity.",
+        "Area under a velocity-time graph gives distance travelled.",
+        "Force-extension graphs show elastic behaviour and Hooke's law in the initial linear region."
+      ]
+    },
+    {
+      title: "Forces and Motion",
+      points: [
+        "A resultant force causes acceleration, deceleration or a change in direction.",
+        "Balanced forces mean the object is stationary or moving at constant speed.",
+        "Stopping distance = thinking distance + braking distance.",
+        "Friction acts against motion and can produce unwanted heating."
+      ]
+    },
+    {
+      title: "Energy Transfers",
+      points: [
+        "Energy is conserved: it cannot be created or destroyed, only transferred between stores.",
+        "Energy transfers can happen mechanically, electrically, by heating, or by radiation.",
+        "Efficiency tells you how much input energy is usefully transferred.",
+        "Insulation reduces unwanted energy transfer by conduction, convection or radiation."
+      ]
+    },
+    {
+      title: "Electricity Quick Core",
+      points: [
+        "Current is the rate of flow of charge. Charge = current × time.",
+        "Voltage is energy transferred per unit charge. Energy = charge × voltage.",
+        "Resistance affects current: increasing resistance lowers current if voltage stays the same.",
+        "In parallel circuits, voltage across components is the same."
+      ]
+    },
+    {
+      title: "Radioactivity Quick Core",
+      points: [
+        "Alpha, beta and gamma are ionising radiations emitted from unstable nuclei.",
+        "Alpha is strongly ionising but weakly penetrating. Gamma is weakly ionising but highly penetrating.",
+        "Half-life is the time taken for activity to halve.",
+        "Contamination means radioactive material is on or inside something; irradiation means exposure to radiation."
+      ]
+    },
+    {
+      title: "Space and Cosmology",
+      points: [
+        "Gravity causes planets, moons and satellites to orbit.",
+        "Stars can be classified by colour, temperature and brightness.",
+        "Red-shift gives evidence that galaxies are moving away and the universe is expanding.",
+        "The Big Bang theory is supported by red-shift and cosmic microwave background radiation."
+      ]
+    },
+    {
+      title: "States of Matter",
+      points: [
+        "Heating a substance increases the energy stored by its particles and can cause a change of state.",
+        "Specific heat capacity is the energy needed to raise 1 kg of a substance by 1°C.",
+        "Gas pressure is caused by particles colliding with the walls of a container.",
+        "Increasing temperature increases the average kinetic energy of gas molecules."
+      ]
+    },
+    {
+      title: "Magnetism and Electromagnetism",
+      points: [
+        "A magnetic field is the region where a magnetic material or moving charge experiences a force.",
+        "Current in a wire produces a magnetic field around the wire.",
+        "Electromagnets can be made stronger by increasing current, adding more turns, or using an iron core.",
+        "The motor effect happens when a current-carrying wire experiences a force in a magnetic field."
+      ]
+    }
+  ],
+  history: [
+    {
+      title: "German Unification Overview",
+      points: [
+        "Germany was not unified in 1848–50 because the Frankfurt Parliament lacked power and Austria regained control.",
+        "The Zollverein helped Prussia by creating economic links and excluding Austria.",
+        "Bismarck used Realpolitik, diplomacy and war to defeat Denmark, Austria and France.",
+        "Judgement questions should balance Bismarck against nationalism, Prussian economic strength, the army, von Roon, von Moltke and Austrian weakness."
+      ]
+    },
+    {
+      title: "1848 Revolutions",
+      points: [
+        "France, Germany, Italy and Austria were affected by liberalism, nationalism, economic hardship and anger at conservative rule.",
+        "Many revolutions began with high hopes for reform, constitutions and greater rights.",
+        "Most failed because revolutionaries were divided, rulers recovered control and armies stayed loyal to monarchs.",
+        "Some changes lasted, such as the abolition of feudal obligations in parts of Europe and the spread of nationalist ideas."
+      ]
+    },
+    {
+      title: "Key Exam Judgement",
+      points: [
+        "For 1848, the strongest failure factor is usually lack of power and unity among revolutionaries.",
+        "For Bismarck, avoid saying he did everything alone; he was important because he exploited existing Prussian strengths.",
+        "For Austria, link weakness to nationalism, economic problems, military pressure and the difficulty of ruling a multi-ethnic empire.",
+        "For France in 1870, link the Ems Telegram to French isolation and German nationalist unity."
       ]
     }
   ]
@@ -1079,7 +1441,9 @@ const PROGRESS_VERSION = 2;
 const defaultUnlockedStages = {
   "pe-skeletal-structure": true,
   "bio-aerobic-respiration": true,
-  "dt-cam": true
+  "dt-cam": true,
+  "hist-german-unification-1848-50": true,
+  "phys-motion-position": true
 };
 
 function loadSavedProgress() {
@@ -2323,7 +2687,7 @@ export default function App() {
                         >
                           <option value="">Empty</option>
                           {subjects.map((subject) => (
-                            <option key={subject.id} value={subject.id}>{subject.label}</option>
+                            <option key={subject.id} value={subject.id}>{subject.title}</option>
                           ))}
                         </select>
                       </label>
