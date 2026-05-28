@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown, Check, X, Cpu } from "lucide-react";
+import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown, Check, X, Cpu, Settings } from "lucide-react";
 
 const subjects = [
   {
@@ -573,12 +573,12 @@ const themes = [
     id: "cherry",
     name: "Cherry Blossom",
     unlockAt: 3,
-    bg: "bg-rose-950",
-    panel: "bg-rose-950/70",
-    soft: "bg-pink-300/10",
-    border: "border-pink-300/50",
-    accent: "text-pink-200",
-    button: "bg-pink-500 hover:bg-pink-600",
+    bg: "bg-[#17101d]",
+    panel: "bg-zinc-950/72",
+    soft: "bg-pink-200/10",
+    border: "border-pink-200/25",
+    accent: "text-pink-100",
+    button: "bg-pink-500 hover:bg-pink-400",
     description: "Unlocked after forging 3 stages in a subject."
   },
   {
@@ -709,6 +709,13 @@ const generalContent = {
   ]
 };
 
+function shuffleOptions(options) {
+  return [...options]
+    .map((option) => ({ option, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ option }) => option);
+}
+
 function makeTopic(id, title, level, status, notes, rawQuestions) {
   return {
     id,
@@ -716,7 +723,7 @@ function makeTopic(id, title, level, status, notes, rawQuestions) {
     level,
     status,
     notes,
-    questions: rawQuestions.map(([q, answer, options]) => ({ q, answer, options }))
+    questions: rawQuestions.map(([q, answer, options]) => ({ q, answer, options: shuffleOptions(options) }))
   };
 }
 
@@ -737,6 +744,211 @@ function getDailyQuestions(subject, count = 8) {
   });
 
   return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
+function CherryBlossomBackground() {
+  const clouds = [
+    { left: "56%", top: "10%", width: "280px", height: "76px", opacity: 0.32 },
+    { left: "70%", top: "22%", width: "360px", height: "98px", opacity: 0.26 },
+    { left: "36%", top: "32%", width: "250px", height: "68px", opacity: 0.18 }
+  ];
+
+  const bushBlobs = [
+    { left: "-8%", top: "42%", width: "320px", height: "260px", opacity: 0.9 },
+    { left: "6%", top: "30%", width: "300px", height: "240px", opacity: 0.84 },
+    { left: "18%", top: "42%", width: "260px", height: "210px", opacity: 0.72 },
+    { left: "0%", top: "62%", width: "330px", height: "230px", opacity: 0.82 },
+    { left: "24%", top: "58%", width: "210px", height: "165px", opacity: 0.62 },
+    { left: "14%", top: "18%", width: "210px", height: "165px", opacity: 0.6 }
+  ];
+
+  const blossomDots = [
+    { left: "8%", top: "40%", size: "18px" },
+    { left: "14%", top: "28%", size: "14px" },
+    { left: "20%", top: "36%", size: "16px" },
+    { left: "27%", top: "31%", size: "13px" },
+    { left: "10%", top: "58%", size: "14px" },
+    { left: "19%", top: "52%", size: "17px" },
+    { left: "29%", top: "55%", size: "12px" },
+    { left: "13%", top: "69%", size: "15px" },
+    { left: "25%", top: "68%", size: "12px" }
+  ];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 cherry-clean-sky" />
+      <div className="absolute inset-0 cherry-clean-overlay" />
+
+      {clouds.map((cloud, i) => (
+        <div
+          key={`cloud-${i}`}
+          className="cherry-soft-cloud absolute rounded-full bg-white blur-2xl"
+          style={{
+            left: cloud.left,
+            top: cloud.top,
+            width: cloud.width,
+            height: cloud.height,
+            opacity: cloud.opacity,
+            animationDelay: `${i * 1.8}s`
+          }}
+        />
+      ))}
+
+      <div className="absolute left-0 bottom-0 h-[78%] w-[34rem]">
+        {bushBlobs.map((blob, i) => (
+          <div
+            key={`bush-${i}`}
+            className="absolute rounded-full blur-xl cherry-bush-blob"
+            style={{
+              left: blob.left,
+              top: blob.top,
+              width: blob.width,
+              height: blob.height,
+              opacity: blob.opacity
+            }}
+          />
+        ))}
+
+        {blossomDots.map((dot, i) => (
+          <span
+            key={`dot-${i}`}
+            className="absolute block rounded-full cherry-blossom-dot"
+            style={{
+              left: dot.left,
+              top: dot.top,
+              width: dot.size,
+              height: dot.size
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-[34%] cherry-ground-fade" />
+      <div className="absolute left-[18%] right-[12%] top-[56%] h-px bg-white/20" />
+      <div className="absolute left-[20%] right-[20%] top-[58%] h-px bg-pink-100/12" />
+    </div>
+  );
+}
+
+function CherryPetalsOverlay() {
+  const petals = Array.from({ length: 18 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[100] overflow-hidden">
+      {petals.map((_, i) => (
+        <span
+          key={`petal-${i}`}
+          className="cherry-petal absolute block"
+          style={{
+            left: `${-8 + i * 5.2}%`,
+            top: `${-16 - (i % 4) * 7}vh`,
+            width: `${7 + (i % 3)}px`,
+            height: `${11 + (i % 4)}px`,
+            animationDelay: `${i * 0.8}s`,
+            animationDuration: `${11 + (i % 5) * 1.4}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function OceanThemeBackground() {
+  const bubbles = Array.from({ length: 16 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 ocean-theme-sky" />
+      <div className="absolute inset-x-0 bottom-0 h-[46%] ocean-theme-water" />
+      <div className="absolute inset-x-0 top-[48%] h-px bg-cyan-100/25" />
+      <div className="absolute left-[8%] top-[18%] h-52 w-52 rounded-full bg-cyan-300/12 blur-3xl" />
+      <div className="absolute right-[12%] top-[14%] h-72 w-72 rounded-full bg-blue-300/10 blur-3xl" />
+      <div className="absolute bottom-[14%] left-[-8%] h-32 w-[120%] rounded-[100%] border-t border-cyan-200/18" />
+      <div className="absolute bottom-[20%] left-[-12%] h-24 w-[130%] rounded-[100%] border-t border-sky-200/12" />
+
+      {bubbles.map((_, i) => (
+        <span
+          key={`bubble-${i}`}
+          className="ocean-bubble absolute block rounded-full border border-cyan-100/40 bg-cyan-100/10"
+          style={{
+            left: `${8 + i * 5.8}%`,
+            bottom: `${-10 - (i % 4) * 6}%`,
+            width: `${7 + (i % 4) * 4}px`,
+            height: `${7 + (i % 4) * 4}px`,
+            animationDelay: `${i * 0.7}s`,
+            animationDuration: `${9 + (i % 5) * 1.3}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function RoyalThemeBackground() {
+  const stars = Array.from({ length: 24 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 royal-theme-bg" />
+      <div className="absolute left-[12%] top-[12%] h-72 w-72 rounded-full bg-purple-400/16 blur-3xl" />
+      <div className="absolute right-[10%] top-[18%] h-80 w-80 rounded-full bg-fuchsia-400/12 blur-3xl" />
+      <div className="absolute bottom-[-12%] left-[30%] h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl" />
+      <div className="absolute left-[4%] top-[18%] h-[70%] w-px bg-gradient-to-b from-transparent via-purple-200/20 to-transparent" />
+      <div className="absolute right-[8%] top-[12%] h-[76%] w-px bg-gradient-to-b from-transparent via-fuchsia-200/16 to-transparent" />
+
+      {stars.map((_, i) => (
+        <span
+          key={`star-${i}`}
+          className="royal-star absolute block rounded-full bg-purple-100"
+          style={{
+            left: `${5 + ((i * 37) % 88)}%`,
+            top: `${9 + ((i * 19) % 78)}%`,
+            width: `${2 + (i % 3)}px`,
+            height: `${2 + (i % 3)}px`,
+            animationDelay: `${i * 0.35}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function GoldThemeBackground() {
+  const embers = Array.from({ length: 22 }, (_, i) => i);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 gold-theme-bg" />
+      <div className="absolute left-[10%] top-[16%] h-72 w-72 rounded-full bg-amber-400/12 blur-3xl" />
+      <div className="absolute right-[12%] top-[12%] h-80 w-80 rounded-full bg-yellow-300/10 blur-3xl" />
+      <div className="absolute bottom-[-16%] left-[18%] h-[26rem] w-[64%] rounded-[100%] bg-amber-500/10 blur-3xl" />
+      <div className="absolute inset-x-0 bottom-[26%] h-px bg-amber-200/18" />
+      <div className="absolute inset-x-0 bottom-[24%] h-px bg-yellow-200/10" />
+
+      {embers.map((_, i) => (
+        <span
+          key={`ember-${i}`}
+          className="gold-ember absolute block rounded-full bg-amber-200"
+          style={{
+            left: `${3 + i * 4.8}%`,
+            bottom: `${-8 - (i % 3) * 5}%`,
+            width: `${3 + (i % 4)}px`,
+            height: `${3 + (i % 4)}px`,
+            animationDelay: `${i * 0.45}s`,
+            animationDuration: `${7 + (i % 5) * 1.2}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ThemeBackground({ activeThemeId }) {
+  if (activeThemeId === "cherry") return <CherryBlossomBackground />;
+  if (activeThemeId === "ocean") return <OceanThemeBackground />;
+  if (activeThemeId === "royal") return <RoyalThemeBackground />;
+  if (activeThemeId === "gold") return <GoldThemeBackground />;
+  return null;
 }
 
 function AchievementCard({ theme, unlocked, onSelect, selected }) {
@@ -862,10 +1074,10 @@ function QuizBlock({ questions, answers, setAnswers, submitted, titlePrefix = ""
 }
 
 const STORAGE_KEY = "ironForgeProgressV1";
+const PROGRESS_VERSION = 2;
 
 const defaultUnlockedStages = {
   "pe-skeletal-structure": true,
-  "pe-synovial-structure": true,
   "bio-aerobic-respiration": true,
   "dt-cam": true
 };
@@ -873,7 +1085,15 @@ const defaultUnlockedStages = {
 function loadSavedProgress() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+
+    if (parsed?.version !== PROGRESS_VERSION && parsed?.unlocked) {
+      delete parsed.unlocked["pe-synovial-structure"];
+    }
+
+    return parsed;
   } catch {
     return null;
   }
@@ -885,6 +1105,11 @@ export default function App() {
   const [usernameInput, setUsernameInput] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(savedProgress?.saveEnabled ?? false);
   const [showSavePrompt, setShowSavePrompt] = useState(!savedProgress);
+  const [workMinutes, setWorkMinutes] = useState(savedProgress?.workMinutes || 30);
+  const [breakMinutes, setBreakMinutes] = useState(savedProgress?.breakMinutes || 5);
+  const [revisionSeconds, setRevisionSeconds] = useState(savedProgress?.revisionSeconds || 0);
+  const [breakAlarm, setBreakAlarm] = useState(false);
+  const [lastBreakMarker, setLastBreakMarker] = useState(savedProgress?.lastBreakMarker || 0);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(savedProgress?.selectedSubjectId || subjects[0].id);
   const selectedSubject = subjects.find((subject) => subject.id === selectedSubjectId) || subjects[0];
@@ -904,20 +1129,52 @@ export default function App() {
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const dailyQuestions = useMemo(() => getDailyQuestions(selectedSubject, 8), [selectedSubject]);
 
+  const formattedRevisionTime = useMemo(() => {
+    const minutes = Math.floor(revisionSeconds / 60);
+    const seconds = revisionSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }, [revisionSeconds]);
+
+  useEffect(() => {
+    if (view !== "stages") return;
+
+    const timer = window.setInterval(() => {
+      setRevisionSeconds((previous) => {
+        const next = previous + 1;
+        const workSeconds = Math.max(1, Number(workMinutes) || 30) * 60;
+        const currentMarker = Math.floor(next / workSeconds);
+
+        if (currentMarker > 0 && currentMarker > lastBreakMarker) {
+          setLastBreakMarker(currentMarker);
+          setBreakAlarm(true);
+        }
+
+        return next;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [view, workMinutes, lastBreakMarker]);
+
   useEffect(() => {
     if (!saveEnabled) return;
 
     const progress = {
+      version: PROGRESS_VERSION,
       username,
       saveEnabled,
       selectedSubjectId,
       selectedTopicId,
       activeThemeId,
-      unlocked
+      unlocked,
+      workMinutes,
+      breakMinutes,
+      revisionSeconds,
+      lastBreakMarker
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked]);
+  }, [saveEnabled, username, selectedSubjectId, selectedTopicId, activeThemeId, unlocked, workMinutes, breakMinutes, revisionSeconds, lastBreakMarker]);
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter((item, index) => answers[index] === item.answer).length;
@@ -1007,12 +1264,17 @@ export default function App() {
     const cleanName = usernameInput.trim() || "Student";
 
     const progress = {
+      version: PROGRESS_VERSION,
       username: cleanName,
       saveEnabled: true,
       selectedSubjectId,
       selectedTopicId,
       activeThemeId,
-      unlocked
+      unlocked,
+      workMinutes,
+      breakMinutes,
+      revisionSeconds,
+      lastBreakMarker
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -1027,7 +1289,46 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen ${activeTheme.bg} text-zinc-100`}>
+    <div
+      className={`relative min-h-screen overflow-hidden ${activeTheme.bg} text-zinc-100 ${
+        activeThemeId === "cherry" ? "cherry-theme" : ""
+      }`}
+    >
+      <ThemeBackground activeThemeId={activeThemeId} />
+      {activeThemeId === "cherry" && <CherryPetalsOverlay />}
+      {breakAlarm && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
+          <div className="absolute inset-0 break-burst" />
+          <div className="relative w-full max-w-lg rounded-3xl border border-orange-300/40 bg-zinc-950/92 p-8 text-center shadow-2xl shadow-orange-950/50">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/20 text-orange-200">
+              <Flame className="h-10 w-10" />
+            </div>
+            <p className="text-xs font-black uppercase tracking-[0.35em] text-orange-300">Break unlocked</p>
+            <h2 className="mt-3 text-4xl font-black text-white">Anvil exploded.</h2>
+            <p className="mt-3 text-zinc-300">
+              You have revised for {workMinutes} minutes. Take a {breakMinutes} minute break, then come back and keep forging.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => setBreakAlarm(false)}
+                className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600"
+              >
+                Start break
+              </button>
+              <button
+                onClick={() => {
+                  setBreakAlarm(false);
+                  setView("settings");
+                }}
+                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-3 font-bold text-zinc-200 hover:bg-zinc-800"
+              >
+                Timer settings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showSavePrompt && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
           <div className="relative w-full max-w-md rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
@@ -1092,7 +1393,252 @@ export default function App() {
         button:focus-visible {
           box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.65);
         }
-      `}</style> 
+
+        .break-burst {
+          background:
+            radial-gradient(circle at 50% 50%, rgba(255, 160, 60, 0.35), transparent 18%),
+            repeating-conic-gradient(from 0deg, rgba(255, 145, 40, 0.28) 0deg 8deg, transparent 8deg 18deg);
+          animation: break-explode 1.1s ease-out infinite alternate;
+        }
+
+        @keyframes break-explode {
+          0% {
+            transform: scale(0.92) rotate(0deg);
+            opacity: 0.55;
+          }
+          100% {
+            transform: scale(1.12) rotate(8deg);
+            opacity: 0.95;
+          }
+        }
+
+        .cherry-theme {
+          background: #17101d;
+        }
+
+        .ocean-theme-sky {
+          background:
+            linear-gradient(
+              180deg,
+              rgba(31, 160, 226, 0.58) 0%,
+              rgba(67, 190, 229, 0.38) 38%,
+              rgba(15, 34, 52, 0.78) 100%
+            );
+        }
+
+        .ocean-theme-water {
+          background:
+            linear-gradient(180deg, rgba(50, 200, 230, 0.14), rgba(6, 26, 42, 0.78)),
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 12px);
+        }
+
+        @keyframes bubble-rise {
+          0% {
+            transform: translate3d(0, 0, 0) scale(0.8);
+            opacity: 0;
+          }
+          16% {
+            opacity: 0.7;
+          }
+          100% {
+            transform: translate3d(20px, -110vh, 0) scale(1.2);
+            opacity: 0;
+          }
+        }
+
+        .ocean-bubble {
+          animation-name: bubble-rise;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+
+        .royal-theme-bg {
+          background:
+            radial-gradient(circle at 20% 12%, rgba(185, 120, 255, 0.20), transparent 24%),
+            radial-gradient(circle at 82% 18%, rgba(255, 110, 210, 0.14), transparent 22%),
+            linear-gradient(180deg, rgba(35, 18, 60, 0.96), rgba(13, 10, 26, 0.98));
+        }
+
+        @keyframes royal-twinkle {
+          0%, 100% {
+            opacity: 0.2;
+            transform: scale(0.85);
+          }
+          50% {
+            opacity: 0.9;
+            transform: scale(1.25);
+          }
+        }
+
+        .royal-star {
+          animation-name: royal-twinkle;
+          animation-duration: 3.6s;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+          box-shadow: 0 0 12px rgba(235, 210, 255, 0.5);
+        }
+
+        .gold-theme-bg {
+          background:
+            radial-gradient(circle at 18% 14%, rgba(255, 190, 80, 0.17), transparent 24%),
+            radial-gradient(circle at 84% 12%, rgba(255, 230, 130, 0.12), transparent 22%),
+            linear-gradient(180deg, rgba(38, 27, 12, 0.98), rgba(14, 11, 9, 0.98));
+        }
+
+        @keyframes ember-rise {
+          0% {
+            transform: translate3d(0, 0, 0) scale(0.8);
+            opacity: 0;
+          }
+          15% {
+            opacity: 0.95;
+          }
+          100% {
+            transform: translate3d(16px, -110vh, 0) scale(0.35);
+            opacity: 0;
+          }
+        }
+
+        .gold-ember {
+          animation-name: ember-rise;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          box-shadow: 0 0 14px rgba(255, 190, 80, 0.65);
+        }
+
+        .cherry-clean-sky {
+          background:
+            linear-gradient(
+              180deg,
+              rgba(120, 210, 255, 0.78) 0%,
+              rgba(165, 225, 255, 0.58) 34%,
+              rgba(255, 223, 238, 0.26) 68%,
+              rgba(23, 16, 29, 0.84) 100%
+            );
+        }
+
+        .cherry-clean-overlay {
+          background:
+            radial-gradient(circle at 18% 18%, rgba(255, 210, 235, 0.28), transparent 24%),
+            radial-gradient(circle at 82% 10%, rgba(255, 255, 255, 0.18), transparent 18%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(18, 12, 24, 0.42));
+        }
+
+        .cherry-bush-blob {
+          background: radial-gradient(circle at 35% 30%, rgba(255,245,250,0.95) 0%, rgba(255,193,224,0.88) 34%, rgba(244,143,191,0.72) 62%, rgba(215,104,164,0.42) 100%);
+        }
+
+        .cherry-blossom-dot {
+          background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95) 0%, rgba(255,221,236,0.92) 38%, rgba(255,177,211,0.9) 72%, rgba(255,140,188,0.72) 100%);
+          box-shadow: 0 0 12px rgba(255, 190, 220, 0.4);
+        }
+
+        .cherry-ground-fade {
+          background: linear-gradient(180deg, rgba(150,215,255,0.10), rgba(255,206,228,0.10) 44%, rgba(10,10,18,0.40) 100%);
+        }
+
+        .cherry-soft-cloud {
+          animation-name: cloud-drift;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+          animation-duration: 24s;
+        }
+
+        .cherry-theme .text-zinc-400 {
+          color: rgba(255, 238, 246, 0.84) !important;
+        }
+
+        .cherry-theme .text-zinc-500 {
+          color: rgba(255, 220, 234, 0.68) !important;
+        }
+
+        .cherry-theme .text-orange-200,
+        .cherry-theme .text-orange-300,
+        .cherry-theme .text-orange-400 {
+          color: #ffd3e7 !important;
+        }
+
+        .cherry-theme .bg-zinc-900 {
+          background-color: rgba(17, 17, 24, 0.78) !important;
+          backdrop-filter: blur(14px);
+        }
+
+        .cherry-theme .bg-zinc-950 {
+          background-color: rgba(10, 10, 16, 0.84) !important;
+          backdrop-filter: blur(14px);
+        }
+
+        .cherry-theme .border-zinc-800 {
+          border-color: rgba(255, 208, 229, 0.14) !important;
+        }
+
+        .cherry-theme .bg-orange-500,
+        .cherry-theme .hover\\:bg-orange-600:hover,
+        .cherry-theme .hover\\:bg-orange-500:hover {
+          background: linear-gradient(135deg, #ff5fa7, #ff8cc4) !important;
+        }
+
+        .cherry-theme .border-orange-400\\/40,
+        .cherry-theme .border-orange-500\\/30,
+        .cherry-theme .border-orange-300,
+        .cherry-theme .border-orange-400\\/80 {
+          border-color: rgba(255, 180, 214, 0.54) !important;
+        }
+
+        .cherry-theme .shadow-orange-500\\/20,
+        .cherry-theme .shadow-orange-950\\/40 {
+          box-shadow: 0 0 24px rgba(255, 125, 180, 0.16) !important;
+        }
+
+        @keyframes cloud-drift {
+          0% {
+            transform: translateX(0px);
+          }
+          50% {
+            transform: translateX(22px);
+          }
+          100% {
+            transform: translateX(0px);
+          }
+        }
+
+        @keyframes petal-fall {
+          0% {
+            transform: translate3d(-12vw, -14vh, 0) rotate(0deg) scale(1);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.92;
+          }
+          42% {
+            transform: translate3d(18vw, 32vh, 0) rotate(180deg) scale(1.02);
+            opacity: 0.82;
+          }
+          76% {
+            transform: translate3d(40vw, 74vh, 0) rotate(340deg) scale(0.96);
+            opacity: 0.56;
+          }
+          100% {
+            transform: translate3d(62vw, 116vh, 0) rotate(520deg) scale(0.92);
+            opacity: 0;
+          }
+        }
+
+        .cherry-petal {
+          border-radius: 60% 40% 70% 30% / 45% 55% 45% 55%;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 247, 251, 0.98),
+            rgba(255, 185, 220, 0.92)
+          );
+          box-shadow: 0 0 10px rgba(255, 205, 226, 0.28);
+          animation-name: petal-fall;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+      `}</style>
+
+      <div className="relative z-10">
       <div className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/90 px-4 py-3 backdrop-blur">
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-between gap-2 overflow-x-auto">
@@ -1104,9 +1650,16 @@ export default function App() {
           <button onClick={goToStages} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "stages" || view === "topic" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Hammer className="h-4 w-4" /> Stages</button>
           <button onClick={startDailyTest} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "daily" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Shuffle className="h-4 w-4" /> Daily</button>
           <button onClick={() => setView("themes")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "themes" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Palette className="h-4 w-4" /> Themes</button>
-          <div className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400">
+          <button onClick={() => setView("settings")} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${view === "settings" ? activeTheme.button + " text-white" : "border border-zinc-800 bg-zinc-900 text-zinc-300"}`}><Settings className="h-4 w-4" /> Settings</button>
+          <button
+            onClick={() => {
+              setUsernameInput(username || "");
+              setShowSavePrompt(true);
+            }}
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400 hover:bg-zinc-800"
+          >
             {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
-          </div>
+          </button>
           </div>
 
           {subjectsOpen && (
@@ -1140,13 +1693,14 @@ export default function App() {
         <section className="grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
-              <Flame className="h-4 w-4" /> 100% to move on
+              <Flame className="h-4 w-4" /> {view === "stages" ? `Revision clock: ${formattedRevisionTime}` : "100% to move on"}
             </div>
             <h1 className="text-4xl font-black tracking-tight md:text-7xl">
               Iron Forge <span className="text-orange-400">Method</span>
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 md:text-lg md:leading-8">
               Pick a subject, open a stage, test yourself, and unlock the next stage only when you score full marks.
+              {view === "stages" && ` You are revising now — break alarm triggers every ${workMinutes} minutes for a ${breakMinutes} minute break.`}
             </p>
           </div>
 
@@ -1425,6 +1979,67 @@ export default function App() {
             )}
           </main>
         </section>}
+
+        {view === "settings" && (
+          <section className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/80 p-6 shadow-2xl shadow-black/20">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">Settings</p>
+                  <h2 className="mt-2 text-4xl font-black text-white">Forge Settings</h2>
+                  <p className="mt-2 max-w-2xl text-zinc-400">Change your revision timer and progress saving settings.</p>
+                </div>
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 px-5 py-4 text-right">
+                  <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">Current session</p>
+                  <p className="mt-1 text-2xl font-black text-white">{formattedRevisionTime}</p>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+                  <div className="flex items-center gap-3">
+                    <Timer className="h-6 w-6 text-orange-300" />
+                    <h3 className="text-2xl font-black text-white">Revision timer</h3>
+                  </div>
+                  <p className="mt-2 text-sm text-zinc-400">On the Stages page, the top badge becomes a live revision clock. When it reaches your work time, the break alarm appears.</p>
+
+                  <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                    <label className="block">
+                      <span className="text-xs font-bold uppercase tracking-widest text-orange-300">Work minutes</span>
+                      <input type="number" min="1" max="180" value={workMinutes} onChange={(event) => setWorkMinutes(Math.max(1, Number(event.target.value) || 30))} className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400" />
+                    </label>
+                    <label className="block">
+                      <span className="text-xs font-bold uppercase tracking-widest text-orange-300">Break minutes</span>
+                      <input type="number" min="1" max="60" value={breakMinutes} onChange={(event) => setBreakMinutes(Math.max(1, Number(event.target.value) || 5))} className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400" />
+                    </label>
+                  </div>
+
+                  <button onClick={() => { setRevisionSeconds(0); setLastBreakMarker(0); setBreakAlarm(false); }} className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800">
+                    Reset revision clock
+                  </button>
+                </div>
+
+                <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
+                  <div className="flex items-center gap-3">
+                    <ShieldCheck className="h-6 w-6 text-orange-300" />
+                    <h3 className="text-2xl font-black text-white">Progress saving</h3>
+                  </div>
+                  <p className="mt-2 text-sm text-zinc-400">{saveEnabled ? `This device is saving progress as ${username || "Student"}.` : "Progress is not currently being saved on this device."}</p>
+
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <button onClick={() => setShowSavePrompt(true)} className="rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600">
+                      {saveEnabled ? "Change username" : "Start saving"}
+                    </button>
+                    <button onClick={() => { setSaveEnabled(false); setUsername(""); localStorage.removeItem(STORAGE_KEY); }} className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800">
+                      Stop saving on this device
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
       </div>
     </div>
   );
