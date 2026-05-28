@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import React, { useMemo, useState } from "react";
 import { Flame, Hammer, Lock, ShieldCheck, RotateCcw, Trophy, BookOpen, Timer, Dumbbell, Microscope, Shuffle, ArrowLeft, Home, Palette, Medal, LibraryBig, ListChecks, ChevronDown } from "lucide-react";
 
@@ -1130,6 +1131,7 @@ export default function App() {
           </main>
         </section>}
       </div>
+      <Analytics />
     </div>
   );
 }
