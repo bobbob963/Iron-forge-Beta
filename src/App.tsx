@@ -2318,15 +2318,20 @@ export default function App() {
               <Trophy className="h-4 w-4" /> Super Test
             </button>
           )}
-          <button
-            onClick={() => {
-              setUsernameInput(username || "");
-              setShowSavePrompt(true);
-            }}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400 hover:bg-zinc-800"
-          >
-            {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
-          </button>
+          <div className="flex shrink-0 flex-col items-center gap-1">
+            <button
+              onClick={() => {
+                setUsernameInput(username || "");
+                setShowSavePrompt(true);
+              }}
+              className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400 hover:bg-zinc-800"
+            >
+              {saveEnabled ? `${username || "Student"}'s Forge` : "Not saving"}
+            </button>
+            <span className="rounded-full border border-zinc-800 bg-zinc-950/70 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
+              made by tbam
+            </span>
+          </div>
           </div>
 
           {subjectsOpen && (
