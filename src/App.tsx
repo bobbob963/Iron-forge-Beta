@@ -1631,6 +1631,57 @@ function makeTopic(id, title, level, status, notes, rawQuestions) {
   };
 }
 
+function makeWordedQuestionText(questionText) {
+  return questionText
+    .replace(/^Which one is a /i, "Describe a ")
+    .replace(/^Which one is an /i, "Describe an ")
+    .replace(/^Which one is /i, "Name or describe ")
+    .replace(/^Which /i, "Name which ")
+    .replace(/^What is the test for /i, "Describe the test for ")
+    .replace(/^What does /i, "Explain what ")
+    .replace(/^What do /i, "Explain what ")
+    .replace(/^What happens /i, "Explain what happens ")
+    .replace(/^Where does /i, "State where ")
+    .replace(/^Where do /i, "State where ")
+    .replace(/^Why /i, "Explain why ");
+}
+
+function normaliseAnswer(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[²₁₂₃₄₅₆₇₈₉₀]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function answerTokens(value) {
+  const ignored = new Set(["a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "into", "is", "it", "of", "on", "or", "the", "they", "this", "to", "with"]);
+  return normaliseAnswer(value).split(" ").filter((token) => token && !ignored.has(token));
+}
+
+function isBroadAnswerCorrect(question, userAnswer) {
+  const cleanUserAnswer = normaliseAnswer(userAnswer);
+  const cleanCorrectAnswer = normaliseAnswer(question.answer);
+
+  if (!cleanUserAnswer) return false;
+  if (cleanUserAnswer === cleanCorrectAnswer) return true;
+  if (cleanCorrectAnswer.length >= 4 && cleanUserAnswer.includes(cleanCorrectAnswer)) return true;
+
+  const correctTokens = answerTokens(question.answer);
+  const userTokens = answerTokens(userAnswer);
+  const userTokenSet = new Set(userTokens);
+  const matchedTokens = correctTokens.filter((token) => userTokenSet.has(token));
+
+  if (correctTokens.length === 1) {
+    const target = correctTokens[0];
+    return userTokens.some((token) => target.includes(token) || token.includes(target));
+  }
+
+  if (correctTokens.length === 2) return matchedTokens.length >= 1;
+
+  return matchedTokens.length >= Math.max(2, Math.ceil(correctTokens.length * 0.5));
+}
+
 function getDailyQuestions(subject, count = 8) {
   const all = subject.topics.flatMap((topic) =>
     topic.questions.map((question) => ({ ...question, topicTitle: topic.title }))
@@ -1647,7 +1698,15 @@ function getDailyQuestions(subject, count = 8) {
     return aScore - bScore;
   });
 
-  return shuffled.slice(0, Math.min(count, shuffled.length));
+  return shuffled.slice(0, Math.min(count, shuffled.length)).map((question, index) => {
+    const isWritten = index % 2 === 1;
+
+    return {
+      ...question,
+      type: isWritten ? "written" : "multiple-choice",
+      q: isWritten ? makeWordedQuestionText(question.q) : question.q
+    };
+  });
 }
 
 function CherryBlossomBackground() {
@@ -2402,48 +2461,80 @@ function ProgressRing({ value, label = "Recall" }) {
 function QuizBlock({ questions, answers, setAnswers, submitted, titlePrefix = "" }) {
   return (
     <div className="mt-5 space-y-5">
-      {questions.map((item, index) => (
-        <div key={`${item.q}-${index}`} className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-          {item.topicTitle && <p className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-300">{item.topicTitle}</p>}
-          <p className="font-bold text-white">{titlePrefix}{index + 1}. {item.q}</p>
-          <div className="mt-3 grid gap-2">
-            {item.options.map((option) => {
-              const chosen = answers[index] === option;
-              const isCorrectAnswer = option === item.answer;
-              const showCorrect = submitted && isCorrectAnswer;
-              const showWrong = submitted && chosen && !isCorrectAnswer;
-              const neutralChosen = chosen && !submitted;
+      {questions.map((item, index) => {
+        const isWritten = item.type === "written";
+        const writtenCorrect = submitted && isWritten && isBroadAnswerCorrect(item, answers[index]);
+        const writtenWrong = submitted && isWritten && !writtenCorrect;
 
-              return (
-                <button
-                  key={option}
-                  onClick={() => !submitted && setAnswers((prev) => ({ ...prev, [index]: option }))}
-                  className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left text-sm transition active:scale-[0.99] ${
-                    neutralChosen ? "border-orange-400 bg-orange-400/10 text-white" : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
-                  } ${showCorrect ? "border-green-400 bg-green-400/15 text-green-100" : ""} ${showWrong ? "border-red-400 bg-red-400/15 text-red-100" : ""}`}
-                >
-                  <span>{option}</span>
+        return (
+          <div key={`${item.q}-${index}`} className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+            {item.topicTitle && <p className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-300">{item.topicTitle}</p>}
+            <p className="font-bold text-white">{titlePrefix}{index + 1}. {item.q}</p>
 
-                  {showCorrect && (
-                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500/20 text-green-300">
-                      <Check className="h-4 w-4" />
-                    </span>
-                  )}
+            {isWritten ? (
+              <div className="mt-3">
+                <textarea
+                  value={answers[index] || ""}
+                  onChange={(event) => !submitted && setAnswers((prev) => ({ ...prev, [index]: event.target.value }))}
+                  disabled={submitted}
+                  placeholder="Type your answer. It does not need to be word-for-word."
+                  className={`min-h-24 w-full rounded-xl border bg-zinc-900 px-3 py-3 text-sm text-white outline-none transition disabled:opacity-70 ${
+                    writtenCorrect ? "border-green-400 bg-green-400/10" : writtenWrong ? "border-red-400 bg-red-400/10" : "border-zinc-800 focus:border-orange-400"
+                  }`}
+                />
 
-                  {showWrong && (
-                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-red-300">
-                      <X className="h-4 w-4" />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                {submitted && (
+                  <div className={`mt-3 rounded-xl border p-3 text-sm font-semibold ${writtenCorrect ? "border-green-400/40 bg-green-400/10 text-green-100" : "border-red-400/40 bg-red-400/10 text-red-100"}`}>
+                    <div className="flex items-center gap-2">
+                      {writtenCorrect ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+                      {writtenCorrect ? "Accepted" : "Not quite"}
+                    </div>
+                    <p className="mt-2 text-zinc-300">Suggested answer: <span className="font-black text-white">{item.answer}</span></p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="mt-3 grid gap-2">
+                {item.options.map((option) => {
+                  const chosen = answers[index] === option;
+                  const isCorrectAnswer = option === item.answer;
+                  const showCorrect = submitted && isCorrectAnswer;
+                  const showWrong = submitted && chosen && !isCorrectAnswer;
+                  const neutralChosen = chosen && !submitted;
+
+                  return (
+                    <button
+                      key={option}
+                      onClick={() => !submitted && setAnswers((prev) => ({ ...prev, [index]: option }))}
+                      className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left text-sm transition active:scale-[0.99] ${
+                        neutralChosen ? "border-orange-400 bg-orange-400/10 text-white" : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
+                      } ${showCorrect ? "border-green-400 bg-green-400/15 text-green-100" : ""} ${showWrong ? "border-red-400 bg-red-400/15 text-red-100" : ""}`}
+                    >
+                      <span>{option}</span>
+
+                      {showCorrect && (
+                        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500/20 text-green-300">
+                          <Check className="h-4 w-4" />
+                        </span>
+                      )}
+
+                      {showWrong && (
+                        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500/20 text-red-300">
+                          <X className="h-4 w-4" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
+
 
 const STORAGE_KEY = "ironForgeProgressV1";
 const PROGRESS_VERSION = 2;
@@ -2547,9 +2638,23 @@ export default function App() {
 
   const superTestQuestions = useMemo(() => {
     return sectionTopics
-      .flatMap((topic) => topic.questions.map((question) => ({ ...question, topicTitle: topic.title })))
+      .flatMap((topic) =>
+        topic.questions.map((question) => ({
+          ...question,
+          q: makeWordedQuestionText(question.q),
+          type: "written",
+          topicTitle: topic.title
+        }))
+      )
       .slice(0, 12);
   }, [sectionTopics]);
+
+  const superTestScore = useMemo(() => {
+    const correct = superTestQuestions.filter((question, index) => isBroadAnswerCorrect(question, superTestAnswers[index])).length;
+    return superTestQuestions.length ? Math.round((correct / superTestQuestions.length) * 100) : 0;
+  }, [superTestAnswers, superTestQuestions]);
+
+  const superTestPassed = superTestSubmitted && superTestScore === 100;
 
   function openSuperTest() {
     setSuperTestAnswers({});
@@ -2558,6 +2663,8 @@ export default function App() {
   }
 
   function resetSelectedSubjectProgress() {
+    if (!superTestPassed) return;
+
     const firstTopicId = sectionTopics[0]?.id;
     const nextUnlocked = { ...unlocked };
 
@@ -2633,7 +2740,10 @@ export default function App() {
   }, [answers, selectedTopic]);
 
   const dailyScore = useMemo(() => {
-    const correct = dailyQuestions.filter((item, index) => dailyAnswers[index] === item.answer).length;
+    const correct = dailyQuestions.filter((item, index) => {
+      if (item.type === "written") return isBroadAnswerCorrect(item, dailyAnswers[index]);
+      return dailyAnswers[index] === item.answer;
+    }).length;
     return dailyQuestions.length ? Math.round((correct / dailyQuestions.length) * 100) : 0;
   }, [dailyAnswers, dailyQuestions]);
 
@@ -5152,13 +5262,20 @@ export default function App() {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2"><BookOpen className="h-6 w-6 text-orange-400" /><h2 className="text-2xl font-black text-white">Stage</h2></div>
                     <div className="flex rounded-2xl border border-zinc-800 bg-zinc-950 p-1">
-                      <button onClick={() => setStageTab("notes")} className={`rounded-xl px-3 py-2 text-sm font-bold ${stageTab === "notes" ? "bg-orange-500 text-white" : "text-zinc-400"}`}>Notes</button>
+                      <button
+                        onClick={() => submitted && setStageTab("notes")}
+                        disabled={!submitted}
+                        className={`rounded-xl px-3 py-2 text-sm font-bold ${stageTab === "notes" ? "bg-orange-500 text-white" : "text-zinc-400"} disabled:cursor-not-allowed disabled:opacity-40`}
+                        title={!submitted ? "Notes unlock after you click Strike the Anvil." : "Open notes"}
+                      >
+                        Notes
+                      </button>
                       <button onClick={() => setStageTab("test")} className={`rounded-xl px-3 py-2 text-sm font-bold ${stageTab === "test" ? "bg-orange-500 text-white" : "text-zinc-400"}`}>Test</button>
                     </div>
                   </div>
                   <p className="mt-2 text-sm font-semibold uppercase tracking-widest text-zinc-500">{selectedTopic.title}</p>
 
-                  {stageTab === "notes" ? (
+                  {stageTab === "notes" && submitted ? (
                     <div className="mt-5 space-y-3">
                       {selectedTopic.notes.map((note, index) => (
                         <div key={index} className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4 text-zinc-300">
@@ -5168,7 +5285,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="mt-5 rounded-2xl border border-zinc-800 bg-zinc-950 p-4 text-zinc-300">
-                      Test mode opens first on phones. Read the notes only if you get stuck.
+                      Notes are locked while the test is active. Click Strike the Anvil to mark your answers and unlock the notes.
                     </div>
                   )}
                 </div>
@@ -5197,7 +5314,7 @@ export default function App() {
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2"><Shuffle className="h-6 w-6 text-orange-400" /><h2 className="text-2xl font-black text-white">Daily {selectedSubject.title} Test</h2></div>
-                    <p className="mt-2 text-sm text-zinc-400">A mixed recall test from across the whole subject.</p>
+                    <p className="mt-2 text-sm text-zinc-400">A mixed recall test from across the whole subject, using multiple choice and written answers.</p>
                   </div>
                   <ProgressRing value={dailySubmitted ? dailyScore : recallPercentage} label={dailySubmitted ? "Score" : "Recall"} />
                 </div>
@@ -5247,9 +5364,11 @@ export default function App() {
                       className="mt-4 min-h-28 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400 disabled:opacity-70"
                     />
                     {superTestSubmitted && (
-                      <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-                        <p className="text-xs font-black uppercase tracking-widest text-emerald-300">Suggested answer</p>
-                        <p className="mt-1 font-bold text-emerald-100">{question.answer}</p>
+                      <div className={`mt-4 rounded-2xl border p-4 ${isBroadAnswerCorrect(question, superTestAnswers[index]) ? "border-emerald-400/20 bg-emerald-400/10" : "border-red-400/30 bg-red-500/10"}`}>
+                        <p className={`text-xs font-black uppercase tracking-widest ${isBroadAnswerCorrect(question, superTestAnswers[index]) ? "text-emerald-300" : "text-red-300"}`}>
+                          {isBroadAnswerCorrect(question, superTestAnswers[index]) ? "Accepted" : "Not quite"}
+                        </p>
+                        <p className="mt-1 font-bold text-zinc-100">Suggested answer: {question.answer}</p>
                       </div>
                     )}
                   </div>
@@ -5261,21 +5380,35 @@ export default function App() {
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>
                       <h3 className="text-2xl font-black text-white">Ready to submit?</h3>
-                      <p className="mt-1 text-sm text-zinc-400">After submitting, you will see the suggested answers and the reset-progress option.</p>
+                      <p className="mt-1 text-sm text-zinc-400">After submitting, you need 100% before the subject reset unlocks.</p>
                     </div>
                     <button onClick={() => setSuperTestSubmitted(true)} className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600">
-                      Submit super test
+                      Strike the final anvil
                     </button>
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-2xl font-black text-white">Subject completed.</h3>
-                      <p className="mt-1 text-sm text-zinc-400">You can now reset this subject and re-forge it from the beginning.</p>
+                      <h3 className="text-2xl font-black text-white">Super Test score: {superTestScore}%</h3>
+                      <p className="mt-1 text-sm text-zinc-400">{superTestPassed ? "100% earned. You can now reset this subject and re-forge it from the beginning." : "Reset is locked. You need 100% on the Super Test first."}</p>
                     </div>
-                    <button onClick={resetSelectedSubjectProgress} className="rounded-2xl border border-red-400/40 bg-red-500/15 px-6 py-3 font-black text-red-100 hover:bg-red-500/25">
-                      Reset {selectedSubject.title} progress
-                    </button>
+                    <div className="flex flex-wrap gap-3">
+                      {!superTestPassed && (
+                        <button
+                          onClick={() => { setSuperTestAnswers({}); setSuperTestSubmitted(false); }}
+                          className="inline-flex items-center rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-3 font-black text-zinc-100 hover:bg-zinc-800"
+                        >
+                          <RotateCcw className="mr-2 h-4 w-4" /> Retry Super Test
+                        </button>
+                      )}
+                      <button
+                        onClick={resetSelectedSubjectProgress}
+                        disabled={!superTestPassed}
+                        className="rounded-2xl border border-red-400/40 bg-red-500/15 px-6 py-3 font-black text-red-100 hover:bg-red-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        Reset {selectedSubject.title} progress
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -5390,4 +5523,3 @@ export default function App() {
     </div>
   );
 }
-
