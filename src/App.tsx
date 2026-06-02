@@ -3116,7 +3116,7 @@ export default function App() {
               onKeyDown={(event) => {
                 if (event.key === "Enter") startSavingProgress();
               }}
-              placeholder="e.g. Teddy"
+              placeholder="e.g. Alfie"
               className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none placeholder:text-zinc-600 focus:border-orange-400"
             />
 
