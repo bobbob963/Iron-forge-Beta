@@ -2401,6 +2401,33 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
   );
 }
 
+function getOcrPastPaperSection(subject, selectedSection) {
+  const ocrSubjectSearchNames = {
+    pe: "GCSE Physical Education",
+    bio: "GCSE Biology",
+    chemistry: "GCSE Chemistry",
+    physics: "GCSE Physics",
+    dt: "GCSE Design and Technology",
+    history: "GCSE History",
+    "english-language": "GCSE English Language",
+    "english-literature": "GCSE English Literature"
+  };
+
+  const subjectName = ocrSubjectSearchNames[subject.id] || `GCSE ${subject.title}`;
+
+  return {
+    title: `OCR GCSE Papers — ${selectedSection}`,
+    points: [
+      `Use the OCR past paper finder for ${subjectName}.`,
+      "Download the question paper first and attempt it without notes.",
+      "Then mark it using the official mark scheme.",
+      "Every lost mark should become a new note before you try another paper."
+    ],
+    buttonLabel: "Open OCR Past Paper Finder",
+    buttonUrl: "https://www.ocr.org.uk/qualifications/past-paper-finder/"
+  };
+}
+
 function GeneralHub({ selectedSubject, sections = [] }) {
   return (
     <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
@@ -2421,6 +2448,17 @@ function GeneralHub({ selectedSubject, sections = [] }) {
                 </div>
               ))}
             </div>
+
+            {section.buttonUrl && (
+              <a
+                href={section.buttonUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-5 inline-flex rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 transition hover:bg-orange-400/10"
+              >
+                {section.buttonLabel || "Open link"}
+              </a>
+            )}
           </div>
         ))}
       </div>
@@ -2572,6 +2610,8 @@ export default function App() {
   const [saveEnabled, setSaveEnabled] = useState(savedProgress?.saveEnabled ?? false);
   const [showSavePrompt, setShowSavePrompt] = useState(!savedProgress);
   const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(false);
+  const [showTutorialPrompt, setShowTutorialPrompt] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
   const [workMinutes, setWorkMinutes] = useState(savedProgress?.workMinutes || 30);
   const [breakMinutes, setBreakMinutes] = useState(savedProgress?.breakMinutes || 5);
   const [revisionSeconds, setRevisionSeconds] = useState(savedProgress?.revisionSeconds || 0);
@@ -2597,11 +2637,65 @@ export default function App() {
 
   const subjectSections = ["Year 10 EOYs", "Year 11"];
 
+  const tutorialSlides = [
+    {
+      title: "Welcome to Iron Forge",
+      tag: "Start here",
+      text: "This is your revision dashboard. Pick a subject, choose Year 10 or Year 11, then work through the stages until everything is forged.",
+      icon: Hammer
+    },
+    {
+      title: "Home",
+      tag: "Main screen",
+      text: "Home shows your selected subject, recall percentage, unlocked themes and quick access to the main revision sections.",
+      icon: Home
+    },
+    {
+      title: "Stages",
+      tag: "Locked topics",
+      text: "Stages are the main topic path. Read the notes, answer the questions, then get 100% to unlock the next stage.",
+      icon: Flame
+    },
+    {
+      title: "Daily Test",
+      tag: "Keep it fresh",
+      text: "Daily Test gives you a quick mix of questions so old topics do not disappear from memory.",
+      icon: Shuffle
+    },
+    {
+      title: "General",
+      tag: "Wider revision",
+      text: "General gives broader notes and OCR GCSE paper links. Use it before past papers or when you need a wider topic refresh.",
+      icon: LibraryBig
+    },
+    {
+      title: "Settings and Themes",
+      tag: "Control panel",
+      text: "Settings lets you change subject slots, timer lengths and themes. More themes unlock as you make progress.",
+      icon: Settings
+    }
+  ];
+
+  const finishSubjectSetup = () => {
+    const firstPickedSubject = subjectSlots.find(Boolean);
+
+    if (firstPickedSubject) {
+      setSelectedSubjectId(firstPickedSubject);
+    }
+
+    setTutorialStep(0);
+    setShowTutorialPrompt(true);
+    setShowSubjectSetupPrompt(false);
+  };
+
   const sectionTopics = useMemo(() => {
     return selectedSubject.topics.filter((topic) => topic.section === selectedSection);
   }, [selectedSubject, selectedSection]);
 
-  const sectionGeneralContent = selectedSection === "Year 10 EOYs" ? generalContent[selectedSubject.id] || [] : [];
+  const sectionGeneralContent = [
+    ...(generalContent[selectedSubject.id] || []),
+    getOcrPastPaperSection(selectedSubject, selectedSection)
+  ];
 
   useEffect(() => {
     if (sectionTopics.length > 0 && !sectionTopics.some((topic) => topic.id === selectedTopicId)) {
@@ -3047,7 +3141,7 @@ export default function App() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md" style={{ zIndex: 9999 }}>
           <div className="relative max-h-[86vh] w-full max-w-3xl overflow-y-auto rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             <button
-              onClick={() => setShowSubjectSetupPrompt(false)}
+              onClick={finishSubjectSetup}
               className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
               aria-label="Close subject setup"
             >
@@ -3094,16 +3188,98 @@ export default function App() {
                 Show all subjects
               </button>
               <button
-                onClick={() => {
-                  const firstPickedSubject = subjectSlots.find(Boolean);
-                  if (firstPickedSubject) setSelectedSubjectId(firstPickedSubject);
-                  setShowSubjectSetupPrompt(false);
-                }}
+                onClick={finishSubjectSetup}
                 className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600 active:scale-[0.99]"
               >
                 Save subject setup
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showTutorialPrompt && view === "home" && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
+          style={{ zIndex: 9999 }}
+        >
+          <div className="relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+            <button
+              onClick={() => setShowTutorialPrompt(false)}
+              className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              aria-label="Close tutorial"
+            >
+              X
+            </button>
+
+            {(() => {
+              const slide = tutorialSlides[tutorialStep];
+              const Icon = slide.icon;
+
+              return (
+                <>
+                  <div className="inline-flex rounded-2xl bg-orange-400/10 p-3 text-orange-300">
+                    <Icon className="h-8 w-8" />
+                  </div>
+
+                  <p className="mt-5 text-xs font-black uppercase tracking-[0.28em] text-orange-300">
+                    {slide.tag}
+                  </p>
+
+                  <h2 className="mt-2 text-3xl font-black text-white">
+                    {slide.title}
+                  </h2>
+
+                  <p className="mt-4 text-base leading-7 text-zinc-300">
+                    {slide.text}
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-2">
+                    {tutorialSlides.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`h-2 rounded-full transition-all ${
+                          index === tutorialStep ? "w-10 bg-orange-400" : "w-2 bg-zinc-700"
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+                    <button
+                      onClick={() => setShowTutorialPrompt(false)}
+                      className="rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
+                    >
+                      Skip tutorial
+                    </button>
+
+                    <div className="flex gap-3">
+                      {tutorialStep > 0 && (
+                        <button
+                          onClick={() => setTutorialStep((step) => Math.max(0, step - 1))}
+                          className="rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
+                        >
+                          Back
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          if (tutorialStep >= tutorialSlides.length - 1) {
+                            setShowTutorialPrompt(false);
+                          } else {
+                            setTutorialStep((step) => step + 1);
+                          }
+                        }}
+                        className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white hover:bg-orange-600 active:scale-[0.99]"
+                      >
+                        {tutorialStep >= tutorialSlides.length - 1 ? "Start forging" : "Next"}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
@@ -5523,3 +5699,4 @@ export default function App() {
     </div>
   );
 }
+
