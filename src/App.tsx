@@ -5095,9 +5095,127 @@ function makeTopic(id, title, level, status, notes, rawQuestions) {
     questions: rawQuestions.map(([q, answer, options]) => ({
       q,
       answer,
-      options: shuffleOptions(options),
+      options: hardenMultipleChoiceOptions(q, answer, options),
     })),
   };
+}
+
+function hardenMultipleChoiceOptions(questionText, answer, options = []) {
+  const genericReasonableDistractors = [
+    'It is linked to the same topic but does not fully answer the question',
+    'It is partly connected but misses the key process being asked about',
+    'It describes a similar idea but applies it in the wrong situation',
+    'It gives a related fact but does not explain the correct cause or effect',
+  ];
+
+  const harderDistractorBank = {
+    oxygen: ['Carbon dioxide', 'Glucose', 'Water'],
+    mitochondria: ['Ribosome', 'Cytoplasm', 'Nucleus'],
+    'carbon dioxide': ['Oxygen', 'Nitrogen', 'Water vapour'],
+    alveoli: ['Bronchioles', 'Capillaries', 'Trachea'],
+    arteries: ['Veins', 'Capillaries', 'Vena cava'],
+    veins: ['Arteries', 'Capillaries', 'Aorta'],
+    capillaries: ['Arteries', 'Veins', 'Alveoli'],
+    'small intestine': ['Stomach', 'Large intestine', 'Pancreas'],
+    amylase: ['Protease', 'Lipase', 'Bile'],
+    protease: ['Amylase', 'Lipase', 'Bile'],
+    lipase: ['Amylase', 'Protease', 'Bile'],
+    starch: ['Glucose', 'Protein', 'Lipid'],
+    'amino acids': ['Glucose', 'Fatty acids', 'Glycerol'],
+    hinge: ['Ball and socket', 'Pivot', 'Condyloid'],
+    ligaments: ['Tendons', 'Cartilage', 'Synovial membrane'],
+    tendons: ['Ligaments', 'Cartilage', 'Synovial fluid'],
+    cartilage: ['Ligament', 'Tendon', 'Synovial membrane'],
+    flexion: ['Extension', 'Abduction', 'Rotation'],
+    extension: ['Flexion', 'Adduction', 'Circumduction'],
+    aerobic: ['Anaerobic', 'Isometric', 'Static'],
+    anaerobic: ['Aerobic', 'Continuous', 'Passive'],
+    'lactic acid': ['Carbon dioxide', 'Oxygen debt', 'Glucose'],
+    'cardiovascular endurance': ['Muscular endurance', 'Power', 'Agility'],
+    power: ['Strength', 'Speed', 'Muscular endurance'],
+    flexibility: ['Agility', 'Balance', 'Coordination'],
+    'constructive waves': [
+      'Destructive waves',
+      'Longshore drift',
+      'Swash-dominant waves',
+    ],
+    'destructive waves': [
+      'Constructive waves',
+      'Deposition-dominant waves',
+      'Low-energy waves',
+    ],
+    deposition: ['Abrasion', 'Attrition', 'Hydraulic action'],
+    'hydraulic action': ['Abrasion', 'Attrition', 'Solution'],
+    slumping: ['Rock fall', 'Soil creep', 'Longshore drift'],
+    'primary data': ['Secondary data', 'Quantitative data', 'Qualitative data'],
+    'secondary data': [
+      'Primary data',
+      'Systematic sampling',
+      'Random sampling',
+    ],
+    section: ['Section B', 'Paper 2', 'Coursework'],
+    'section a': ['Section B', 'Paper 2', 'Coursework'],
+    'dramatic monologue': ['Ballad', 'Sonnet', 'Free verse'],
+    sonnet: ['Ballad', 'Dramatic monologue', 'Epic'],
+    ballad: ['Sonnet', 'Dramatic monologue', 'Free verse'],
+    duke: ['The narrator', 'The visitor', 'The Duchess'],
+  };
+
+  const correctAnswer = String(answer);
+  const originalOptions = Array.isArray(options) ? options.map(String) : [];
+  const normalisedAnswer = normaliseAnswer(correctAnswer);
+  const specificDistractors =
+    harderDistractorBank[normalisedAnswer] ||
+    Object.entries(harderDistractorBank).find(([key]) =>
+      normalisedAnswer.includes(key)
+    )?.[1] ||
+    [];
+
+  const questionWords = answerTokens(questionText);
+  const cleanedOriginal = originalOptions.filter((option) => {
+    const cleanOption = normaliseAnswer(option);
+    if (!cleanOption || cleanOption === normalisedAnswer) return false;
+    if (option.length <= 2) return true;
+    const sillyWords = [
+      'banned',
+      'forever',
+      'instantly',
+      'never happen',
+      'no risks',
+    ];
+    return !sillyWords.some((word) => cleanOption.includes(word));
+  });
+
+  const topicAwareDistractors = genericReasonableDistractors.map(
+    (text, index) => {
+      const topicWord =
+        questionWords[index % Math.max(questionWords.length, 1)] || 'topic';
+      return `${text} (${topicWord})`;
+    }
+  );
+
+  const merged = [
+    correctAnswer,
+    ...specificDistractors,
+    ...cleanedOriginal,
+    ...topicAwareDistractors,
+  ];
+
+  const unique = [];
+  for (const option of merged) {
+    const cleanOption = normaliseAnswer(option);
+    if (!cleanOption) continue;
+    if (unique.some((existing) => normaliseAnswer(existing) === cleanOption))
+      continue;
+    unique.push(option);
+    if (unique.length === 4) break;
+  }
+
+  while (unique.length < 4) {
+    unique.push(genericReasonableDistractors[unique.length - 1]);
+  }
+
+  return shuffleOptions(unique);
 }
 
 function makeWordedQuestionText(questionText) {
@@ -5186,12 +5304,310 @@ function isBroadAnswerCorrect(question, userAnswer) {
   );
 }
 
-function getDailyQuestions(subject, count = 8) {
-  const all = subject.topics.flatMap((topic) =>
+const GCSE_DAILY_EXAM_QUESTIONS = {
+  'english-language': [
+    {
+      q: 'A writer uses a personal anecdote in a non-fiction extract. What is the most likely effect?',
+      answer: 'It makes the argument feel more personal and believable',
+      options: [
+        'It makes the argument feel more personal and believable',
+        'It proves the argument using only statistics',
+        'It removes the writer’s personal viewpoint',
+        'It makes the text purely informative with no emotion',
+      ],
+      topicTitle: 'GCSE past-paper-style Language',
+    },
+    {
+      q: 'In a comparison question, what should a strong answer compare?',
+      answer: 'Both writers’ ideas and how they present them',
+      options: [
+        'Both writers’ ideas and how they present them',
+        'Only the number of paragraphs in each text',
+        'Only the facts that are exactly the same',
+        'Only the first sentence of each extract',
+      ],
+      topicTitle: 'GCSE past-paper-style Language',
+    },
+    {
+      q: 'Why might a writer use emotive language when describing hardship?',
+      answer:
+        'To make the reader feel sympathy and understand the seriousness of the situation',
+      options: [
+        'To make the reader feel sympathy and understand the seriousness of the situation',
+        'To make the writing sound neutral and detached',
+        'To stop the reader forming an opinion',
+        'To make the extract less persuasive',
+      ],
+      topicTitle: 'GCSE past-paper-style Language',
+    },
+  ],
+  'english-literature': [
+    {
+      q: 'How is power presented in My Last Duchess?',
+      answer: 'The Duke tries to control the Duchess and how she is remembered',
+      options: [
+        'The Duke tries to control the Duchess and how she is remembered',
+        'The Duchess controls the Duke throughout the whole poem',
+        'Power is presented as equal and harmless',
+        'The poem shows power only through nature imagery',
+      ],
+      topicTitle: 'GCSE past-paper-style Literature',
+    },
+    {
+      q: 'Why is War Photographer tightly structured?',
+      answer: 'It reflects the photographer trying to control painful memories',
+      options: [
+        'It reflects the photographer trying to control painful memories',
+        'It shows the photographer feels completely calm',
+        'It makes the poem feel like a romantic sonnet',
+        'It removes the contrast between safety and conflict',
+      ],
+      topicTitle: 'GCSE past-paper-style Literature',
+    },
+    {
+      q: 'What is the effect of repeated questions in The Tyger?',
+      answer: 'They create mystery and uncertainty about creation',
+      options: [
+        'They create mystery and uncertainty about creation',
+        'They answer every question in the poem clearly',
+        'They make the tiger seem weak and ordinary',
+        'They remove the poem’s sense of danger',
+      ],
+      topicTitle: 'GCSE past-paper-style Literature',
+    },
+  ],
+  geography: [
+    {
+      q: 'Explain one reason why destructive waves increase coastal erosion.',
+      answer:
+        'Their backwash is stronger than their swash, removing material from the beach',
+      options: [
+        'Their backwash is stronger than their swash, removing material from the beach',
+        'Their swash is stronger than their backwash, building the beach',
+        'They only transport sediment inland by traction',
+        'They stop hydraulic action from happening',
+      ],
+      topicTitle: 'GCSE past-paper-style Geography',
+    },
+    {
+      q: 'Why might people continue to live in areas at risk from natural hazards?',
+      answer:
+        'They may have jobs, family links or believe serious events are rare',
+      options: [
+        'They may have jobs, family links or believe serious events are rare',
+        'Hazard areas always have no economic value',
+        'Natural hazards can always be predicted exactly',
+        'People are never aware of any risk',
+      ],
+      topicTitle: 'GCSE past-paper-style Geography',
+    },
+    {
+      q: 'What is one advantage of using GIS in earthquake management?',
+      answer: 'It can help map risk areas and support planning',
+      options: [
+        'It can help map risk areas and support planning',
+        'It prevents tectonic plates from moving',
+        'It guarantees that earthquakes will not happen',
+        'It replaces the need for emergency responses',
+      ],
+      topicTitle: 'GCSE past-paper-style Geography',
+    },
+  ],
+  pe: [
+    {
+      q: 'Explain why a warm up can reduce the risk of injury.',
+      answer:
+        'It increases muscle temperature and prepares joints for movement',
+      options: [
+        'It increases muscle temperature and prepares joints for movement',
+        'It lowers breathing rate so muscles use less oxygen',
+        'It prevents fatigue from ever occurring',
+        'It removes the need for correct technique',
+      ],
+      topicTitle: 'GCSE past-paper-style PE',
+    },
+    {
+      q: 'Why does heart rate increase during exercise?',
+      answer: 'To deliver more oxygen and glucose to working muscles',
+      options: [
+        'To deliver more oxygen and glucose to working muscles',
+        'To slow down blood flow to the muscles',
+        'To stop carbon dioxide being removed',
+        'To reduce the amount of energy released',
+      ],
+      topicTitle: 'GCSE past-paper-style PE',
+    },
+    {
+      q: 'Why is progressive overload important in a training programme?',
+      answer: 'It gradually increases training stress so fitness can improve',
+      options: [
+        'It gradually increases training stress so fitness can improve',
+        'It means training gets easier every week',
+        'It prevents the body from adapting',
+        'It means the performer should never rest',
+      ],
+      topicTitle: 'GCSE past-paper-style PE',
+    },
+  ],
+  bio: [
+    {
+      q: 'Explain why villi are effective at absorbing digested food molecules.',
+      answer:
+        'They have a large surface area, thin walls and a good blood supply',
+      options: [
+        'They have a large surface area, thin walls and a good blood supply',
+        'They have thick walls to slow diffusion down',
+        'They are found in the stomach where most absorption happens',
+        'They stop soluble molecules entering the blood',
+      ],
+      topicTitle: 'GCSE past-paper-style Biology',
+    },
+    {
+      q: 'Why does breathing rate increase during exercise?',
+      answer: 'To take in more oxygen and remove more carbon dioxide',
+      options: [
+        'To take in more oxygen and remove more carbon dioxide',
+        'To reduce oxygen supply to the muscles',
+        'To stop aerobic respiration from happening',
+        'To make lactic acid build up faster',
+      ],
+      topicTitle: 'GCSE past-paper-style Biology',
+    },
+    {
+      q: 'Why do enzymes stop working properly if the body gets too hot?',
+      answer:
+        'The enzyme’s active site changes shape so the substrate no longer fits',
+      options: [
+        'The enzyme’s active site changes shape so the substrate no longer fits',
+        'The enzyme gains a stronger active site at all temperatures',
+        'The substrate is converted into oxygen',
+        'The enzyme becomes a carbohydrate molecule',
+      ],
+      topicTitle: 'GCSE past-paper-style Biology',
+    },
+  ],
+  dt: [
+    {
+      q: 'Why is an iterative design process useful?',
+      answer: 'It lets a designer test, improve and refine the idea over time',
+      options: [
+        'It lets a designer test, improve and refine the idea over time',
+        'It means the first idea must always be final',
+        'It removes the need for user feedback',
+        'It stops prototypes being evaluated',
+      ],
+      topicTitle: 'GCSE past-paper-style DT',
+    },
+    {
+      q: 'Why might a designer choose a modular construction method?',
+      answer: 'It makes parts easier to replace, repair or upgrade',
+      options: [
+        'It makes parts easier to replace, repair or upgrade',
+        'It means the product cannot be changed',
+        'It makes every component permanently sealed',
+        'It removes the need for maintenance access',
+      ],
+      topicTitle: 'GCSE past-paper-style DT',
+    },
+  ],
+  chemistry: [
+    {
+      q: 'Explain why increasing temperature usually increases the rate of reaction.',
+      answer:
+        'Particles have more kinetic energy and collide more frequently with enough energy',
+      options: [
+        'Particles have more kinetic energy and collide more frequently with enough energy',
+        'Particles stop moving so collisions become more controlled',
+        'Activation energy is completely removed from the reaction',
+        'Atoms become smaller so the products form automatically',
+      ],
+      topicTitle: 'GCSE past-paper-style Chemistry',
+    },
+    {
+      q: 'Why is crystallisation used after filtration in making a soluble salt?',
+      answer: 'To remove water and form solid crystals of the salt',
+      options: [
+        'To remove water and form solid crystals of the salt',
+        'To separate an insoluble solid from a liquid only',
+        'To neutralise the acid without a base',
+        'To turn the salt into a gas',
+      ],
+      topicTitle: 'GCSE past-paper-style Chemistry',
+    },
+  ],
+  physics: [
+    {
+      q: 'Why does a larger force cause a larger acceleration when mass stays the same?',
+      answer:
+        'Resultant force is proportional to acceleration when mass is constant',
+      options: [
+        'Resultant force is proportional to acceleration when mass is constant',
+        'A larger force always makes mass decrease to zero',
+        'Acceleration only depends on distance travelled',
+        'Force and acceleration are unrelated quantities',
+      ],
+      topicTitle: 'GCSE past-paper-style Physics',
+    },
+    {
+      q: 'Why does a moving object with a greater mass have more kinetic energy at the same speed?',
+      answer: 'Kinetic energy increases with mass when speed stays the same',
+      options: [
+        'Kinetic energy increases with mass when speed stays the same',
+        'Mass only affects gravitational potential energy',
+        'Kinetic energy decreases whenever mass increases',
+        'Objects with greater mass cannot have kinetic energy',
+      ],
+      topicTitle: 'GCSE past-paper-style Physics',
+    },
+  ],
+  history: [
+    {
+      q: 'Why is provenance useful when analysing a historical source?',
+      answer:
+        'It helps judge the source’s purpose, origin and possible limitations',
+      options: [
+        'It helps judge the source’s purpose, origin and possible limitations',
+        'It proves the source is automatically reliable',
+        'It means the content of the source does not matter',
+        'It removes the need for contextual knowledge',
+      ],
+      topicTitle: 'GCSE past-paper-style History',
+    },
+    {
+      q: 'Why should a history answer use precise evidence?',
+      answer:
+        'It supports the judgement and makes the argument more convincing',
+      options: [
+        'It supports the judgement and makes the argument more convincing',
+        'It replaces the need for explanation',
+        'It makes the answer less focused on the question',
+        'It means the conclusion is optional',
+      ],
+      topicTitle: 'GCSE past-paper-style History',
+    },
+  ],
+};
+
+function getDailyQuestions(subject, count = 10) {
+  const allQuickQuestions = subject.topics.flatMap((topic) =>
     topic.questions.map((question) => ({
       ...question,
       topicTitle: topic.title,
+      type: 'multiple-choice',
     }))
+  );
+
+  const examQuestions = (GCSE_DAILY_EXAM_QUESTIONS[subject.id] || []).map(
+    (question) => ({
+      ...question,
+      options: hardenMultipleChoiceOptions(
+        question.q,
+        question.answer,
+        question.options
+      ),
+      type: 'multiple-choice',
+      examStyle: true,
+    })
   );
 
   const today = new Date().toDateString();
@@ -5200,23 +5616,33 @@ function getDailyQuestions(subject, count = 8) {
   for (let i = 0; i < seedText.length; i++)
     seed += seedText.charCodeAt(i) * (i + 1);
 
-  const shuffled = [...all].sort((a, b) => {
-    const aScore = Math.sin(seed + a.q.length * 999) % 1;
-    const bScore = Math.sin(seed + b.q.length * 999) % 1;
-    return aScore - bScore;
-  });
+  const seededShuffle = (items) =>
+    [...items].sort((a, b) => {
+      const aScore = Math.sin(seed + a.q.length * 999) % 1;
+      const bScore = Math.sin(seed + b.q.length * 999) % 1;
+      return aScore - bScore;
+    });
 
-  return shuffled
-    .slice(0, Math.min(count, shuffled.length))
+  const examCount = Math.min(3, examQuestions.length, Math.ceil(count * 0.3));
+  const quickCount = Math.max(0, count - examCount);
+
+  const selectedQuickQuestions = seededShuffle(allQuickQuestions)
+    .slice(0, Math.min(quickCount, allQuickQuestions.length))
     .map((question, index) => {
-      const isWritten = index % 2 === 1;
-
+      const isWritten = index % 3 === 1;
       return {
         ...question,
         type: isWritten ? 'written' : 'multiple-choice',
         q: isWritten ? makeWordedQuestionText(question.q) : question.q,
       };
     });
+
+  const selectedExamQuestions = seededShuffle(examQuestions).slice(
+    0,
+    examCount
+  );
+
+  return seededShuffle([...selectedQuickQuestions, ...selectedExamQuestions]);
 }
 
 function CherryBlossomBackground() {
@@ -6317,7 +6743,7 @@ export default function App() {
     {
       title: 'Daily Test',
       tag: 'Keep it fresh',
-      text: 'Daily Test gives you a quick mix of questions so old topics do not disappear from memory.',
+      text: 'Daily Test now mixes quick recall with GCSE past-paper-style questions. Multiple choice is harder too, because wrong answers sound more reasonable, so you have to actually know the content instead of guessing.',
       icon: Shuffle,
     },
     {
@@ -6401,7 +6827,7 @@ export default function App() {
   );
 
   const dailyQuestions = useMemo(
-    () => getDailyQuestions(sectionSubject, 8),
+    () => getDailyQuestions(sectionSubject, 10),
     [sectionSubject]
   );
 
@@ -9647,8 +10073,9 @@ export default function App() {
                           </h2>
                         </div>
                         <p className="mt-2 text-sm text-zinc-400">
-                          A mixed recall test from across the whole subject,
-                          using multiple choice and written answers.
+                          A mixed recall test from across the whole subject, now
+                          using tougher multiple choice, written answers and
+                          GCSE past-paper-style questions.
                         </p>
                       </div>
                       <ProgressRing
