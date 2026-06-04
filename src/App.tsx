@@ -4644,6 +4644,489 @@ const subjects = [
       ),
     ],
   },
+
+  {
+    id: 'rs',
+    title: 'RS',
+    icon: BookOpen,
+    group: 'Year 10',
+    yearGroup: 'Year 10',
+    category: 'Year 10',
+    description:
+      'Year 10 RS — Buddhist beliefs, existence of God and revelation, and Christian beliefs and salvation.',
+    topics: [
+      makeTopic(
+        'rs-buddhist-dhamma',
+        'Buddhist Beliefs: Dhamma and Dependent Arising',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'Dhamma means the truth the Buddha discovered and taught about reality and how to end suffering.',
+          'For Buddhists, Dhamma can also mean the natural law or order of things.',
+          'Dependent arising, or paticcasamupada, means everything exists because of causes and conditions.',
+          'Nothing exists completely by itself; all things are connected and change when their causes change.',
+          'This links to Buddhist teaching because suffering also has causes, so it can be ended if those causes are removed.',
+        ],
+        [
+          [
+            'What does Dhamma mean in Buddhism?',
+            'The truth or teaching discovered by the Buddha',
+            [
+              'The truth or teaching discovered by the Buddha',
+              'A Christian sacrament',
+              'A place of final judgement',
+              'A belief in one creator God',
+            ],
+          ],
+          [
+            'What does dependent arising mean?',
+            'Everything exists because of causes and conditions',
+            [
+              'Everything exists because of causes and conditions',
+              'Everything has a fixed soul',
+              'Nothing ever changes',
+              'Only monks can reach enlightenment',
+            ],
+          ],
+          [
+            'Why is dependent arising important for suffering?',
+            'Suffering can end if its causes are removed',
+            [
+              'Suffering can end if its causes are removed',
+              'Suffering is created by one permanent self',
+              'Suffering has no cause',
+              'Suffering is only physical pain',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-three-marks',
+        'The Three Marks of Existence',
+        'Foundation Forge',
+        'Not forged',
+        [
+          'The Three Marks of Existence are anicca, anatta and dukkha.',
+          'Anicca means impermanence: everything changes and nothing lasts forever.',
+          'Anatta means no fixed self: there is no permanent, unchanging soul or identity.',
+          'Dukkha means suffering, unsatisfactoriness or the fact that life never gives complete lasting satisfaction.',
+          'The Three Marks help Buddhists understand why attachment causes suffering.',
+        ],
+        [
+          [
+            'What does anicca mean?',
+            'Impermanence',
+            ['Impermanence', 'No fixed self', 'Suffering', 'Enlightenment'],
+          ],
+          [
+            'What does anatta mean?',
+            'No fixed self',
+            ['No fixed self', 'Permanent soul', 'Creation by God', 'Heaven'],
+          ],
+          [
+            'What does dukkha mean?',
+            'Suffering or unsatisfactoriness',
+            [
+              'Suffering or unsatisfactoriness',
+              'Perfect happiness on earth',
+              'A fixed identity',
+              'A miracle story',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-human-personality',
+        'Human Personality: Five Aggregates and Sunyata',
+        'Steel Forge',
+        'Not forged',
+        [
+          'Theravada Buddhism explains human personality through the Five Aggregates, also called skandhas.',
+          'The Five Aggregates are form, sensation, perception, mental formations and consciousness.',
+          'They show that a person is made up of changing parts rather than one fixed self.',
+          'Mahayana Buddhism teaches sunyata, meaning emptiness: all things are empty of independent fixed existence.',
+          'Mahayana Buddhists may also teach Buddha-nature, the potential for all beings to attain Buddhahood.',
+        ],
+        [
+          [
+            'Which tradition uses the Five Aggregates to explain human personality?',
+            'Theravada Buddhism',
+            ['Theravada Buddhism', 'Christianity', 'Atheism', 'Humanism'],
+          ],
+          [
+            'Which one is one of the Five Aggregates?',
+            'Consciousness',
+            ['Consciousness', 'Original sin', 'Omnipotence', 'Ascension'],
+          ],
+          [
+            'What does sunyata mean?',
+            'Emptiness or lack of independent fixed existence',
+            [
+              'Emptiness or lack of independent fixed existence',
+              'A permanent soul',
+              'A creator God',
+              'Judgement after death',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-buddhist-ideals',
+        'Theravada and Mahayana Ideals',
+        'Steel Forge',
+        'Not forged',
+        [
+          'An Arhat is a perfected person who has overcome craving and reached enlightenment.',
+          'The Arhat ideal is especially important in Theravada Buddhism.',
+          'A Bodhisattva is someone who seeks enlightenment but delays final nibbana to help others.',
+          'The Bodhisattva ideal is especially important in Mahayana Buddhism.',
+          'Pure Land Buddhism teaches that people can be reborn in a Pure Land where enlightenment is easier to attain.',
+        ],
+        [
+          [
+            'What is an Arhat?',
+            'A perfected person who has reached enlightenment',
+            [
+              'A perfected person who has reached enlightenment',
+              'A person who denies all religion',
+              'A Christian prophet',
+              'A creator of the universe',
+            ],
+          ],
+          [
+            'What is a Bodhisattva?',
+            'Someone who seeks enlightenment and helps others reach it',
+            [
+              'Someone who seeks enlightenment and helps others reach it',
+              'Someone who only wants wealth',
+              'Someone who believes suffering is impossible',
+              'Someone who rejects compassion',
+            ],
+          ],
+          [
+            'What is the Pure Land?',
+            'A place where enlightenment is easier to attain',
+            [
+              'A place where enlightenment is easier to attain',
+              'A punishment after judgement',
+              'A scientific argument against God',
+              'A type of miracle',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-buddha-life-four-sights',
+        'The Buddha’s Life and the Four Sights',
+        'Iron Forge',
+        'Not forged',
+        [
+          'Siddhartha Gautama was born into a life of luxury and was protected from suffering.',
+          'The Four Sights were illness, old age, death and a holy man.',
+          'The Four Sights showed Siddhartha that suffering is part of human life.',
+          'He lived an ascetic life, using extreme self-denial to search for truth.',
+          'After rejecting both luxury and extreme asceticism, he gained Enlightenment and became the Buddha.',
+        ],
+        [
+          [
+            'What were the Four Sights?',
+            'Illness, old age, death and a holy man',
+            [
+              'Illness, old age, death and a holy man',
+              'Birth, baptism, crucifixion and resurrection',
+              'Design, cause, miracles and science',
+              'Heaven, hell, judgement and creation',
+            ],
+          ],
+          [
+            'What did the Four Sights make Siddhartha realise?',
+            'Suffering is part of human life',
+            [
+              'Suffering is part of human life',
+              'Luxury removes all suffering',
+              'Only old people suffer',
+              'There is no path to enlightenment',
+            ],
+          ],
+          [
+            'What happened at the Buddha’s Enlightenment?',
+            'He understood the truth about suffering and how to end it',
+            [
+              'He understood the truth about suffering and how to end it',
+              'He became the Christian Son of God',
+              'He created the universe',
+              'He rejected all meditation forever',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-four-noble-truths',
+        'The Four Noble Truths',
+        'Iron Forge',
+        'Not forged',
+        [
+          'The First Noble Truth is dukkha: life involves suffering and unsatisfactoriness.',
+          'The Second Noble Truth is samudaya: suffering is caused by craving and the Three Poisons.',
+          'The Three Poisons are ignorance, greed and hate.',
+          'The Third Noble Truth is nirodha: suffering can end when craving ends.',
+          'The Fourth Noble Truth is magga: the Eightfold Path is the way to nibbana.',
+        ],
+        [
+          [
+            'What is the First Noble Truth?',
+            'Life involves suffering',
+            [
+              'Life involves suffering',
+              'God is Trinity',
+              'Science disproves miracles',
+              'Jesus ascended',
+            ],
+          ],
+          [
+            'What are the Three Poisons?',
+            'Ignorance, greed and hate',
+            [
+              'Ignorance, greed and hate',
+              'Faith, hope and love',
+              'Father, Son and Spirit',
+              'Heaven, hell and judgement',
+            ],
+          ],
+          [
+            'What is nibbana?',
+            'The end of craving and suffering',
+            [
+              'The end of craving and suffering',
+              'A permanent creator God',
+              'A place of eternal punishment',
+              'A scientific explanation of the universe',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-eightfold-path',
+        'The Eightfold Path and Threefold Way',
+        'Gold Forge',
+        'Not forged',
+        [
+          'The Eightfold Path is the Buddhist path to nibbana.',
+          'It includes right understanding, intention, speech, action, livelihood, effort, mindfulness and concentration.',
+          'The path can be grouped as the Threefold Way: ethics, meditation and wisdom.',
+          'Ethics is sila, meditation is samadhi and wisdom is panna.',
+          'Dhammapada 190-191 teaches that taking refuge in the Buddha, Dhamma and Sangha can lead people away from suffering.',
+        ],
+        [
+          [
+            'What is the Eightfold Path?',
+            'The Buddhist path to nibbana',
+            [
+              'The Buddhist path to nibbana',
+              'A Christian creation story',
+              'A miracle argument',
+              'A non-religious funeral',
+            ],
+          ],
+          [
+            'What are the three parts of the Threefold Way?',
+            'Ethics, meditation and wisdom',
+            [
+              'Ethics, meditation and wisdom',
+              'Power, love and justice',
+              'Creation, judgement and hell',
+              'Design, cause and miracles',
+            ],
+          ],
+          [
+            'What is sila?',
+            'Ethics',
+            ['Ethics', 'Meditation', 'Wisdom', 'Suffering'],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-existence-of-god',
+        'Arguments for and against God',
+        'Gold Forge',
+        'Not forged',
+        [
+          'The Design argument says the order and complexity of the world point towards a designer.',
+          'The First Cause argument says the universe needs a first cause, which some people call God.',
+          'The argument from miracles says events that appear to break natural laws may show God exists.',
+          'Evil and suffering are used as an argument against God because they challenge belief in an all-loving and all-powerful God.',
+          'Arguments from science may claim the universe and life can be explained naturally without needing God.',
+        ],
+        [
+          [
+            'What does the Design argument claim?',
+            'The order and complexity of the world point to a designer',
+            [
+              'The order and complexity of the world point to a designer',
+              'Suffering proves there is no free will',
+              'Only scripture can reveal truth',
+              'Nibbana is reached through grace',
+            ],
+          ],
+          [
+            'What does the First Cause argument claim?',
+            'The universe needs a first cause',
+            [
+              'The universe needs a first cause',
+              'The universe has no order',
+              'Miracles never happen',
+              'Jesus was not incarnate',
+            ],
+          ],
+          [
+            'Why is evil and suffering a challenge to belief in God?',
+            'It questions how an all-loving and all-powerful God could allow suffering',
+            [
+              'It questions how an all-loving and all-powerful God could allow suffering',
+              'It proves the Eightfold Path is false',
+              'It proves all visions are true',
+              'It removes the need for any moral choices',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-revelation-divine',
+        'Revelation and the Nature of the Divine',
+        'Platinum Forge',
+        'Not forged',
+        [
+          'Special revelation means God or ultimate reality is revealed directly, for example through visions or miracles.',
+          'General revelation means learning about the divine through nature, reason or scripture.',
+          'Enlightenment can be seen as a source of knowledge about ultimate reality in Buddhism.',
+          'Revelation can lead to ideas of the divine as omnipotent, omniscient, personal, impersonal, immanent or transcendent.',
+          'Problems include different people claiming different revelations, natural explanations, or the possibility that someone was lying or mistaken.',
+        ],
+        [
+          [
+            'What is special revelation?',
+            'Direct revelation through experiences such as visions or miracles',
+            [
+              'Direct revelation through experiences such as visions or miracles',
+              'Learning only through ordinary nature',
+              'A scientific law against religion',
+              'The belief that nothing can be known',
+            ],
+          ],
+          [
+            'What is general revelation?',
+            'Learning about the divine through nature or scripture',
+            [
+              'Learning about the divine through nature or scripture',
+              'Only a private vision',
+              'The end of craving',
+              'The Five Aggregates',
+            ],
+          ],
+          [
+            'What does transcendent mean?',
+            'Beyond and outside the world',
+            [
+              'Beyond and outside the world',
+              'Inside the world only',
+              'Limited in power',
+              'Unable to know anything',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-christian-nature-god',
+        'Christian Beliefs: God, Trinity and Creation',
+        'Master Forge',
+        'Not forged',
+        [
+          'Christians believe God is omnipotent, loving and just.',
+          'The problem of evil asks why suffering exists if God is powerful and loving.',
+          'Christianity is monotheistic but teaches the Trinity: Father, Son and Holy Spirit.',
+          'Genesis 1:1-3 teaches that God created the heavens and the earth and the Spirit of God was present.',
+          'John 1:1-3 teaches that the Word was with God and that creation happened through the Word.',
+        ],
+        [
+          [
+            'What does omnipotent mean?',
+            'All-powerful',
+            [
+              'All-powerful',
+              'All-loving only',
+              'All-knowing',
+              'Inside the world only',
+            ],
+          ],
+          [
+            'What is the Trinity?',
+            'Father, Son and Holy Spirit',
+            [
+              'Father, Son and Holy Spirit',
+              'Ignorance, greed and hate',
+              'Ethics, meditation and wisdom',
+              'Heaven, hell and judgement',
+            ],
+          ],
+          [
+            'What does John 1 teach about creation?',
+            'Creation happened through the Word',
+            [
+              'Creation happened through the Word',
+              'Creation happened through dependent arising only',
+              'There was no role for God',
+              'The Buddha created the universe',
+            ],
+          ],
+        ]
+      ),
+      makeTopic(
+        'rs-christian-salvation',
+        'Christian Beliefs: Jesus, Afterlife and Salvation',
+        'Master Forge',
+        'Not forged',
+        [
+          'Christians believe in the incarnation: Jesus is God in human form and the Son of God.',
+          'The crucifixion is the death of Jesus, the resurrection is Jesus rising from the dead, and the ascension is Jesus returning to heaven.',
+          'Sin separates humans from God; some Christians believe original sin comes from the fall of Adam and Eve.',
+          'Salvation can be understood through law, grace and the Holy Spirit.',
+          'Atonement means Jesus restored the relationship between God and humanity through his death.',
+        ],
+        [
+          [
+            'What is the incarnation?',
+            'God becoming human in Jesus',
+            [
+              'God becoming human in Jesus',
+              'The end of craving',
+              'A scientific argument',
+              'A Buddhist rebirth realm',
+            ],
+          ],
+          [
+            'What is the resurrection?',
+            'Jesus rising from the dead',
+            [
+              'Jesus rising from the dead',
+              'Jesus dying on the cross',
+              'Jesus returning to heaven',
+              'God creating the world',
+            ],
+          ],
+          [
+            'What does atonement mean?',
+            'Jesus restored the relationship between God and humanity',
+            [
+              'Jesus restored the relationship between God and humanity',
+              'The belief that there is no fixed self',
+              'A miracle that proves science wrong',
+              'A judgement made by humans only',
+            ],
+          ],
+        ]
+      ),
+    ],
+  },
 ];
 
 const themes = [
@@ -4783,6 +5266,44 @@ const themes = [
 ];
 
 const generalContent = {
+  rs: [
+    {
+      title: 'Buddhist Beliefs Core',
+      points: [
+        'Dhamma is the truth or teaching discovered by the Buddha, and dependent arising means things exist because of causes and conditions.',
+        'The Three Marks are anicca, anatta and dukkha: impermanence, no fixed self and suffering or unsatisfactoriness.',
+        'Theravada explains personality through the Five Aggregates, while Mahayana includes sunyata and Buddha-nature.',
+        'Theravada often focuses on the Arhat ideal, while Mahayana often focuses on the Bodhisattva ideal.',
+      ],
+    },
+    {
+      title: 'The Buddha and the Four Noble Truths',
+      points: [
+        'The Four Sights were illness, old age, death and a holy man, showing Siddhartha the reality of suffering.',
+        'The Four Noble Truths explain suffering, its cause, its end and the path to end it.',
+        'The Three Poisons are ignorance, greed and hate.',
+        'The Eightfold Path can be grouped into ethics, meditation and wisdom: sila, samadhi and panna.',
+      ],
+    },
+    {
+      title: 'Existence of God and Revelation',
+      points: [
+        'Arguments for God include the Design argument, the First Cause argument and the argument from miracles.',
+        'Arguments against God include evil and suffering and scientific explanations of the universe.',
+        'Special revelation includes visions and miracles; general revelation includes nature and scripture.',
+        'Revelation can suggest the divine is omnipotent, omniscient, personal, impersonal, immanent or transcendent.',
+      ],
+    },
+    {
+      title: 'Christian Beliefs Core',
+      points: [
+        'Christians believe God is omnipotent, loving and just, but evil and suffering create a challenge to this belief.',
+        'The Trinity is one God in three persons: Father, Son and Holy Spirit.',
+        'Creation is linked to Genesis 1:1-3 and John 1:1-3, including the role of the Spirit and the Word.',
+        'Salvation links to incarnation, crucifixion, resurrection, ascension, sin, grace, Spirit and atonement.',
+      ],
+    },
+  ],
   pe: [
     {
       title: 'Body Systems',
@@ -4989,6 +5510,44 @@ const generalContent = {
         'Electromagnets can be made stronger by increasing current, adding more turns, or using an iron core.',
         'The motor effect happens when a current-carrying wire experiences a force in a magnetic field.',
       ],
+    },
+  ],
+  rs: [
+    {
+      q: 'Explain one way the Three Marks of Existence link to Buddhist teaching about suffering.',
+      answer:
+        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
+      options: [
+        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
+        'They show that humans have a permanent soul created by God',
+        'They prove that suffering is only caused by physical pain',
+        'They teach that enlightenment is impossible',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
+    },
+    {
+      q: 'Why might evil and suffering be used as an argument against God?',
+      answer:
+        'They challenge belief in a God who is all-powerful, loving and just',
+      options: [
+        'They challenge belief in a God who is all-powerful, loving and just',
+        'They prove the Design argument is always successful',
+        'They show that miracles must happen every day',
+        'They are part of the Eightfold Path only',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
+    },
+    {
+      q: 'Explain why the resurrection is important for Christian beliefs about salvation.',
+      answer:
+        'It shows Jesus defeated death and gives Christians hope of life after death',
+      options: [
+        'It shows Jesus defeated death and gives Christians hope of life after death',
+        'It shows Jesus was only a normal teacher',
+        'It proves that original sin is not important to Christians',
+        'It means Christians reject the afterlife',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
     },
   ],
   geography: [
@@ -5616,7 +6175,8 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
   const seededShuffle = (items) =>
     [...items].sort(
       (a, b) =>
-        scoreForQuestion(a, items.indexOf(a)) - scoreForQuestion(b, items.indexOf(b))
+        scoreForQuestion(a, items.indexOf(a)) -
+        scoreForQuestion(b, items.indexOf(b))
     );
 
   const examCount = Math.min(3, examQuestions.length, Math.ceil(count * 0.3));
@@ -6359,9 +6919,7 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
             {unlocked ? 'Unlocked' : lockedLabel}
           </p>
           <h3 className="mt-1 text-xl font-black text-white">{theme.name}</h3>
-          <p className="mt-2 text-sm text-zinc-400">
-            {theme.description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-400">{theme.description}</p>
         </div>
         {unlocked ? (
           <Medal className={`h-6 w-6 ${theme.accent}`} />
@@ -6380,6 +6938,7 @@ function getOcrPastPaperSection(subject, selectedSection) {
     chemistry: 'GCSE Chemistry',
     physics: 'GCSE Physics',
     geography: 'GCSE Geography',
+    rs: 'GCSE Religious Studies',
     dt: 'GCSE Design and Technology',
     history: 'GCSE History',
     'english-language': 'GCSE English Language',
@@ -6647,6 +7206,7 @@ const defaultUnlockedStages = {
   'chem-electronic-configuration': true,
   'phys-motion-position': true,
   'hist-german-unification-1848-50': true,
+  'rs-buddhist-dhamma': true,
 };
 
 function loadSavedProgress() {
@@ -6694,6 +7254,7 @@ export default function App() {
   const [subjectSlots, setSubjectSlots] = useState(
     savedProgress?.subjectSlots || Array(9).fill('')
   );
+  const [subjectSaveMessage, setSubjectSaveMessage] = useState('');
   const [selectedSection, setSelectedSection] = useState(
     savedProgress?.selectedSection || 'Year 10 EOYs'
   );
@@ -6717,7 +7278,20 @@ export default function App() {
   const [selectedSubjectId, setSelectedSubjectId] = useState(
     savedProgress?.selectedSubjectId || subjects[0].id
   );
-  const visibleSubjects = useMemo(() => subjects, []);
+  const selectedSubjectSlots = useMemo(() => {
+    const uniquePickedIds = [...new Set(subjectSlots.filter(Boolean))];
+    return uniquePickedIds.filter((subjectId) =>
+      subjects.some((subject) => subject.id === subjectId)
+    );
+  }, [subjectSlots]);
+
+  const visibleSubjects = useMemo(() => {
+    const pickedSubjects = selectedSubjectSlots
+      .map((subjectId) => subjects.find((subject) => subject.id === subjectId))
+      .filter(Boolean);
+
+    return pickedSubjects.length ? pickedSubjects : subjects;
+  }, [selectedSubjectSlots]);
 
   const selectedSubject =
     visibleSubjects.find((subject) => subject.id === selectedSubjectId) ||
@@ -6777,6 +7351,60 @@ export default function App() {
     setShowSubjectSetupPrompt(false);
   };
 
+  const saveSubjectSlots = () => {
+    const firstPickedSubject = subjectSlots.find((subjectId) =>
+      subjects.some((subject) => subject.id === subjectId)
+    );
+    const currentSubjectStillVisible = visibleSubjects.some(
+      (subject) => subject.id === selectedSubjectId
+    );
+    const nextSelectedSubjectId = currentSubjectStillVisible
+      ? selectedSubjectId
+      : firstPickedSubject || selectedSubjectId;
+
+    if (!currentSubjectStillVisible && firstPickedSubject) {
+      const nextSubject = subjects.find(
+        (subject) => subject.id === firstPickedSubject
+      );
+      const firstUnlockedTopic =
+        nextSubject?.topics.find((topic) => unlocked[topic.id]) ||
+        nextSubject?.topics[0];
+
+      setSelectedSubjectId(firstPickedSubject);
+      if (firstUnlockedTopic) setSelectedTopicId(firstUnlockedTopic.id);
+    }
+
+    if (saveEnabled) {
+      const progress = {
+        version: PROGRESS_VERSION,
+        username,
+        saveEnabled,
+        selectedSubjectId: nextSelectedSubjectId,
+        selectedTopicId,
+        activeThemeId,
+        unlocked,
+        workMinutes,
+        breakMinutes,
+        revisionSeconds,
+        revisionSecondsBySubject,
+        lastBreakMarker,
+        subjectSlots,
+        selectedSection,
+        allThemesUnlocked,
+        themeActions,
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    setSubjectSaveMessage(
+      firstPickedSubject
+        ? 'Saved. The taskbar now only shows your selected subjects.'
+        : 'Saved. Every subject is showing because all slots are empty.'
+    );
+    window.setTimeout(() => setSubjectSaveMessage(''), 2500);
+  };
+
   const sectionTopics = useMemo(() => {
     return selectedSubject.topics.filter(
       (topic) => topic.section === selectedSection
@@ -6831,6 +7459,20 @@ export default function App() {
     ...defaultUnlockedStages,
     ...(savedProgress?.unlocked || {}),
   });
+
+  useEffect(() => {
+    if (!visibleSubjects.length) return;
+    if (visibleSubjects.some((subject) => subject.id === selectedSubjectId))
+      return;
+
+    const nextSubject = visibleSubjects[0];
+    const firstUnlockedTopic =
+      nextSubject.topics.find((topic) => unlocked[topic.id]) ||
+      nextSubject.topics[0];
+
+    setSelectedSubjectId(nextSubject.id);
+    if (firstUnlockedTopic) setSelectedTopicId(firstUnlockedTopic.id);
+  }, [visibleSubjects, selectedSubjectId, unlocked]);
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const sectionSubject = useMemo(
@@ -7009,7 +7651,9 @@ export default function App() {
   const selectedHomeSubjects = useMemo(() => {
     const pickedSubjectIds = [...new Set(subjectSlots.filter(Boolean))];
     const pickedSubjects = pickedSubjectIds
-      .map((subjectId) => visibleSubjects.find((subject) => subject.id === subjectId))
+      .map((subjectId) =>
+        visibleSubjects.find((subject) => subject.id === subjectId)
+      )
       .filter(Boolean);
 
     return pickedSubjects.length ? pickedSubjects : visibleSubjects;
@@ -7017,9 +7661,12 @@ export default function App() {
 
   const subjectRevisionStats = useMemo(() => {
     return selectedHomeSubjects.map((subject) => {
-      const forged = subject.topics.filter((topic) => unlocked[topic.id]).length;
+      const forged = subject.topics.filter(
+        (topic) => unlocked[topic.id]
+      ).length;
       const total = subject.topics.length || 1;
-      const revisionSecondsForSubject = revisionSecondsBySubject[subject.id] || 0;
+      const revisionSecondsForSubject =
+        revisionSecondsBySubject[subject.id] || 0;
 
       return {
         subject,
@@ -7035,7 +7682,9 @@ export default function App() {
     (lowest, current) => {
       if (!lowest) return current;
       if (current.revisionSeconds !== lowest.revisionSeconds) {
-        return current.revisionSeconds < lowest.revisionSeconds ? current : lowest;
+        return current.revisionSeconds < lowest.revisionSeconds
+          ? current
+          : lowest;
       }
       return current.recall < lowest.recall ? current : lowest;
     },
@@ -9429,14 +10078,18 @@ export default function App() {
                 Achievement unlocked!
               </p>
               <div className="mt-2 flex items-center gap-3">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-sm border-2 ${achievementToast.border} ${achievementToast.soft}`}>
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-sm border-2 ${achievementToast.border} ${achievementToast.soft}`}
+                >
                   <Trophy className={`h-7 w-7 ${achievementToast.accent}`} />
                 </div>
                 <div>
                   <p className="text-sm font-black text-white">
                     New theme forged
                   </p>
-                  <p className={`text-lg font-black ${achievementToast.accent}`}>
+                  <p
+                    className={`text-lg font-black ${achievementToast.accent}`}
+                  >
                     {achievementToast.name}
                   </p>
                 </div>
@@ -9629,7 +10282,7 @@ export default function App() {
           <section className="grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
-                {view === 'stages' ? (
+                {view === 'stages' || view === 'topic' ? (
                   <span className="inline-flex items-center gap-3">
                     {activeThemeId === 'cyber' ? (
                       <span className="cyber-gameboy-clock">
@@ -9682,7 +10335,7 @@ export default function App() {
               <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 md:text-lg md:leading-8">
                 Pick a subject, open a stage, test yourself, and unlock the next
                 stage only when you score full marks.
-                {view === 'stages' &&
+                {(view === 'stages' || view === 'topic') &&
                   ` You are revising now — break alarm triggers every ${workMinutes} minutes for a ${breakMinutes} minute break.`}
               </p>
             </div>
@@ -9837,12 +10490,16 @@ export default function App() {
                       </h3>
                     </div>
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-                      This shows how much revision time you have put into each selected subject, so you can see what needs work instead of just guessing.
+                      This shows how much revision time you have put into each
+                      selected subject, so you can see what needs work instead
+                      of just guessing.
                     </p>
                   </div>
                   {subjectMostNeedingWork && (
                     <button
-                      onClick={() => switchSubject(subjectMostNeedingWork.subject)}
+                      onClick={() =>
+                        switchSubject(subjectMostNeedingWork.subject)
+                      }
                       className="rounded-2xl border border-orange-400/40 bg-orange-400/10 px-4 py-3 text-left text-sm font-black text-orange-100 hover:bg-orange-400/15"
                     >
                       Work on next: {subjectMostNeedingWork.subject.title}
@@ -9851,59 +10508,72 @@ export default function App() {
                 </div>
 
                 <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {subjectRevisionStats.map(({ subject, forged, total, recall, revisionSeconds }) => {
-                    const Icon = subject.icon;
-                    const needsWork = subjectMostNeedingWork?.subject.id === subject.id;
+                  {subjectRevisionStats.map(
+                    ({ subject, forged, total, recall, revisionSeconds }) => {
+                      const Icon = subject.icon;
+                      const needsWork =
+                        subjectMostNeedingWork?.subject.id === subject.id;
 
-                    return (
-                      <button
-                        key={`revision-balance-${subject.id}`}
-                        onClick={() => switchSubject(subject)}
-                        className={`rounded-2xl border p-4 text-left transition hover:bg-zinc-800 active:scale-[0.99] ${
-                          needsWork
-                            ? 'border-orange-400/70 bg-orange-400/10 shadow-lg shadow-orange-950/20'
-                            : 'border-zinc-800 bg-zinc-950/70'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className={`rounded-xl border p-3 ${needsWork ? activeTheme.border + ' ' + activeTheme.soft + ' ' + activeTheme.accent : 'border-zinc-800 text-zinc-300'}`}>
-                              <Icon className="h-5 w-5" />
+                      return (
+                        <button
+                          key={`revision-balance-${subject.id}`}
+                          onClick={() => switchSubject(subject)}
+                          className={`rounded-2xl border p-4 text-left transition hover:bg-zinc-800 active:scale-[0.99] ${
+                            needsWork
+                              ? 'border-orange-400/70 bg-orange-400/10 shadow-lg shadow-orange-950/20'
+                              : 'border-zinc-800 bg-zinc-950/70'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`rounded-xl border p-3 ${
+                                  needsWork
+                                    ? activeTheme.border +
+                                      ' ' +
+                                      activeTheme.soft +
+                                      ' ' +
+                                      activeTheme.accent
+                                    : 'border-zinc-800 text-zinc-300'
+                                }`}
+                              >
+                                <Icon className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <h4 className="text-base font-black text-white">
+                                  {subject.title}
+                                </h4>
+                                <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+                                  {forged}/{total} stages forged
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <h4 className="text-base font-black text-white">
-                                {subject.title}
-                              </h4>
-                              <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                                {forged}/{total} stages forged
-                              </p>
-                            </div>
+                            {needsWork && (
+                              <span className="rounded-full bg-orange-400/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-orange-200">
+                                Low
+                              </span>
+                            )}
                           </div>
-                          {needsWork && (
-                            <span className="rounded-full bg-orange-400/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-orange-200">
-                              Low
+
+                          <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-800">
+                            <div
+                              className="h-full rounded-full bg-orange-400 transition-all duration-700"
+                              style={{ width: `${recall}%` }}
+                            />
+                          </div>
+
+                          <div className="mt-3 flex items-center justify-between text-sm">
+                            <span className="font-black text-white">
+                              {formatRevisionDuration(revisionSeconds)} revised
                             </span>
-                          )}
-                        </div>
-
-                        <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-800">
-                          <div
-                            className="h-full rounded-full bg-orange-400 transition-all duration-700"
-                            style={{ width: `${recall}%` }}
-                          />
-                        </div>
-
-                        <div className="mt-3 flex items-center justify-between text-sm">
-                          <span className="font-black text-white">
-                            {formatRevisionDuration(revisionSeconds)} revised
-                          </span>
-                          <span className="font-bold text-orange-200">
-                            {recall}% recall
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
+                            <span className="font-bold text-orange-200">
+                              {recall}% recall
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    }
+                  )}
                 </div>
               </div>
 
@@ -10045,15 +10715,13 @@ export default function App() {
                     </h2>
                   </div>
                   <p className="mt-2 text-sm text-zinc-400">
-                    Every 11 total forged stages unlocks a new theme.
-                    Total forged stages: {totalForgedStages}. Next unlock: {nextThemeToUnlock?.name || 'All themes unlocked'}.
+                    Every 11 total forged stages unlocks a new theme. Total
+                    forged stages: {totalForgedStages}. Next unlock:{' '}
+                    {nextThemeToUnlock?.name || 'All themes unlocked'}.
                   </p>
                 </div>
                 <ProgressRing
-                  value={Math.min(
-                    100,
-                    nextThemeProgress
-                  )}
+                  value={Math.min(100, nextThemeProgress)}
                   label="Themes"
                 />
               </div>
@@ -10085,7 +10753,8 @@ export default function App() {
                         {selectedSubject.title} Recall
                       </h2>
                       <p className="mt-1 text-xs font-bold text-orange-300">
-                        {totalForgedStages % 11}/11 towards next theme checkpoint
+                        {totalForgedStages % 11}/11 towards next theme
+                        checkpoint
                       </p>
                       <p className="mt-1 text-sm text-zinc-400">
                         Based on unlocked stages and recent test score.
@@ -10108,7 +10777,8 @@ export default function App() {
                         Random {selectedSubject.title} recall
                       </h3>
                       <p className="mt-2 text-sm text-zinc-400">
-                        10 mixed questions from this subject, reshuffled every time.
+                        10 mixed questions from this subject, reshuffled every
+                        time.
                       </p>
                     </div>
                     <Shuffle className="h-6 w-6 text-orange-300" />
@@ -10521,9 +11191,9 @@ export default function App() {
                       </h3>
                     </div>
                     <p className="mt-2 text-sm text-zinc-400">
-                      On the Stages page, the top badge becomes a live revision
-                      clock. When it reaches your work time, the break alarm
-                      appears.
+                      On the Stages page and inside an open stage test, the top
+                      badge becomes a live revision clock. When it reaches your
+                      work time, the break alarm appears.
                     </p>
 
                     <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -10621,17 +11291,35 @@ export default function App() {
                           </h3>
                         </div>
                         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-                          All subjects now show in the taskbar menu. These old
-                          slots are kept here only so previous saved settings do
-                          not break the app.
+                          Pick the subjects you want in the taskbar menu. Once a
+                          slot is filled, the taskbar only shows your selected
+                          subjects. Empty every slot to show every subject.
                         </p>
+                        {subjectSaveMessage && (
+                          <p className="mt-3 text-sm font-black text-green-300">
+                            {subjectSaveMessage}
+                          </p>
+                        )}
                       </div>
-                      <button
-                        onClick={() => setSubjectSlots(Array(9).fill(''))}
-                        className="rounded-2xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
-                      >
-                        Clear slots
-                      </button>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={() => {
+                            setSubjectSlots(Array(9).fill(''));
+                            setSubjectSaveMessage(
+                              'All slots cleared. Save subjects to keep every subject visible.'
+                            );
+                          }}
+                          className="rounded-2xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
+                        >
+                          Clear slots
+                        </button>
+                        <button
+                          onClick={saveSubjectSlots}
+                          className="rounded-2xl bg-orange-500 px-4 py-3 text-sm font-black text-white hover:bg-orange-600"
+                        >
+                          Save subjects
+                        </button>
+                      </div>
                     </div>
 
                     <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -10649,6 +11337,9 @@ export default function App() {
                               const nextSlots = [...subjectSlots];
                               nextSlots[index] = event.target.value;
                               setSubjectSlots(nextSlots);
+                              setSubjectSaveMessage(
+                                'Subject slots updated. Click Save subjects to keep this setup.'
+                              );
                               if (event.target.value)
                                 setSelectedSubjectId(event.target.value);
                             }}
@@ -10674,4 +11365,3 @@ export default function App() {
     </div>
   );
 }
-
