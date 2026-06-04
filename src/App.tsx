@@ -5512,44 +5512,6 @@ const generalContent = {
       ],
     },
   ],
-  rs: [
-    {
-      q: 'Explain one way the Three Marks of Existence link to Buddhist teaching about suffering.',
-      answer:
-        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
-      options: [
-        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
-        'They show that humans have a permanent soul created by God',
-        'They prove that suffering is only caused by physical pain',
-        'They teach that enlightenment is impossible',
-      ],
-      topicTitle: 'GCSE past-paper-style RS',
-    },
-    {
-      q: 'Why might evil and suffering be used as an argument against God?',
-      answer:
-        'They challenge belief in a God who is all-powerful, loving and just',
-      options: [
-        'They challenge belief in a God who is all-powerful, loving and just',
-        'They prove the Design argument is always successful',
-        'They show that miracles must happen every day',
-        'They are part of the Eightfold Path only',
-      ],
-      topicTitle: 'GCSE past-paper-style RS',
-    },
-    {
-      q: 'Explain why the resurrection is important for Christian beliefs about salvation.',
-      answer:
-        'It shows Jesus defeated death and gives Christians hope of life after death',
-      options: [
-        'It shows Jesus defeated death and gives Christians hope of life after death',
-        'It shows Jesus was only a normal teacher',
-        'It proves that original sin is not important to Christians',
-        'It means Christians reject the afterlife',
-      ],
-      topicTitle: 'GCSE past-paper-style RS',
-    },
-  ],
   geography: [
     {
       title: 'Exam Structure',
@@ -5856,6 +5818,44 @@ function isBroadAnswerCorrect(question, userAnswer) {
 }
 
 const GCSE_DAILY_EXAM_QUESTIONS = {
+  rs: [
+    {
+      q: 'Explain one way the Three Marks of Existence link to Buddhist teaching about suffering.',
+      answer:
+        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
+      options: [
+        'They show that life is impermanent, has no fixed self and cannot give lasting satisfaction, so attachment causes suffering',
+        'They show that humans have a permanent soul created by God',
+        'They prove that suffering is only caused by physical pain',
+        'They teach that enlightenment is impossible',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
+    },
+    {
+      q: 'Why might evil and suffering be used as an argument against God?',
+      answer:
+        'They challenge belief in a God who is all-powerful, loving and just',
+      options: [
+        'They challenge belief in a God who is all-powerful, loving and just',
+        'They prove the Design argument is always successful',
+        'They show that miracles must happen every day',
+        'They are part of the Eightfold Path only',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
+    },
+    {
+      q: 'Explain why the resurrection is important for Christian beliefs about salvation.',
+      answer:
+        'It shows Jesus defeated death and gives Christians hope of life after death',
+      options: [
+        'It shows Jesus defeated death and gives Christians hope of life after death',
+        'It shows Jesus was only a normal teacher',
+        'It proves that original sin is not important to Christians',
+        'It means Christians reject the afterlife',
+      ],
+      topicTitle: 'GCSE past-paper-style RS',
+    },
+  ],
   'english-language': [
     {
       q: 'A writer uses a personal anecdote in a non-fiction extract. What is the most likely effect?',
@@ -7209,6 +7209,15 @@ const defaultUnlockedStages = {
   'rs-buddhist-dhamma': true,
 };
 
+function createUnlockedStagesMap() {
+  return subjects.reduce((stageMap, subject) => {
+    subject.topics.forEach((topic) => {
+      stageMap[topic.id] = true;
+    });
+    return stageMap;
+  }, {});
+}
+
 function loadSavedProgress() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -7238,6 +7247,7 @@ export default function App() {
   const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(false);
   const [showTutorialPrompt, setShowTutorialPrompt] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
+  const [tutorialCanContinue, setTutorialCanContinue] = useState(false);
   const [workMinutes, setWorkMinutes] = useState(
     savedProgress?.workMinutes || 30
   );
@@ -7304,40 +7314,72 @@ export default function App() {
     {
       title: 'Welcome to Iron Forge',
       tag: 'Start here',
-      text: 'This is your revision dashboard. Pick a subject, choose Year 10 or Year 11, then work through the stages until everything is forged.',
+      text: 'This tutorial is part of the setup and cannot be skipped. Pick your subjects, then work through the forge properly instead of jumping in blind.',
       icon: Hammer,
     },
     {
-      title: 'Home',
-      tag: 'Main screen',
-      text: 'Home shows your selected subject, recall percentage, unlocked themes and quick access to the main revision sections.',
-      icon: Home,
+      title: 'Subject Slots',
+      tag: 'Pick your revision loadout',
+      text: 'Your subject slots decide what appears in the taskbar. Save your subjects in Settings and the taskbar will only show the subjects you actually selected. Empty every slot if you want every subject visible.',
+      icon: ListChecks,
     },
     {
       title: 'Stages',
-      tag: 'Locked topics',
-      text: 'Stages are the main topic path. Read the notes, answer the questions, then get 100% to unlock the next stage.',
+      tag: '100% to move on',
+      text: 'Stages are the main topic path. Read the notes, answer the test, then hit Strike the Anvil. You need 100% before the next stage unlocks.',
       icon: Flame,
+    },
+    {
+      title: 'Revision Clock',
+      tag: 'Still active in tests',
+      text: 'The revision clock keeps running on the Stages page and inside open stage tests. It tracks proper revision time and triggers the break alarm when your work block is done.',
+      icon: Timer,
+    },
+    {
+      title: 'Super Test',
+      tag: 'Final Forge',
+      text: 'Once every stage in a subject is unlocked, the Super Test appears. It uses written answers and you need 100% before you can reset that subject.',
+      icon: Trophy,
     },
     {
       title: 'Daily Test',
       tag: 'Keep it fresh',
-      text: 'Daily Test now mixes quick recall with GCSE past-paper-style questions. Multiple choice is harder too, because wrong answers sound more reasonable, so you have to actually know the content instead of guessing.',
+      text: 'Daily Test now mixes quick recall, tougher multiple choice, written answers and GCSE-style questions. It reshuffles so it is not just the same test every time.',
       icon: Shuffle,
     },
     {
-      title: 'General',
+      title: 'General and Past Papers',
       tag: 'Wider revision',
       text: 'General gives broader notes and OCR GCSE paper links. Use it before past papers or when you need a wider topic refresh.',
       icon: LibraryBig,
     },
     {
+      title: 'Saving and Reopening',
+      tag: 'Do not lose progress',
+      text: `Click ${
+        saveEnabled ? `${username || 'Student'}'s Forge` : 'Not saving'
+      } in the taskbar to reopen the saving panel. From there you can save your name again or replay this tutorial whenever you need it.`,
+      icon: ShieldCheck,
+    },
+    {
       title: 'Settings and Themes',
       tag: 'Control panel',
-      text: 'Settings lets you change subject slots, timer lengths and themes. More themes unlock as you make progress.',
+      text: 'Settings lets you change subject slots, save subjects, timer lengths and themes. More themes unlock as you make progress through the forge.',
       icon: Settings,
     },
   ];
+
+  useEffect(() => {
+    if (!showTutorialPrompt) {
+      setTutorialCanContinue(false);
+      return;
+    }
+
+    setTutorialCanContinue(false);
+    const timer = window.setTimeout(() => setTutorialCanContinue(true), 7000);
+
+    return () => window.clearTimeout(timer);
+  }, [showTutorialPrompt, tutorialStep]);
 
   const finishSubjectSetup = () => {
     const firstPickedSubject = subjectSlots.find(Boolean);
@@ -7923,7 +7965,7 @@ export default function App() {
               Theme unlock code
             </h2>
             <p className="mt-2 text-sm text-zinc-400">
-              Enter the creator code to unlock every theme.
+              Enter the creator code to unlock every theme and every stage.
             </p>
 
             <input
@@ -7958,6 +8000,9 @@ export default function App() {
                 onClick={() => {
                   if (themeUnlockCode === 'Tilly2025!') {
                     setAllThemesUnlocked(true);
+                    setUnlocked(createUnlockedStagesMap());
+                    setSuperTestAnswers({});
+                    setSuperTestSubmitted(false);
                     setThemeUnlockCodeOpen(false);
                     setThemeUnlockCode('');
                     setThemeUnlockError('');
@@ -7967,7 +8012,7 @@ export default function App() {
                 }}
                 className="rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600"
               >
-                Unlock themes
+                Unlock everything
               </button>
             </div>
           </div>
@@ -8080,6 +8125,18 @@ export default function App() {
             >
               Continue without saving
             </button>
+
+            <button
+              onClick={() => {
+                setShowSavePrompt(false);
+                setTutorialStep(0);
+                setShowTutorialPrompt(true);
+                setView('home');
+              }}
+              className="mt-3 w-full rounded-2xl border border-orange-400/30 bg-orange-400/10 px-5 py-3 text-sm font-black text-orange-200 hover:bg-orange-400/15"
+            >
+              Replay tutorial
+            </button>
           </div>
         </div>
       )}
@@ -8165,14 +8222,6 @@ export default function App() {
           style={{ zIndex: 9999 }}
         >
           <div className="relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
-            <button
-              onClick={() => setShowTutorialPrompt(false)}
-              className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
-              aria-label="Close tutorial"
-            >
-              X
-            </button>
-
             {(() => {
               const slide = tutorialSlides[tutorialStep];
               const Icon = slide.icon;
@@ -8209,12 +8258,9 @@ export default function App() {
                   </div>
 
                   <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-                    <button
-                      onClick={() => setShowTutorialPrompt(false)}
-                      className="rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
-                    >
-                      Skip tutorial
-                    </button>
+                    <p className="rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-bold text-zinc-400">
+                      Tutorial is locked in. Next unlocks after 7 seconds.
+                    </p>
 
                     <div className="flex gap-3">
                       {tutorialStep > 0 && (
@@ -8229,16 +8275,25 @@ export default function App() {
                       )}
 
                       <button
+                        disabled={!tutorialCanContinue}
                         onClick={() => {
+                          if (!tutorialCanContinue) return;
+
                           if (tutorialStep >= tutorialSlides.length - 1) {
                             setShowTutorialPrompt(false);
                           } else {
                             setTutorialStep((step) => step + 1);
                           }
                         }}
-                        className="rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white hover:bg-orange-600 active:scale-[0.99]"
+                        className={`rounded-2xl px-5 py-3 text-sm font-black text-white active:scale-[0.99] ${
+                          tutorialCanContinue
+                            ? 'bg-orange-500 hover:bg-orange-600'
+                            : 'cursor-not-allowed bg-zinc-700 opacity-60'
+                        }`}
                       >
-                        {tutorialStep >= tutorialSlides.length - 1
+                        {!tutorialCanContinue
+                          ? 'Wait 7 seconds'
+                          : tutorialStep >= tutorialSlides.length - 1
                           ? 'Start forging'
                           : 'Next'}
                       </button>
@@ -10784,6 +10839,29 @@ export default function App() {
                     <Shuffle className="h-6 w-6 text-orange-300" />
                   </div>
                 </button>
+
+                {subjectSuperTestReady && (
+                  <button
+                    onClick={openSuperTest}
+                    className="w-full rounded-3xl border border-green-400/40 bg-green-500/10 p-5 text-left transition hover:bg-green-500/15 active:scale-[0.99]"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-bold uppercase tracking-widest text-green-300">
+                          Final Forge Ready
+                        </p>
+                        <h3 className="mt-1 text-xl font-black text-white">
+                          All stages are unlocked — do the Super Test now
+                        </h3>
+                        <p className="mt-2 text-sm text-zinc-400">
+                          Written answers only. You need 100% before you can
+                          reset this subject.
+                        </p>
+                      </div>
+                      <Trophy className="h-6 w-6 text-green-300" />
+                    </div>
+                  </button>
+                )}
 
                 <h2 className="flex items-center gap-2 text-2xl font-black text-white">
                   <Hammer className="h-6 w-6 text-orange-400" />{' '}
