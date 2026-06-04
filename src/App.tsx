@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Flame,
   Hammer,
@@ -4662,110 +4662,118 @@ const themes = [
   {
     id: 'cherry',
     name: 'Cherry Blossom',
-    unlockAt: 11,
+    unlockAt: 3,
     bg: 'bg-[#17101d]',
     panel: 'bg-zinc-950/72',
     soft: 'bg-pink-200/10',
     border: 'border-pink-200/25',
     accent: 'text-pink-100',
     button: 'bg-pink-500 hover:bg-pink-400',
-    description: 'Unlocked after forging 11 total stages.',
+    description: 'Unlocked after forging 3 stages in a subject.',
   },
   {
     id: 'ocean',
     name: 'Ocean Forge',
-    unlockAt: 22,
+    unlockAt: 6,
     bg: 'bg-slate-950',
     panel: 'bg-cyan-950/40',
     soft: 'bg-cyan-300/10',
     border: 'border-cyan-300/50',
     accent: 'text-cyan-200',
     button: 'bg-cyan-600 hover:bg-cyan-700',
-    description: 'Unlocked after forging 22 total stages.',
+    description: 'Unlocked after forging 6 stages in a subject.',
   },
   {
     id: 'royal',
     name: 'Royal Purple',
-    unlockAt: 33,
+    unlockAt: 9,
     bg: 'bg-purple-950',
     panel: 'bg-purple-950/70',
     soft: 'bg-violet-300/10',
     border: 'border-violet-300/50',
     accent: 'text-violet-200',
     button: 'bg-violet-600 hover:bg-violet-700',
-    description: 'Unlocked after forging 33 total stages.',
+    description: 'Unlocked after forging 9 stages in a subject.',
   },
   {
     id: 'gold',
     name: 'Gold Forge',
-    unlockAt: 44,
+    unlockAt: 12,
     bg: 'bg-yellow-950',
     panel: 'bg-yellow-950/60',
     soft: 'bg-yellow-300/10',
     border: 'border-yellow-300/50',
     accent: 'text-yellow-200',
     button: 'bg-yellow-600 hover:bg-yellow-700',
-    description: 'Unlocked after forging 44 total stages.',
+    description: 'Unlocked after forging 12 stages in a subject.',
   },
   {
     id: 'valentine',
     name: 'Valentine Forge',
-    unlockAt: 55,
+    unlockAt: 15,
     bg: 'bg-rose-950',
     panel: 'bg-rose-950/70',
     soft: 'bg-pink-300/10',
     border: 'border-pink-300/50',
     accent: 'text-pink-200',
     button: 'bg-pink-600 hover:bg-pink-700',
-    description: 'Unlocked after forging 55 total stages.',
+    description: 'Unlocked after forging 15 stages in a subject.',
   },
   {
     id: 'japan',
     name: 'Japan Forge',
-    unlockAt: 66,
+    unlockAt: 18,
+    unlockAction: 'subjectSwitches5',
+    unlockTask: 'Switch subjects 5 times using the Subjects menu.',
     bg: 'bg-red-950',
     panel: 'bg-red-950/65',
     soft: 'bg-red-300/10',
     border: 'border-red-200/50',
     accent: 'text-red-100',
     button: 'bg-red-600 hover:bg-red-700',
-    description: 'Unlocked after forging 66 total stages.',
+    description: 'Unlocked by switching subjects 5 times.',
   },
   {
     id: 'cyber',
     name: 'Cyber Forge',
-    unlockAt: 77,
+    unlockAt: 21,
+    unlockAction: 'dailyTestsStarted3',
+    unlockTask: 'Start the Daily Test 3 times.',
     bg: 'bg-emerald-950',
     panel: 'bg-emerald-950/65',
     soft: 'bg-emerald-300/10',
     border: 'border-emerald-300/50',
     accent: 'text-emerald-200',
     button: 'bg-emerald-500 hover:bg-emerald-600',
-    description: 'Unlocked after forging 77 total stages.',
+    description: 'Unlocked by opening the Daily Test 3 times.',
   },
   {
     id: 'arctic',
     name: 'Arctic Forge',
-    unlockAt: 88,
+    unlockAt: 24,
+    unlockAction: 'revisionClockReset',
+    unlockTask: 'Reset the revision clock once in Settings.',
     bg: 'bg-sky-950',
     panel: 'bg-sky-950/65',
     soft: 'bg-sky-200/10',
     border: 'border-sky-200/50',
     accent: 'text-sky-100',
     button: 'bg-sky-500 hover:bg-sky-600',
-    description: 'Unlocked after forging 88 total stages.',
+    description: 'Unlocked by resetting the revision clock.',
   },
   {
     id: 'volcano',
     name: 'Volcano Forge',
-    unlockAt: 99,
+    unlockAt: 27,
+    unlockAction: 'failedStageOnce',
+    unlockTask: 'Fail any stage test once.',
     bg: 'bg-red-950',
     panel: 'bg-red-950/70',
     soft: 'bg-red-400/10',
     border: 'border-red-400/50',
     accent: 'text-red-200',
     button: 'bg-red-600 hover:bg-red-700',
-    description: 'Unlocked after forging 99 total stages.',
+    description: 'Unlocked by failing any stage test once.',
   },
   {
     id: 'god',
@@ -5580,7 +5588,7 @@ const GCSE_DAILY_EXAM_QUESTIONS = {
   ],
 };
 
-function getDailyQuestions(subject, count = 10, runKey = 0) {
+function getDailyQuestions(subject, count = 10) {
   const allQuickQuestions = subject.topics.flatMap((topic) =>
     topic.questions.map((question) => ({
       ...question,
@@ -5602,22 +5610,18 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
     })
   );
 
-  const seedText = `${subject.id}-${runKey}`;
-
-  const scoreForQuestion = (question, index) => {
-    const textToHash = `${seedText}-${question.q}-${index}`;
-    let hash = 0;
-    for (let i = 0; i < textToHash.length; i++) {
-      hash = (hash * 31 + textToHash.charCodeAt(i)) % 1000003;
-    }
-    return hash;
-  };
+  const today = new Date().toDateString();
+  const seedText = `${today}-${subject.id}`;
+  let seed = 0;
+  for (let i = 0; i < seedText.length; i++)
+    seed += seedText.charCodeAt(i) * (i + 1);
 
   const seededShuffle = (items) =>
-    [...items].sort(
-      (a, b) =>
-        scoreForQuestion(a, items.indexOf(a)) - scoreForQuestion(b, items.indexOf(b))
-    );
+    [...items].sort((a, b) => {
+      const aScore = Math.sin(seed + a.q.length * 999) % 1;
+      const bScore = Math.sin(seed + b.q.length * 999) % 1;
+      return aScore - bScore;
+    });
 
   const examCount = Math.min(3, examQuestions.length, Math.ceil(count * 0.3));
   const quickCount = Math.max(0, count - examCount);
@@ -6360,7 +6364,9 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
           </p>
           <h3 className="mt-1 text-xl font-black text-white">{theme.name}</h3>
           <p className="mt-2 text-sm text-zinc-400">
-            {theme.description}
+            {unlocked || !theme.unlockTask
+              ? theme.description
+              : theme.unlockTask}
           </p>
         </div>
         {unlocked ? (
@@ -6489,17 +6495,6 @@ function ProgressRing({ value, label = 'Recall' }) {
       </div>
     </div>
   );
-}
-
-function formatRevisionDuration(seconds = 0) {
-  const safeSeconds = Math.max(0, Number(seconds) || 0);
-  const minutes = Math.floor(safeSeconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (hours > 0) return `${hours}h ${remainingMinutes}m`;
-  if (minutes > 0) return `${minutes}m`;
-  return `${safeSeconds}s`;
 }
 
 function QuizBlock({
@@ -6820,13 +6815,6 @@ export default function App() {
   const [submitted, setSubmitted] = useState(false);
   const [dailyAnswers, setDailyAnswers] = useState({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
-  const [dailyRunKey, setDailyRunKey] = useState(0);
-  const [revisionSecondsBySubject, setRevisionSecondsBySubject] = useState(
-    savedProgress?.revisionSecondsBySubject || {}
-  );
-  const [achievementToast, setAchievementToast] = useState(null);
-  const achievementToastStartedRef = useRef(false);
-  const previousUnlockedThemeIdsRef = useRef([]);
   const [unlocked, setUnlocked] = useState({
     ...defaultUnlockedStages,
     ...(savedProgress?.unlocked || {}),
@@ -6839,8 +6827,8 @@ export default function App() {
   );
 
   const dailyQuestions = useMemo(
-    () => getDailyQuestions(sectionSubject, 10, dailyRunKey),
-    [sectionSubject, dailyRunKey]
+    () => getDailyQuestions(sectionSubject, 10),
+    [sectionSubject]
   );
 
   const subjectSuperTestReady =
@@ -6905,8 +6893,7 @@ export default function App() {
   }, [revisionSeconds]);
 
   useEffect(() => {
-    const revisionViews = ['general', 'stages', 'topic', 'daily', 'superTest'];
-    if (!revisionViews.includes(view)) return;
+    if (view !== 'stages') return;
 
     const timer = window.setInterval(() => {
       setRevisionSeconds((previous) => {
@@ -6921,15 +6908,10 @@ export default function App() {
 
         return next;
       });
-
-      setRevisionSecondsBySubject((previous) => ({
-        ...previous,
-        [selectedSubjectId]: (previous[selectedSubjectId] || 0) + 1,
-      }));
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [view, workMinutes, lastBreakMarker, selectedSubjectId]);
+  }, [view, workMinutes, lastBreakMarker]);
 
   useEffect(() => {
     if (!saveEnabled) return;
@@ -6945,7 +6927,6 @@ export default function App() {
       workMinutes,
       breakMinutes,
       revisionSeconds,
-      revisionSecondsBySubject,
       lastBreakMarker,
       subjectSlots,
       selectedSection,
@@ -6964,7 +6945,6 @@ export default function App() {
     workMinutes,
     breakMinutes,
     revisionSeconds,
-    revisionSecondsBySubject,
     lastBreakMarker,
     subjectSlots,
     selectedSection,
@@ -7005,42 +6985,6 @@ export default function App() {
       (subject) => subject.topics.filter((topic) => unlocked[topic.id]).length
     )
   );
-  const totalForgedStages = unlockedCount;
-  const selectedHomeSubjects = useMemo(() => {
-    const pickedSubjectIds = [...new Set(subjectSlots.filter(Boolean))];
-    const pickedSubjects = pickedSubjectIds
-      .map((subjectId) => visibleSubjects.find((subject) => subject.id === subjectId))
-      .filter(Boolean);
-
-    return pickedSubjects.length ? pickedSubjects : visibleSubjects;
-  }, [subjectSlots, visibleSubjects]);
-
-  const subjectRevisionStats = useMemo(() => {
-    return selectedHomeSubjects.map((subject) => {
-      const forged = subject.topics.filter((topic) => unlocked[topic.id]).length;
-      const total = subject.topics.length || 1;
-      const revisionSecondsForSubject = revisionSecondsBySubject[subject.id] || 0;
-
-      return {
-        subject,
-        forged,
-        total,
-        recall: Math.round((forged / total) * 100),
-        revisionSeconds: revisionSecondsForSubject,
-      };
-    });
-  }, [selectedHomeSubjects, unlocked, revisionSecondsBySubject]);
-
-  const subjectMostNeedingWork = subjectRevisionStats.reduce(
-    (lowest, current) => {
-      if (!lowest) return current;
-      if (current.revisionSeconds !== lowest.revisionSeconds) {
-        return current.revisionSeconds < lowest.revisionSeconds ? current : lowest;
-      }
-      return current.recall < lowest.recall ? current : lowest;
-    },
-    null
-  );
 
   const recallPercentage = useMemo(() => {
     const unlockedInSubject = sectionTopics.filter(
@@ -7070,42 +7014,13 @@ export default function App() {
   function isThemeUnlocked(theme) {
     if (allThemesUnlocked) return true;
     if (theme.requiresRecall100) return recallPercentage === 100;
-    return totalForgedStages >= theme.unlockAt;
+    if (theme.unlockAction === 'dailyTestsStarted3')
+      return (themeActions.dailyTestsStarted3 || 0) >= 3;
+    if (theme.unlockAction === 'subjectSwitches5')
+      return (themeActions.subjectSwitches5 || 0) >= 5;
+    if (theme.unlockAction) return Boolean(themeActions[theme.unlockAction]);
+    return maxForgedInAnySubject >= theme.unlockAt;
   }
-
-  const unlockedThemeIds = themes
-    .filter((theme) => isThemeUnlocked(theme))
-    .map((theme) => theme.id);
-
-  const nextThemeToUnlock = themes.find((theme) => !isThemeUnlocked(theme));
-  const nextThemeTarget = nextThemeToUnlock?.unlockAt || totalForgedStages || 1;
-  const nextThemeProgress = nextThemeToUnlock
-    ? Math.min(100, Math.round((totalForgedStages / nextThemeTarget) * 100))
-    : 100;
-
-  useEffect(() => {
-    if (!achievementToastStartedRef.current) {
-      previousUnlockedThemeIdsRef.current = unlockedThemeIds;
-      achievementToastStartedRef.current = true;
-      return;
-    }
-
-    const previousIds = previousUnlockedThemeIdsRef.current;
-    const newThemeId = unlockedThemeIds.find(
-      (themeId) => themeId !== 'forge' && !previousIds.includes(themeId)
-    );
-
-    previousUnlockedThemeIdsRef.current = unlockedThemeIds;
-
-    if (!newThemeId) return;
-
-    const newTheme = themes.find((theme) => theme.id === newThemeId);
-    if (!newTheme) return;
-
-    setAchievementToast(newTheme);
-    const timer = window.setTimeout(() => setAchievementToast(null), 4300);
-    return () => window.clearTimeout(timer);
-  }, [unlockedThemeIds.join('|')]);
 
   const activeTheme =
     themes.find(
@@ -7169,7 +7084,6 @@ export default function App() {
 
   function startDailyTest() {
     incrementThemeAction('dailyTestsStarted3');
-    setDailyRunKey((previous) => previous + 1);
     setDailyAnswers({});
     setDailySubmitted(false);
     setView('daily');
@@ -7195,12 +7109,10 @@ export default function App() {
       workMinutes,
       breakMinutes,
       revisionSeconds,
-      revisionSecondsBySubject,
       lastBreakMarker,
       subjectSlots,
       selectedSection,
       allThemesUnlocked,
-      themeActions,
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -9377,35 +9289,6 @@ export default function App() {
         }
 
 
-        .minecraft-achievement-toast {
-          animation: achievement-slide-in 4.25s ease-in-out forwards;
-          image-rendering: pixelated;
-        }
-
-        @keyframes achievement-slide-in {
-          0% {
-            transform: translateX(130%) scale(0.98);
-            opacity: 0;
-          }
-          12% {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-          }
-          84% {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(130%) scale(0.98);
-            opacity: 0;
-          }
-        }
-
-        .minecraft-achievement-notch {
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 10px 100%, 10px calc(100% - 10px), 0 calc(100% - 10px));
-        }
-
-
         .taskbar-solid {
           backdrop-filter: none !important;
           -webkit-backdrop-filter: none !important;
@@ -9422,29 +9305,6 @@ export default function App() {
       `}</style>
 
       <div className="relative z-10">
-        {achievementToast && (
-          <div className="minecraft-achievement-toast fixed right-4 top-20 z-[9998] w-[min(92vw,360px)] overflow-hidden rounded-sm border-4 border-zinc-700 bg-zinc-950 shadow-2xl shadow-black/60">
-            <div className="minecraft-achievement-notch border-b-4 border-zinc-800 bg-zinc-900 px-4 py-3">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-lime-300">
-                Achievement unlocked!
-              </p>
-              <div className="mt-2 flex items-center gap-3">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-sm border-2 ${achievementToast.border} ${achievementToast.soft}`}>
-                  <Trophy className={`h-7 w-7 ${achievementToast.accent}`} />
-                </div>
-                <div>
-                  <p className="text-sm font-black text-white">
-                    New theme forged
-                  </p>
-                  <p className={`text-lg font-black ${achievementToast.accent}`}>
-                    {achievementToast.name}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="taskbar-solid sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950 px-4 py-3 shadow-lg">
           <div className="relative mx-auto max-w-7xl">
             <div className="flex items-center justify-between gap-2 overflow-x-auto">
@@ -9787,7 +9647,7 @@ export default function App() {
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-6 text-zinc-400">
-                        Themes now unlock every 11 total forged stages.
+                        Themes earned by forging stages with 100%.
                       </p>
                     </div>
                     <button
@@ -9822,88 +9682,9 @@ export default function App() {
 
                   <p className="mt-4 text-xs font-bold uppercase tracking-widest text-zinc-500">
                     Next unlock:{' '}
-                    {nextThemeToUnlock?.name || 'All themes unlocked'}
+                    {themes.find((theme) => !isThemeUnlocked(theme))?.name ||
+                      'All themes unlocked'}
                   </p>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <ListChecks className="h-6 w-6 text-orange-400" />
-                      <h3 className="text-2xl font-black text-white">
-                        Subject Revision Balance
-                      </h3>
-                    </div>
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-                      This shows how much revision time you have put into each selected subject, so you can see what needs work instead of just guessing.
-                    </p>
-                  </div>
-                  {subjectMostNeedingWork && (
-                    <button
-                      onClick={() => switchSubject(subjectMostNeedingWork.subject)}
-                      className="rounded-2xl border border-orange-400/40 bg-orange-400/10 px-4 py-3 text-left text-sm font-black text-orange-100 hover:bg-orange-400/15"
-                    >
-                      Work on next: {subjectMostNeedingWork.subject.title}
-                    </button>
-                  )}
-                </div>
-
-                <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  {subjectRevisionStats.map(({ subject, forged, total, recall, revisionSeconds }) => {
-                    const Icon = subject.icon;
-                    const needsWork = subjectMostNeedingWork?.subject.id === subject.id;
-
-                    return (
-                      <button
-                        key={`revision-balance-${subject.id}`}
-                        onClick={() => switchSubject(subject)}
-                        className={`rounded-2xl border p-4 text-left transition hover:bg-zinc-800 active:scale-[0.99] ${
-                          needsWork
-                            ? 'border-orange-400/70 bg-orange-400/10 shadow-lg shadow-orange-950/20'
-                            : 'border-zinc-800 bg-zinc-950/70'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className={`rounded-xl border p-3 ${needsWork ? activeTheme.border + ' ' + activeTheme.soft + ' ' + activeTheme.accent : 'border-zinc-800 text-zinc-300'}`}>
-                              <Icon className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <h4 className="text-base font-black text-white">
-                                {subject.title}
-                              </h4>
-                              <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                                {forged}/{total} stages forged
-                              </p>
-                            </div>
-                          </div>
-                          {needsWork && (
-                            <span className="rounded-full bg-orange-400/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-orange-200">
-                              Low
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-800">
-                          <div
-                            className="h-full rounded-full bg-orange-400 transition-all duration-700"
-                            style={{ width: `${recall}%` }}
-                          />
-                        </div>
-
-                        <div className="mt-3 flex items-center justify-between text-sm">
-                          <span className="font-black text-white">
-                            {formatRevisionDuration(revisionSeconds)} revised
-                          </span>
-                          <span className="font-bold text-orange-200">
-                            {recall}% recall
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
                 </div>
               </div>
 
@@ -9921,8 +9702,8 @@ export default function App() {
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-6 text-zinc-400">
-                        Keep your recall sharp with a different mixed test every
-                        time you open Daily.
+                        Keep your recall sharp with a new mixed test for the
+                        selected subject.
                       </p>
                       <div
                         className={`mt-4 inline-flex rounded-2xl px-4 py-2 text-sm font-black text-white ${activeTheme.button}`}
@@ -9934,7 +9715,7 @@ export default function App() {
                       className={`flex h-24 w-24 shrink-0 flex-col items-center justify-center rounded-full ${activeTheme.soft} ${activeTheme.accent}`}
                     >
                       <Shuffle className="h-8 w-8" />
-                      <span className="mt-1 text-xl font-black">10</span>
+                      <span className="mt-1 text-xl font-black">8</span>
                       <span className="text-[10px] font-bold uppercase tracking-widest">
                         Questions
                       </span>
@@ -10045,14 +9826,14 @@ export default function App() {
                     </h2>
                   </div>
                   <p className="mt-2 text-sm text-zinc-400">
-                    Every 11 total forged stages unlocks a new theme.
-                    Total forged stages: {totalForgedStages}. Next unlock: {nextThemeToUnlock?.name || 'All themes unlocked'}.
+                    Every 3 stages forged in a subject unlocks a new theme.
+                    Current best subject streak: {maxForgedInAnySubject} stages.
                   </p>
                 </div>
                 <ProgressRing
                   value={Math.min(
                     100,
-                    nextThemeProgress
+                    Math.round((maxForgedInAnySubject / 12) * 100)
                   )}
                   label="Themes"
                 />
@@ -10085,7 +9866,7 @@ export default function App() {
                         {selectedSubject.title} Recall
                       </h2>
                       <p className="mt-1 text-xs font-bold text-orange-300">
-                        {totalForgedStages % 11}/11 towards next theme checkpoint
+                        {subjectUnlockedCount}/3 towards next theme checkpoint
                       </p>
                       <p className="mt-1 text-sm text-zinc-400">
                         Based on unlocked stages and recent test score.
@@ -10108,7 +9889,7 @@ export default function App() {
                         Random {selectedSubject.title} recall
                       </h3>
                       <p className="mt-2 text-sm text-zinc-400">
-                        10 mixed questions from this subject, reshuffled every time.
+                        8 mixed questions from this subject.
                       </p>
                     </div>
                     <Shuffle className="h-6 w-6 text-orange-300" />
@@ -10674,4 +10455,3 @@ export default function App() {
     </div>
   );
 }
-
