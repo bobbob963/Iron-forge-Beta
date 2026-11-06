@@ -17,6 +17,21 @@ input[type="color"] {
   cursor: pointer;
 }
 
+/* Use the same secondary swatch as the panels. The outline keeps even a
+   near-black swatch readable against the Forge background. */
+.forge-title-word {
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.025em currentColor;
+  paint-order: stroke fill;
+}
+.has-custom-secondary .forge-title-word {
+  background-color: var(--custom-secondary);
+}
+@media (forced-colors: active) {
+  .forge-title-word { -webkit-text-fill-color: CanvasText; -webkit-text-stroke: 0; }
+}
+
 /* Keep custom colours on the controls and panels they describe. Quiz feedback
    retains its own success/error colours, as does each theme's illustration. */
 .has-custom-primary .palette-button,

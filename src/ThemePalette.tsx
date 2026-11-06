@@ -101,7 +101,7 @@ export default function ThemePalette({ theme, unlocked, colours, onChange }: Pro
             const label = role === 'primary' ? 'Primary' : 'Secondary';
             const value = colours[role] || defaults[role];
             return <fieldset key={role} className="min-w-0">
-              <legend className="font-bold text-white">{label} <span className="ml-1 text-sm font-normal text-zinc-400">{role === 'primary' ? 'Buttons' : 'Highlight panels'}</span></legend>
+              <legend className="font-bold text-white">{label} <span className="ml-1 text-sm font-normal text-zinc-400">{role === 'primary' ? 'Buttons' : 'Forge title and highlight panels'}</span></legend>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <label className="flex cursor-pointer items-center gap-2 rounded-md border border-zinc-700 px-2 py-1">
                   <input type="color" value={value} aria-label={label + ' custom colour'} onChange={e => onChange({ ...colours, [role]: e.target.value.toUpperCase() })} />
