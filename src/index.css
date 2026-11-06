@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+.theme-choice { display: block; }
+.theme-choice:not(:disabled):hover, .theme-choice[aria-pressed="true"] {
+  outline: 1px solid currentColor;
+  outline-offset: -1px;
+}
+.theme-choice:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+.theme-choice:disabled { cursor: not-allowed; }
+.theme-choice-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 512 / 200;
+  object-fit: cover;
+}
+
 .forge-scroll-panel {
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;

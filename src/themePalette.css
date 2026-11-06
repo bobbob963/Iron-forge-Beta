@@ -1,0 +1,49 @@
+.colour-swatch {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 1px solid #8889;
+  border-radius: 50%;
+  font-weight: 800;
+}
+.colour-swatch[aria-pressed="true"], .colour-swatch:focus-visible {
+  outline: 2px solid var(--color-zinc-300);
+  outline-offset: 2px;
+}
+input[type="color"] {
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Keep custom colours on the controls and panels they describe. Quiz feedback
+   retains its own success/error colours, as does each theme's illustration. */
+.has-custom-primary .palette-button,
+.has-custom-primary button.bg-orange-500 {
+  background: var(--custom-primary) !important;
+  color: var(--custom-primary-ink) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--custom-primary-ink) 35%, transparent);
+}
+.has-custom-primary .palette-button:hover,
+.has-custom-primary button.bg-orange-500:hover {
+  background: color-mix(in srgb, var(--custom-primary) 94%, var(--custom-primary-ink)) !important;
+}
+.has-custom-secondary .palette-panel,
+.has-custom-secondary .theme-choice[aria-pressed="true"],
+.has-custom-secondary button[aria-expanded="true"][aria-controls] {
+  background: var(--custom-secondary) !important;
+  color: var(--custom-secondary-ink) !important;
+  border-color: color-mix(in srgb, var(--custom-secondary-ink) 40%, var(--custom-secondary)) !important;
+}
+.has-custom-secondary .palette-panel :is(p, h2, h3, h4, span, button),
+.has-custom-secondary button[aria-expanded="true"][aria-controls] > :is(span, svg),
+.has-custom-secondary .theme-choice[aria-pressed="true"] :is(h3, p) {
+  color: var(--custom-secondary-ink) !important;
+}
+.has-custom-secondary .palette-panel circle:first-child {
+  color: color-mix(in srgb, var(--custom-secondary-ink) 25%, var(--custom-secondary));
+}
+.has-custom-secondary .palette-panel circle:last-child {
+  color: var(--custom-secondary-ink);
+}

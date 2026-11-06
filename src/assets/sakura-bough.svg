@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384 228" fill="none">
+  <defs>
+    <linearGradient id="bark" x1="0" y1="1" x2="1" y2="0">
+      <stop stop-color="#835562"/><stop offset="1" stop-color="#bc9093"/>
+    </linearGradient>
+    <linearGradient id="petal" x2=".6" y2="1">
+      <stop stop-color="#ffe3e8"/><stop offset=".7" stop-color="#eaa3b3"/><stop offset="1" stop-color="#c27b9a"/>
+    </linearGradient>
+    <path id="p" d="M0 1C-3-1-8-6-7-11Q-6-15-2-14L0-11L2-14Q7-15 8-10C8-5 4-1 0 1Z" fill="url(#petal)"/>
+    <g id="flower">
+      <use xlink:href="#p"/><use xlink:href="#p" transform="rotate(72)"/><use xlink:href="#p" transform="rotate(144)"/><use xlink:href="#p" transform="rotate(216)"/><use xlink:href="#p" transform="rotate(288)"/>
+      <circle r="3.2" fill="#dc9793"/><g fill="#ffdfab"><circle r="1.2" cx="-2" cy="-2"/><circle r="1.1" cx="1.4" cy="-2.2"/><circle r="1.1" cx="2.8" cy=".5"/><circle r="1.2" cy="2.5"/><circle r=".9" cx="-2.8" cy=".9"/></g>
+    </g>
+    <g id="bud"><path d="M0 0C-6-1-9-7-7-11Q-1-13 2-7Q4-2 0 0Z" fill="#d795a6"/><path d="M0 0L-5-1L-3-4Z" fill="#a79e81"/></g>
+    <g id="leaf"><path d="M0 0Q7-12 18-13Q15-4 0 0Z" fill="#8e9d8a"/><path d="M2-1L16-11" stroke="#cfbeaa" stroke-width=".7"/></g>
+  </defs>
+  <path d="M386 13Q347 40 292 49Q258 53 222 78Q198 95 158 112Q136 120 103 150L89 154Q117 125 149 109Q192 91 218 72Q247 53 274 45Q331 32 382 0Z" fill="url(#bark)"/>
+  <g stroke="#af808a" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M276 47Q264 65 257 81Q248 99 223 113Q207 123 194 142M244 95Q251 116 246 129M217 115Q199 118 186 114M151 110Q144 100 130 92Q118 87 112 76M111 141Q96 142 76 139M103 146Q95 164 74 176M293 48Q289 31 274 24" stroke-width="2.1"/>
+    <path d="M195 141Q183 148 172 153M189 137Q180 132 174 132M89 155Q75 158 66 153M82 169Q81 177 73 186M253 78Q253 64 248 60M348 28Q343 42 343 51M323 40Q318 56 301 64M220 76Q201 72 192 73M125 88Q127 80 126 72M141 102Q150 96 148 87" stroke-width="1.2"/>
+  </g>
+  <g>
+    <use xlink:href="#leaf" transform="translate(262 74) rotate(-40)"/><use xlink:href="#leaf" transform="translate(199 122) rotate(140) scale(.8)"/><use xlink:href="#leaf" transform="translate(116 135) rotate(142)"/><use xlink:href="#leaf" transform="translate(143 101) rotate(-52) scale(.85)"/>
+    <use xlink:href="#flower" transform="translate(302 62) rotate(18) scale(1.02)"/><use xlink:href="#flower" transform="translate(343 52) rotate(40) scale(.74)"/>
+    <use xlink:href="#flower" transform="translate(245 122) rotate(-20) scale(.95)"/><use xlink:href="#flower" transform="translate(257 111) rotate(22) scale(.66)"/>
+    <use xlink:href="#flower" transform="translate(189 115) rotate(40) scale(.88)"/><use xlink:href="#flower" transform="translate(195 138) rotate(10) scale(1.1)"/><use xlink:href="#flower" transform="translate(172 152) rotate(-15) scale(.65)"/>
+    <use xlink:href="#flower" transform="translate(128 91) rotate(35) scale(.85)"/><use xlink:href="#flower" transform="translate(111 78) rotate(-22) scale(.66)"/>
+    <use xlink:href="#flower" transform="translate(80 140) rotate(18) scale(.7)"/><use xlink:href="#flower" transform="translate(89 163) rotate(43) scale(.88)"/>
+    <use xlink:href="#bud" transform="translate(73 186) rotate(-55) scale(.84)"/><use xlink:href="#bud" transform="translate(66 153) rotate(-39)"/><use xlink:href="#bud" transform="translate(149 88) rotate(38)"/><use xlink:href="#bud" transform="translate(193 74) rotate(-42)"/><use xlink:href="#bud" transform="translate(274 24) rotate(-14)"/>
+  </g>
+</svg>

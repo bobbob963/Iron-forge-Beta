@@ -1,6 +1,10 @@
+import './revisionPalettes.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { CyberThemeBackground, GodThemeBackground, JapanCarOverlay, JapanThemeBackground, VolcanoThemeBackground } from './ForgeScenes';
 import StageTopicList from './StageTopicList';
+import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
+import './floralThemes.css';
 import {
   Flame,
   Hammer,
@@ -16,7 +20,6 @@ import {
   ArrowLeft,
   Home,
   Palette,
-  Medal,
   LibraryBig,
   ListChecks,
   ChevronDown,
@@ -5258,31 +5261,31 @@ const themes = [
     soft: 'bg-orange-400/10',
     border: 'border-orange-400/40',
     accent: 'text-orange-300',
-    button: 'bg-orange-500 hover:bg-orange-600',
+    button: 'bg-orange-700 hover:bg-orange-800',
     description: 'The original black and orange Iron Forge look.',
   },
   {
     id: 'cherry',
     name: 'Cherry Blossom',
     unlockAt: 11,
-    bg: 'bg-[#17101d]',
-    panel: 'bg-zinc-950/72',
-    soft: 'bg-pink-200/10',
-    border: 'border-pink-200/25',
-    accent: 'text-pink-100',
-    button: 'bg-pink-500 hover:bg-pink-400',
-    description: 'Unlocked after forging 11 total stages.',
+    bg: 'bg-[#181522]',
+    panel: 'bg-zinc-900',
+    soft: 'bg-[#403044]',
+    border: 'border-[#a77d95]',
+    accent: 'text-[#efbcd0]',
+    button: 'bg-[#88405f] hover:bg-[#a14d70]',
+    description: 'Sakura branches, plum shadows and soft pink blossoms.',
   },
   {
     id: 'ocean',
     name: 'Ocean Forge',
     unlockAt: 22,
-    bg: 'bg-slate-950',
-    panel: 'bg-cyan-950/40',
-    soft: 'bg-cyan-300/10',
-    border: 'border-cyan-300/50',
-    accent: 'text-cyan-200',
-    button: 'bg-cyan-600 hover:bg-cyan-700',
+    bg: 'bg-slate-50',
+    panel: 'bg-zinc-900',
+    soft: 'bg-teal-100',
+    border: 'border-teal-600/50',
+    accent: 'text-teal-900',
+    button: 'ocean-primary',
     description: 'Unlocked after forging 22 total stages.',
   },
   {
@@ -5290,11 +5293,11 @@ const themes = [
     name: 'Royal Purple',
     unlockAt: 33,
     bg: 'bg-purple-950',
-    panel: 'bg-purple-950/70',
+    panel: 'bg-zinc-900',
     soft: 'bg-violet-300/10',
     border: 'border-violet-300/50',
     accent: 'text-violet-200',
-    button: 'bg-violet-600 hover:bg-violet-700',
+    button: 'bg-violet-700 hover:bg-violet-800',
     description: 'Unlocked after forging 33 total stages.',
   },
   {
@@ -5302,31 +5305,31 @@ const themes = [
     name: 'Gold Forge',
     unlockAt: 44,
     bg: 'bg-yellow-950',
-    panel: 'bg-yellow-950/60',
+    panel: 'bg-zinc-900',
     soft: 'bg-yellow-300/10',
     border: 'border-yellow-300/50',
     accent: 'text-yellow-200',
-    button: 'bg-yellow-600 hover:bg-yellow-700',
+    button: 'bg-amber-800 hover:bg-amber-900',
     description: 'Unlocked after forging 44 total stages.',
   },
   {
     id: 'valentine',
     name: 'Valentine Forge',
     unlockAt: 55,
-    bg: 'bg-rose-950',
-    panel: 'bg-rose-950/70',
-    soft: 'bg-pink-300/10',
-    border: 'border-pink-300/50',
-    accent: 'text-pink-200',
-    button: 'bg-pink-600 hover:bg-pink-700',
-    description: 'Unlocked after forging 55 total stages.',
+    bg: 'bg-[#21171f]',
+    panel: 'bg-zinc-900',
+    soft: 'bg-[#452b35]',
+    border: 'border-[#ad807b]',
+    accent: 'text-[#efbaaa]',
+    button: 'bg-[#863d52] hover:bg-[#99495d]',
+    description: 'Burgundy, rose gold and a wax-sealed letter.',
   },
   {
     id: 'japan',
     name: 'Japan Forge',
     unlockAt: 66,
     bg: 'bg-red-950',
-    panel: 'bg-red-950/65',
+    panel: 'japan-panel',
     soft: 'bg-red-300/10',
     border: 'border-red-200/50',
     accent: 'text-red-100',
@@ -5350,11 +5353,11 @@ const themes = [
     name: 'Arctic Forge',
     unlockAt: 88,
     bg: 'bg-sky-950',
-    panel: 'bg-sky-950/65',
+    panel: 'bg-zinc-900',
     soft: 'bg-sky-200/10',
     border: 'border-sky-200/50',
     accent: 'text-sky-100',
-    button: 'bg-sky-500 hover:bg-sky-600',
+    button: 'bg-sky-800 hover:bg-sky-900',
     description: 'Unlocked after forging 88 total stages.',
   },
   {
@@ -5362,7 +5365,7 @@ const themes = [
     name: 'Volcano Forge',
     unlockAt: 99,
     bg: 'bg-red-950',
-    panel: 'bg-red-950/70',
+    panel: 'volcano-panel',
     soft: 'bg-red-400/10',
     border: 'border-red-400/50',
     accent: 'text-red-200',
@@ -5375,11 +5378,11 @@ const themes = [
     unlockAt: 100,
     requiresRecall100: true,
     bg: 'bg-yellow-50',
-    panel: 'bg-yellow-100/80',
+    panel: 'god-panel',
     soft: 'bg-yellow-200/30',
     border: 'border-yellow-200/70',
-    accent: 'text-yellow-700',
-    button: 'bg-yellow-300 hover:bg-yellow-400',
+    accent: 'god-accent',
+    button: 'god-button',
     description: 'Only unlocked when your selected subject recall hits 100%.',
   },
 ];
@@ -6322,111 +6325,8 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
   return seededShuffle([...selectedQuickQuestions, ...selectedExamQuestions]);
 }
 
-function CherryBlossomBackground() {
-  const clouds = [
-    { left: '56%', top: '10%', width: '280px', height: '76px', opacity: 0.32 },
-    { left: '70%', top: '22%', width: '360px', height: '98px', opacity: 0.26 },
-    { left: '36%', top: '32%', width: '250px', height: '68px', opacity: 0.18 },
-  ];
-
-  const bushBlobs = [
-    { left: '-8%', top: '42%', width: '320px', height: '260px', opacity: 0.9 },
-    { left: '6%', top: '30%', width: '300px', height: '240px', opacity: 0.84 },
-    { left: '18%', top: '42%', width: '260px', height: '210px', opacity: 0.72 },
-    { left: '0%', top: '62%', width: '330px', height: '230px', opacity: 0.82 },
-    { left: '24%', top: '58%', width: '210px', height: '165px', opacity: 0.62 },
-    { left: '14%', top: '18%', width: '210px', height: '165px', opacity: 0.6 },
-  ];
-
-  const blossomDots = [
-    { left: '8%', top: '40%', size: '18px' },
-    { left: '14%', top: '28%', size: '14px' },
-    { left: '20%', top: '36%', size: '16px' },
-    { left: '27%', top: '31%', size: '13px' },
-    { left: '10%', top: '58%', size: '14px' },
-    { left: '19%', top: '52%', size: '17px' },
-    { left: '29%', top: '55%', size: '12px' },
-    { left: '13%', top: '69%', size: '15px' },
-    { left: '25%', top: '68%', size: '12px' },
-  ];
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 cherry-clean-sky" />
-      <div className="absolute inset-0 cherry-clean-overlay" />
-
-      {clouds.map((cloud, i) => (
-        <div
-          key={`cloud-${i}`}
-          className="cherry-soft-cloud absolute rounded-full bg-white blur-2xl"
-          style={{
-            left: cloud.left,
-            top: cloud.top,
-            width: cloud.width,
-            height: cloud.height,
-            opacity: cloud.opacity,
-            animationDelay: `${i * 1.8}s`,
-          }}
-        />
-      ))}
-
-      <div className="absolute left-0 bottom-0 h-[78%] w-[34rem]">
-        {bushBlobs.map((blob, i) => (
-          <div
-            key={`bush-${i}`}
-            className="absolute rounded-full blur-xl cherry-bush-blob"
-            style={{
-              left: blob.left,
-              top: blob.top,
-              width: blob.width,
-              height: blob.height,
-              opacity: blob.opacity,
-            }}
-          />
-        ))}
-
-        {blossomDots.map((dot, i) => (
-          <span
-            key={`dot-${i}`}
-            className="absolute block rounded-full cherry-blossom-dot"
-            style={{
-              left: dot.left,
-              top: dot.top,
-              width: dot.size,
-              height: dot.size,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 h-[34%] cherry-ground-fade" />
-      <div className="absolute left-[18%] right-[12%] top-[56%] h-px bg-white/20" />
-      <div className="absolute left-[20%] right-[20%] top-[58%] h-px bg-pink-100/12" />
-    </div>
-  );
-}
-
-function CherryPetalsOverlay() {
-  const petals = Array.from({ length: 18 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none fixed inset-0 z-[100] overflow-hidden">
-      {petals.map((_, i) => (
-        <span
-          key={`petal-${i}`}
-          className="cherry-petal absolute block"
-          style={{
-            left: `${-8 + i * 5.2}%`,
-            top: `${-16 - (i % 4) * 7}vh`,
-            width: `${7 + (i % 3)}px`,
-            height: `${11 + (i % 4)}px`,
-            animationDelay: `${i * 0.8}s`,
-            animationDuration: `${11 + (i % 5) * 1.4}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
+function FloralBackdrop() {
+  return <div aria-hidden="true" className="floral-backdrop" />;
 }
 
 function OceanThemeBackground() {
@@ -6464,7 +6364,7 @@ function OceanThemeBackground() {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 ocean-theme-sky" />
       <div className="absolute inset-x-0 bottom-0 h-[46%] ocean-theme-water" />
       <div className="absolute inset-x-0 top-[48%] h-px bg-cyan-100/25" />
@@ -6484,7 +6384,7 @@ function OceanThemeBackground() {
             animationDelay: item.delay,
             animationDuration: item.duration,
             opacity: item.opacity,
-            transform: `scale(${item.size})`,
+            ['--fish-scale' as any]: item.size,
             ['--fish-body' as any]: item.body,
             ['--fish-tail' as any]: item.tail,
             ['--fish-shadow' as any]: item.shadow,
@@ -6522,7 +6422,7 @@ function RoyalThemeBackground() {
   ];
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 royal-theme-bg" />
       <div className="absolute left-[12%] top-[12%] h-72 w-72 rounded-full bg-purple-400/16 blur-3xl" />
       <div className="absolute right-[10%] top-[18%] h-80 w-80 rounded-full bg-fuchsia-400/12 blur-3xl" />
@@ -6559,11 +6459,11 @@ function RoyalThemeBackground() {
 }
 
 function GoldThemeBackground() {
-  const embers = Array.from({ length: 22 }, (_, i) => i);
-  const money = Array.from({ length: 14 }, (_, i) => i);
+  const embers = Array.from({ length: 9 }, (_, i) => i);
+  const money = Array.from({ length: 7 }, (_, i) => i);
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 gold-theme-bg" />
       <div className="absolute left-[10%] top-[16%] h-72 w-72 rounded-full bg-amber-400/12 blur-3xl" />
       <div className="absolute right-[12%] top-[12%] h-80 w-80 rounded-full bg-yellow-300/10 blur-3xl" />
@@ -6574,7 +6474,7 @@ function GoldThemeBackground() {
       {money.map((_, i) => (
         <span
           key={`money-${i}`}
-          className="gold-money absolute flex items-center justify-center rounded-md border border-yellow-200/70 bg-yellow-300 text-[10px] font-black text-yellow-950 shadow-lg shadow-yellow-900/30"
+          className="gold-money absolute flex items-center justify-center"
           style={{
             left: `${4 + ((i * 13) % 92)}%`,
             top: `${-18 - (i % 5) * 8}vh`,
@@ -6604,290 +6504,54 @@ function GoldThemeBackground() {
   );
 }
 
-function GoldThiefOverlay({ mousePosition }) {
-  const [elapsedMs, setElapsedMs] = useState(0);
-  const [taskbarVisible, setTaskbarVisible] = useState(true);
+function GoldThiefOverlay() {
+  const thief = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setElapsedMs((previous) => (previous + 30) % 15000);
-    }, 30);
-
-    function checkTaskbarVisible() {
-      setTaskbarVisible(window.scrollY < 92);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let jumping = false;
+    function onPointerMove(event: PointerEvent) {
+      if (jumping || reducedMotion.matches || event.clientY > 160 || !thief.current) return;
+      const rect = thief.current.getBoundingClientRect();
+      if (event.clientX < rect.left - 8 || event.clientX > rect.right + 8 ||
+          event.clientY < rect.top - 12 || event.clientY > rect.bottom + 12) return;
+      jumping = true;
+      const jump = thief.current.animate(
+        [{ translate: '0 0' }, { translate: '0 -14px' }, { translate: '0 0' }],
+        { duration: 480, easing: 'ease-out' }
+      );
+      jump.onfinish = () => { jumping = false; };
     }
-
-    checkTaskbarVisible();
-    window.addEventListener('scroll', checkTaskbarVisible);
-
-    return () => {
-      window.clearInterval(timer);
-      window.removeEventListener('scroll', checkTaskbarVisible);
-    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onPointerMove);
   }, []);
 
-  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
-  const taskbarBottom = 108;
-  const runDuration = 5200;
-  const isRunning = elapsedMs < runDuration;
-  const runProgress = Math.min(1, elapsedMs / runDuration);
-  const thiefX = isRunning ? -120 + runProgress * (screenWidth + 260) : -260;
-  const mouseBlocking =
-    isRunning &&
-    taskbarVisible &&
-    mousePosition &&
-    mousePosition.y < taskbarBottom + 85 &&
-    Math.abs(mousePosition.x - thiefX) < 90;
-  const jumpY = mouseBlocking ? 34 : 0;
-
   return (
-    <div
-      className="pointer-events-none fixed left-0 z-[31] h-28 w-screen overflow-visible"
-      style={{
-        top: taskbarBottom,
-        opacity: isRunning && taskbarVisible ? 1 : 0,
-      }}
-    >
-      <div
-        className="gold-thief gold-thief-under-taskbar"
-        style={{
-          transform: `translateX(${thiefX}px) translateY(${jumpY}px) rotate(180deg) scaleX(-1) scale(0.62)`,
-        }}
-      >
-        <div className="gold-thief-head">
-          <span className="gold-thief-mask" />
-          <span className="gold-thief-eye eye-left" />
-          <span className="gold-thief-eye eye-right" />
-        </div>
-        <div className="gold-thief-body">
-          <span className="gold-thief-bag">£</span>
-        </div>
-        <span className="gold-thief-leg leg-left" />
-        <span className="gold-thief-leg leg-right" />
-      </div>
-    </div>
-  );
-}
-
-function ValentineThemeBackground() {
-  const hearts = Array.from({ length: 20 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 valentine-theme-bg" />
-      <div className="absolute left-[12%] top-[14%] h-72 w-72 rounded-full bg-pink-300/18 blur-3xl" />
-      <div className="absolute right-[10%] top-[20%] h-80 w-80 rounded-full bg-rose-300/14 blur-3xl" />
-      {hearts.map((_, i) => (
-        <span
-          key={`heart-${i}`}
-          className="valentine-heart absolute"
-          style={{
-            left: `${4 + ((i * 17) % 92)}%`,
-            top: `${-12 - (i % 5) * 9}vh`,
-            animationDelay: `${i * 0.55}s`,
-            animationDuration: `${8 + (i % 5) * 1.3}s`,
-          }}
-        >
-          ♥
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function JapanThemeBackground() {
-  const leaves = Array.from({ length: 26 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 japan-theme-bg" />
-      <div className="absolute left-1/2 top-24 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-red-800/95 shadow-2xl shadow-red-950/40" />
-
-      {leaves.map((_, i) => (
-        <span
-          key={`leaf-${i}`}
-          className="japan-leaf absolute"
-          style={{
-            left: `${5 + ((i * 7) % 90)}%`,
-            top: `${-20 - i * 8}px`,
-            animationDelay: `${i * 0.45}s`,
-            animationDuration: `${5.6 + (i % 5) * 0.65}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function JapanCarOverlay({ mousePosition, onJumpUnlock }) {
-  const [run, setRun] = useState({
-    active: false,
-    startTime: 0,
-    duration: 4200,
-    nextStart: Date.now() + 900,
-    x: -260,
-    blockedSince: null,
-    jumped: false,
-  });
-
-  useEffect(() => {
-    let frameId;
-
-    function tick() {
-      const now = Date.now();
-      const screenWidth =
-        typeof window !== 'undefined' ? window.innerWidth : 1200;
-
-      setRun((previous) => {
-        if (!previous.active) {
-          if (now >= previous.nextStart) {
-            return {
-              active: true,
-              startTime: now,
-              duration: 2400 + Math.random() * 2200,
-              nextStart: previous.nextStart,
-              x: -260,
-              blockedSince: null,
-              jumped: false,
-            };
-          }
-          return previous;
-        }
-
-        const carCenterX = previous.x + 44;
-        const isMouseBlocking =
-          previous.active &&
-          mousePosition &&
-          mousePosition.y >= 34 &&
-          mousePosition.y <= 92 &&
-          Math.abs(mousePosition.x - carCenterX) < 52;
-
-        const blockedSince = isMouseBlocking
-          ? previous.blockedSince || now
-          : null;
-        const blockedLongEnough = blockedSince && now - blockedSince >= 5000;
-        if (blockedLongEnough && !previous.jumped) {
-          onJumpUnlock?.();
-        }
-
-        const shouldPause = isMouseBlocking && !blockedLongEnough;
-        const frozenStartTime =
-          previous.startTime +
-          ((previous.x + 260) / (screenWidth + 520)) * previous.duration;
-        const elapsed = Math.max(
-          0,
-          now - (shouldPause ? frozenStartTime : previous.startTime)
-        );
-        const progress = Math.min(1, elapsed / previous.duration);
-        const nextX = shouldPause
-          ? previous.x
-          : -260 + progress * (screenWidth + 520);
-
-        if (progress >= 1) {
-          return {
-            active: false,
-            startTime: 0,
-            duration: 4200,
-            nextStart: now + 2000 + Math.random() * 25000,
-            x: -260,
-            blockedSince: null,
-            jumped: false,
-          };
-        }
-
-        return {
-          ...previous,
-          startTime: shouldPause ? frozenStartTime : previous.startTime,
-          x: nextX,
-          blockedSince,
-          jumped: previous.jumped || Boolean(blockedLongEnough),
-        };
-      });
-
-      frameId = requestAnimationFrame(tick);
-    }
-
-    frameId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frameId);
-  }, [mousePosition, onJumpUnlock]);
-
-  const blockedFor = run.blockedSince ? Date.now() - run.blockedSince : 0;
-  const burnout = run.active && run.blockedSince && blockedFor < 5000;
-  const jumping = run.active && run.blockedSince && blockedFor >= 5000;
-  const jumpY = jumping ? 18 : 0;
-
-  return (
-    <div className="pointer-events-none fixed left-0 top-[42px] z-[31] h-16 w-screen overflow-visible">
-      <div
-        className={`japan-supra-run ${burnout ? 'japan-supra-burnout' : ''} ${
-          jumping ? 'japan-supra-jumping' : ''
-        }`}
-        style={{
-          transform: `translateX(${run.x}px) translateY(${jumpY}px)`,
-          opacity: run.active ? 1 : 0,
-        }}
-      >
-        {burnout && (
-          <div className="japan-smoke-pack">
-            <span className="japan-smoke smoke-one" />
-            <span className="japan-smoke smoke-two" />
-            <span className="japan-smoke smoke-three" />
-            <span className="japan-smoke smoke-four" />
+    <div aria-hidden="true" className="gold-runway">
+      <div className="gold-runner">
+        <div ref={thief} className="gold-thief">
+          <div className="gold-thief-head">
+            <span className="gold-thief-mask" />
+            <span className="gold-thief-eye eye-left" />
+            <span className="gold-thief-eye eye-right" />
           </div>
-        )}
-        <div className="japan-supra-hanger">
-          <div className="japan-supra">
-            <div className="japan-supra-green-splash splash-one" />
-            <div className="japan-supra-green-splash splash-two" />
-            <div className="japan-supra-wing" />
-            <div className="japan-supra-roof" />
-            <div className="japan-supra-window front" />
-            <div className="japan-supra-window rear" />
-            <div className="japan-supra-door-line" />
-            <div className="japan-supra-graphic" />
-            <div className="japan-supra-light front" />
-            <div className="japan-supra-light rear" />
-            <div className="japan-supra-wheel wheel-front" />
-            <div className="japan-supra-wheel wheel-rear" />
-            <div className="japan-supra-skirt" />
-          </div>
+          <div className="gold-thief-body"><span className="gold-thief-bag">£</span></div>
+          <span className="gold-thief-leg leg-left" />
+          <span className="gold-thief-leg leg-right" />
         </div>
       </div>
     </div>
   );
 }
 
-function CyberThemeBackground() {
-  const codeRain = Array.from({ length: 26 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 cyber-theme-bg" />
-      <div className="absolute inset-0 cyber-grid" />
-      {codeRain.map((_, i) => (
-        <span
-          key={`code-${i}`}
-          className="cyber-code absolute font-mono text-xs font-black text-emerald-300/45"
-          style={{
-            left: `${2 + i * 4}%`,
-            top: `${-25 - (i % 6) * 12}vh`,
-            animationDelay: `${i * 0.32}s`,
-            animationDuration: `${6 + (i % 5) * 0.8}s`,
-          }}
-        >
-          {i % 3 === 0 ? '101' : i % 3 === 1 ? '011' : 'IFM'}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 function ArcticThemeBackground() {
-  const snow = Array.from({ length: 32 }, (_, i) => i);
+  const snow = Array.from({ length: 18 }, (_, i) => i);
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 arctic-theme-bg" />
+      <div className="arctic-ridgeline" />
       <div className="absolute bottom-[-8%] left-[-10%] h-40 w-[120%] rounded-[100%] bg-white/18 blur-xl" />
       {snow.map((_, i) => (
         <span
@@ -6907,104 +6571,12 @@ function ArcticThemeBackground() {
   );
 }
 
-function VolcanoThemeBackground() {
-  const sparks = Array.from({ length: 26 }, (_, i) => i);
-  const eruptionParticles = Array.from({ length: 70 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 volcano-theme-bg" />
-      <div className="absolute bottom-[-14%] left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-[100%] bg-red-600/22 blur-3xl" />
-      <div className="absolute bottom-0 left-1/2 h-64 w-64 -translate-x-1/2 volcano-mountain" />
-
-      <div className="volcano-eruption-core absolute left-1/2 top-1/2" />
-      <div className="volcano-eruption-shockwave absolute left-1/2 top-1/2" />
-      {eruptionParticles.map((_, i) => {
-        const angle = (i / eruptionParticles.length) * Math.PI * 2;
-        const distance = 360 + (i % 8) * 72;
-        const x = Math.cos(angle) * distance;
-        const y = Math.sin(angle) * distance;
-        return (
-          <span
-            key={`eruption-particle-${i}`}
-            className="volcano-eruption-particle absolute left-1/2 top-1/2 block rounded-full"
-            style={{
-              ['--eruption-x' as any]: `${x}px`,
-              ['--eruption-y' as any]: `${y}px`,
-              ['--eruption-delay' as any]: `${i * 0.025}s`,
-              width: `${8 + (i % 5) * 4}px`,
-              height: `${8 + (i % 5) * 4}px`,
-            }}
-          />
-        );
-      })}
-
-      {sparks.map((_, i) => (
-        <span
-          key={`spark-${i}`}
-          className="volcano-spark absolute block rounded-full bg-orange-300"
-          style={{
-            left: `${38 + ((i * 7) % 24)}%`,
-            bottom: `${12 + (i % 4) * 2}%`,
-            width: `${4 + (i % 3)}px`,
-            height: `${4 + (i % 3)}px`,
-            animationDelay: `${i * 0.22}s`,
-            animationDuration: `${4 + (i % 5) * 0.7}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function GodThemeBackground() {
-  const rays = Array.from({ length: 16 }, (_, i) => i);
-  const doves = Array.from({ length: 7 }, (_, i) => i);
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 god-theme-bg" />
-
-      <div className="absolute left-[6%] top-[14%] h-28 w-52 rounded-full bg-white/35 blur-2xl" />
-      <div className="absolute right-[10%] top-[18%] h-24 w-44 rounded-full bg-sky-100/30 blur-2xl" />
-      <div className="absolute left-[18%] bottom-[18%] h-24 w-48 rounded-full bg-white/20 blur-2xl" />
-
-      <div className="absolute left-1/2 top-[16%] -translate-x-1/2 god-sun-wrap">
-        {rays.map((_, i) => (
-          <span
-            key={`god-ray-${i}`}
-            className="god-rotating-ray"
-            style={{ transform: `rotate(${i * 22.5}deg)` }}
-          />
-        ))}
-        <div className="god-sun-core" />
-      </div>
-
-      {doves.map((_, i) => (
-        <div
-          key={`god-dove-${i}`}
-          className="god-dove"
-          style={{
-            top: `${12 + (i % 4) * 14}%`,
-            animationDelay: `${i * 4.6}s`,
-            animationDuration: `${18 + (i % 3) * 3}s`,
-          }}
-        >
-          <span className="god-dove-wing left" />
-          <span className="god-dove-body" />
-          <span className="god-dove-wing right" />
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function ThemeBackground({ activeThemeId, volcanoEruptionKey }) {
-  if (activeThemeId === 'cherry') return <CherryBlossomBackground />;
+  if (activeThemeId === 'cherry' || activeThemeId === 'valentine') return <FloralBackdrop />;
   if (activeThemeId === 'ocean') return <OceanThemeBackground />;
   if (activeThemeId === 'royal') return <RoyalThemeBackground />;
   if (activeThemeId === 'gold') return <GoldThemeBackground />;
-  if (activeThemeId === 'valentine') return <ValentineThemeBackground />;
   if (activeThemeId === 'japan') return <JapanThemeBackground />;
   if (activeThemeId === 'cyber') return <CyberThemeBackground />;
   if (activeThemeId === 'arctic') return <ArcticThemeBackground />;
@@ -7016,37 +6588,25 @@ function ThemeBackground({ activeThemeId, volcanoEruptionKey }) {
 
 function AchievementCard({ theme, unlocked, onSelect, selected }) {
   const lockedLabel = theme.requiresRecall100
-    ? 'Unlock at 100% recall'
-    : theme.unlockTask
-    ? 'Secret unlock'
-    : `Unlock at ${theme.unlockAt} stages`;
+    ? 'Requires 100% subject recall'
+    : `Requires ${theme.unlockAt} forged stages`;
 
   return (
     <button
-      onClick={() => unlocked && onSelect(theme.id)}
-      className={`rounded-3xl border p-5 text-left transition active:scale-[0.99] ${
-        selected
-          ? theme.border + ' ' + theme.soft
-          : 'border-zinc-800 bg-zinc-900 hover:bg-zinc-800'
-      } ${!unlocked ? 'cursor-not-allowed opacity-50' : ''}`}
+      type="button"
+      disabled={!unlocked}
+      aria-pressed={selected}
+      onClick={() => onSelect(theme.id)}
+      className="theme-choice overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-950 text-left text-zinc-200"
     >
-      <div className="flex items-start justify-between gap-4">
+      <img className="theme-choice-preview" src={`${import.meta.env.BASE_URL}theme-previews/${theme.id}.webp`} alt="" width="512" height="200" loading="lazy" />
+      <div className="flex items-center justify-between gap-4 p-4">
         <div>
-          <p
-            className={`text-sm font-bold uppercase tracking-widest ${
-              unlocked ? theme.accent : 'text-zinc-500'
-            }`}
-          >
-            {unlocked ? 'Unlocked' : lockedLabel}
-          </p>
           <h3 className="mt-1 text-xl font-black text-white">{theme.name}</h3>
-          <p className="mt-2 text-sm text-zinc-400">{theme.description}</p>
+          <p className="mt-1 text-sm text-zinc-300">{selected ? 'Selected' : unlocked ? 'Apply theme' : lockedLabel}</p>
         </div>
-        {unlocked ? (
-          <Medal className={`h-6 w-6 ${theme.accent}`} />
-        ) : (
-          <Lock className="h-6 w-6 text-zinc-500" />
-        )}
+        {selected && <Check className="h-5 w-5 shrink-0" aria-hidden="true" />}
+        {!unlocked && <Lock className="h-4 w-4 shrink-0" aria-hidden="true" />}
       </div>
     </button>
   );
@@ -7435,7 +6995,7 @@ export default function App() {
     savedProgress?.themeActions || {}
   );
   const [themeUnlockError, setThemeUnlockError] = useState('');
-  const [mousePosition, setMousePosition] = useState({ x: -999, y: -999 });
+  const { palettes, save: savePalette } = useThemePalettes();
   const [volcanoEruptionKey, setVolcanoEruptionKey] = useState(0);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState(
@@ -7922,7 +7482,9 @@ export default function App() {
 
   const nextThemeToUnlock = themes.find((theme) => !isThemeUnlocked(theme));
   const nextThemeTarget = nextThemeToUnlock?.unlockAt || totalForgedStages || 1;
-  const nextThemeProgress = nextThemeToUnlock
+  const nextThemeProgress = nextThemeToUnlock?.requiresRecall100
+    ? recallPercentage
+    : nextThemeToUnlock
     ? Math.min(100, Math.round((totalForgedStages / nextThemeTarget) * 100))
     : 100;
 
@@ -7946,14 +7508,26 @@ export default function App() {
     if (!newTheme) return;
 
     setAchievementToast(newTheme);
-    const timer = window.setTimeout(() => setAchievementToast(null), 4300);
-    return () => window.clearTimeout(timer);
   }, [unlockedThemeIds.join('|')]);
 
-  const activeTheme =
+  useEffect(() => {
+    if (!achievementToast) return;
+    const timer = window.setTimeout(() => setAchievementToast(null), 4300);
+    return () => window.clearTimeout(timer);
+  }, [achievementToast]);
+
+  const selectedTheme =
     themes.find(
       (theme) => theme.id === activeThemeId && isThemeUnlocked(theme)
     ) || themes[0];
+  const paletteUnlocked = unlockedThemeIds.includes('cherry') && unlockedThemeIds.includes('ocean');
+  const colours = (paletteUnlocked && palettes[selectedTheme.id]) || {};
+  const activeTheme = {
+    ...selectedTheme,
+    button: selectedTheme.button + ' palette-button',
+    panel: selectedTheme.panel + ' palette-panel',
+    soft: selectedTheme.soft + ' palette-panel',
+  };
 
   function changeSubject(subject) {
     incrementThemeAction('subjectSwitches5');
@@ -7985,7 +7559,7 @@ export default function App() {
   function openTopic(topic) {
     if (!unlocked[topic.id]) return;
     setSelectedTopicId(topic.id);
-    if (activeThemeId === 'volcano') {
+    if (activeTheme.id === 'volcano') {
       setVolcanoEruptionKey((previous) => previous + 1);
     }
     setAnswers({});
@@ -8068,46 +7642,18 @@ export default function App() {
 
   return (
     <div
-      onMouseMove={(event) =>
-        setMousePosition({ x: event.clientX, y: event.clientY })
-      }
-      className={`relative min-h-screen overflow-hidden ${
-        activeTheme.bg
-      } text-zinc-100 ${
-        activeThemeId === 'cherry'
-          ? 'cherry-theme'
-          : activeThemeId === 'ocean'
-          ? 'ocean-theme'
-          : activeThemeId === 'royal'
-          ? 'royal-theme'
-          : activeThemeId === 'gold'
-          ? 'gold-theme'
-          : activeThemeId === 'valentine'
-          ? 'valentine-theme'
-          : activeThemeId === 'japan'
-          ? 'japan-theme'
-          : activeThemeId === 'cyber'
-          ? 'cyber-theme'
-          : activeThemeId === 'arctic'
-          ? 'arctic-theme'
-          : activeThemeId === 'volcano'
-          ? 'volcano-theme'
-          : activeThemeId === 'god'
-          ? 'god-theme'
-          : ''
-      }`}
+      style={paletteStyle(colours)}
+      className={`relative min-h-screen overflow-hidden ${activeTheme.bg} text-zinc-100 ${activeTheme.id}-theme ${colours.primary ? 'has-custom-primary' : ''} ${colours.secondary ? 'has-custom-secondary' : ''}`}
     >
       <ThemeBackground
-        activeThemeId={activeThemeId}
+        activeThemeId={activeTheme.id}
         volcanoEruptionKey={volcanoEruptionKey}
       />
-      {activeThemeId === 'cherry' && <CherryPetalsOverlay />}
-      {activeThemeId === 'gold' && (
-        <GoldThiefOverlay mousePosition={mousePosition} />
+      {activeTheme.id === 'gold' && (
+        <GoldThiefOverlay />
       )}
-      {activeThemeId === 'japan' && (
+      {activeTheme.id === 'japan' && (
         <JapanCarOverlay
-          mousePosition={mousePosition}
           onJumpUnlock={() => unlockThemeAction('japanCarJumped')}
         />
       )}
@@ -8485,106 +8031,6 @@ export default function App() {
           box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.65);
         }
 
-        .ocean-theme {
-          background: #dff6ff !important;
-          color: #0f3b57;
-        }
-
-        .ocean-theme .text-white,
-        .ocean-theme .text-zinc-100,
-        .ocean-theme .text-zinc-200 {
-          color: #0f3b57 !important;
-        }
-
-        .ocean-theme .text-zinc-300,
-        .ocean-theme .text-zinc-400,
-        .ocean-theme .text-zinc-500 {
-          color: rgba(15, 59, 87, 0.72) !important;
-        }
-
-        .ocean-theme .bg-black,
-        .ocean-theme .bg-black\/70,
-        .ocean-theme .bg-black\/78,
-        .ocean-theme .bg-zinc-950,
-        .ocean-theme .bg-zinc-950\/70,
-        .ocean-theme .bg-zinc-950\/72,
-        .ocean-theme .bg-zinc-950\/80,
-        .ocean-theme .bg-zinc-950\/84,
-        .ocean-theme .bg-zinc-950\/90,
-        .ocean-theme .bg-zinc-950\/92,
-        .ocean-theme .bg-zinc-900,
-        .ocean-theme .bg-zinc-900\/70,
-        .ocean-theme .bg-zinc-900\/80,
-        .ocean-theme .bg-zinc-900\/85 {
-          background-color: rgba(186, 230, 253, 0.92) !important;
-          backdrop-filter: blur(14px);
-        }
-
-        .ocean-theme .hover\:bg-zinc-800:hover,
-        .ocean-theme .hover\:bg-black\/80:hover {
-          background-color: rgba(147, 197, 253, 0.96) !important;
-        }
-
-        .ocean-theme .border-zinc-700,
-        .ocean-theme .border-zinc-800 {
-          border-color: rgba(59, 130, 246, 0.28) !important;
-        }
-
-        .ocean-theme .text-orange-100,
-        .ocean-theme .text-orange-200,
-        .ocean-theme .text-orange-300,
-        .ocean-theme .text-orange-400,
-        .ocean-theme .text-orange-500 {
-          color: #0284c7 !important;
-        }
-
-        .ocean-theme .bg-orange-400\/10,
-        .ocean-theme .bg-orange-400\/15,
-        .ocean-theme .bg-orange-400\/20,
-        .ocean-theme .bg-orange-500\/10,
-        .ocean-theme .bg-orange-500\/15,
-        .ocean-theme .bg-orange-500\/20,
-        .ocean-theme .bg-orange-500\/25 {
-          background-color: rgba(56, 189, 248, 0.18) !important;
-        }
-
-        .ocean-theme .bg-orange-500,
-        .ocean-theme .hover\:bg-orange-500:hover,
-        .ocean-theme .hover\:bg-orange-600:hover {
-          background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
-          color: #eff8ff !important;
-        }
-
-        .ocean-theme .border-orange-300,
-        .ocean-theme .border-orange-300\/40,
-        .ocean-theme .border-orange-400\/30,
-        .ocean-theme .border-orange-400\/40,
-        .ocean-theme .border-orange-400\/80,
-        .ocean-theme .border-orange-500\/30 {
-          border-color: rgba(56, 189, 248, 0.42) !important;
-        }
-
-        .ocean-theme input,
-        .ocean-theme textarea,
-        .ocean-theme select {
-          background-color: rgba(224, 242, 254, 0.95) !important;
-          border-color: rgba(56, 189, 248, 0.3) !important;
-          color: #0f3b57 !important;
-        }
-
-        .ocean-theme input::placeholder,
-        .ocean-theme textarea::placeholder {
-          color: rgba(15, 59, 87, 0.45) !important;
-        }
-
-        .ocean-theme .shadow-orange-500\/20,
-        .ocean-theme .shadow-orange-950\/20,
-        .ocean-theme .shadow-orange-950\/30,
-        .ocean-theme .shadow-orange-950\/40,
-        .ocean-theme .shadow-orange-950\/50 {
-          box-shadow: 0 18px 44px rgba(56, 189, 248, 0.14) !important;
-        }
-
         .ocean-theme-bg {
           background:
             radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 20%),
@@ -8819,25 +8265,6 @@ export default function App() {
           }
         }
 
-        .cherry-theme {
-          background: #17101d;
-        }
-
-        .ocean-theme-sky {
-          background:
-            linear-gradient(
-              180deg,
-              rgba(31, 160, 226, 0.58) 0%,
-              rgba(67, 190, 229, 0.38) 38%,
-              rgba(15, 34, 52, 0.78) 100%
-            );
-        }
-
-        .ocean-theme-water {
-          background:
-            linear-gradient(180deg, rgba(50, 200, 230, 0.14), rgba(6, 26, 42, 0.78)),
-            repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 12px);
-        }
 
         @keyframes bubble-rise {
           0% {
@@ -8952,83 +8379,6 @@ export default function App() {
           }
         }
 
-        .royal-theme {
-          color: #eadcff;
-        }
-
-        .royal-theme .text-white,
-        .royal-theme .text-zinc-100,
-        .royal-theme .text-zinc-200 {
-          color: #eadcff !important;
-        }
-
-        .royal-theme .text-zinc-300,
-        .royal-theme .text-zinc-400,
-        .royal-theme .text-zinc-500 {
-          color: rgba(226, 201, 255, 0.76) !important;
-        }
-
-        .royal-theme .text-orange-100,
-        .royal-theme .text-orange-200,
-        .royal-theme .text-orange-300,
-        .royal-theme .text-orange-400,
-        .royal-theme .text-orange-500 {
-          color: #c084fc !important;
-        }
-
-        .royal-theme .bg-orange-400\/10,
-        .royal-theme .bg-orange-400\/15,
-        .royal-theme .bg-orange-400\/20,
-        .royal-theme .bg-orange-500\/10,
-        .royal-theme .bg-orange-500\/15,
-        .royal-theme .bg-orange-500\/20,
-        .royal-theme .bg-orange-500\/25 {
-          background-color: rgba(168, 85, 247, 0.2) !important;
-        }
-
-        .royal-theme .bg-orange-500,
-        .royal-theme .hover\:bg-orange-600:hover,
-        .royal-theme .hover\:bg-orange-500:hover {
-          background: linear-gradient(135deg, #7c3aed, #c084fc) !important;
-          color: #f3e8ff !important;
-        }
-
-        .royal-theme .border-orange-300,
-        .royal-theme .border-orange-300\/40,
-        .royal-theme .border-orange-400\/30,
-        .royal-theme .border-orange-400\/40,
-        .royal-theme .border-orange-400\/80,
-        .royal-theme .border-orange-500\/30 {
-          border-color: rgba(192, 132, 252, 0.58) !important;
-        }
-
-        .royal-theme .shadow-orange-500\/20,
-        .royal-theme .shadow-orange-950\/20,
-        .royal-theme .shadow-orange-950\/30,
-        .royal-theme .shadow-orange-950\/40,
-        .royal-theme .shadow-orange-950\/50 {
-          box-shadow: 0 18px 45px rgba(168, 85, 247, 0.22) !important;
-        }
-
-        .royal-theme input,
-        .royal-theme textarea,
-        .royal-theme select {
-          border-color: rgba(192, 132, 252, 0.28) !important;
-          color: #eadcff !important;
-        }
-
-        .royal-theme input::placeholder,
-        .royal-theme textarea::placeholder {
-          color: rgba(226, 201, 255, 0.48) !important;
-        }
-
-        .royal-theme-bg {
-          background:
-            radial-gradient(circle at 20% 12%, rgba(185, 120, 255, 0.20), transparent 24%),
-            radial-gradient(circle at 82% 18%, rgba(255, 110, 210, 0.14), transparent 22%),
-            linear-gradient(180deg, rgba(35, 18, 60, 0.96), rgba(13, 10, 26, 0.98));
-        }
-
         .royal-lightning {
           position: absolute;
           top: -8vh;
@@ -9092,94 +8442,6 @@ export default function App() {
           animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
           box-shadow: 0 0 12px rgba(235, 210, 255, 0.5);
-        }
-
-        .gold-theme {
-          color: #fff7c2;
-        }
-
-        .gold-theme .text-white,
-        .gold-theme .text-zinc-100,
-        .gold-theme .text-zinc-200 {
-          color: #fff7c2 !important;
-        }
-
-        .gold-theme .text-zinc-300,
-        .gold-theme .text-zinc-400,
-        .gold-theme .text-zinc-500 {
-          color: rgba(254, 240, 138, 0.78) !important;
-        }
-
-        .gold-theme .text-orange-100,
-        .gold-theme .text-orange-200,
-        .gold-theme .text-orange-300,
-        .gold-theme .text-orange-400,
-        .gold-theme .text-orange-500 {
-          color: #fde047 !important;
-        }
-
-        .gold-theme .bg-orange-400\/10,
-        .gold-theme .bg-orange-400\/15,
-        .gold-theme .bg-orange-400\/20,
-        .gold-theme .bg-orange-500\/10,
-        .gold-theme .bg-orange-500\/15,
-        .gold-theme .bg-orange-500\/20,
-        .gold-theme .bg-orange-500\/25 {
-          background-color: rgba(250, 204, 21, 0.2) !important;
-        }
-
-        .gold-theme .bg-orange-500,
-        .gold-theme .hover\:bg-orange-600:hover,
-        .gold-theme .hover\:bg-orange-500:hover {
-          background: linear-gradient(135deg, #eab308, #fde047) !important;
-          color: #422006 !important;
-        }
-
-        .gold-theme .border-orange-300,
-        .gold-theme .border-orange-300\/40,
-        .gold-theme .border-orange-400\/30,
-        .gold-theme .border-orange-400\/40,
-        .gold-theme .border-orange-400\/80,
-        .gold-theme .border-orange-500\/30 {
-          border-color: rgba(253, 224, 71, 0.62) !important;
-        }
-
-        .gold-theme .shadow-orange-500\/20,
-        .gold-theme .shadow-orange-950\/20,
-        .gold-theme .shadow-orange-950\/30,
-        .gold-theme .shadow-orange-950\/40,
-        .gold-theme .shadow-orange-950\/50 {
-          box-shadow: 0 18px 45px rgba(234, 179, 8, 0.22) !important;
-        }
-
-        .gold-theme input,
-        .gold-theme textarea,
-        .gold-theme select {
-          border-color: rgba(253, 224, 71, 0.32) !important;
-          color: #fff7c2 !important;
-        }
-
-        .gold-theme input::placeholder,
-        .gold-theme textarea::placeholder {
-          color: rgba(254, 240, 138, 0.5) !important;
-        }
-
-        .gold-theme-bg {
-          background:
-            radial-gradient(circle at 18% 14%, rgba(255, 235, 120, 0.34), transparent 25%),
-            radial-gradient(circle at 84% 12%, rgba(255, 210, 45, 0.26), transparent 24%),
-            radial-gradient(circle at 50% 78%, rgba(234, 179, 8, 0.2), transparent 36%),
-            linear-gradient(180deg, rgba(122, 82, 5, 0.98), rgba(54, 34, 3, 0.99) 52%, rgba(22, 14, 4, 0.99));
-        }
-
-        .gold-money {
-          height: 24px;
-          width: 42px;
-          transform: rotate(-10deg);
-          animation-name: money-fall;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          box-shadow: 0 0 18px rgba(250, 204, 21, 0.36);
         }
 
         @keyframes money-fall {
@@ -9303,944 +8565,9 @@ export default function App() {
           box-shadow: 0 0 14px rgba(255, 190, 80, 0.65);
         }
 
-        .valentine-theme {
-          color: #ffe4ef;
-        }
 
-        .valentine-theme .text-white,
-        .valentine-theme .text-zinc-100,
-        .valentine-theme .text-zinc-200 { color: #ffe4ef !important; }
-        .valentine-theme .text-zinc-300,
-        .valentine-theme .text-zinc-400,
-        .valentine-theme .text-zinc-500 { color: rgba(255, 205, 225, 0.78) !important; }
-        .valentine-theme .text-orange-100,
-        .valentine-theme .text-orange-200,
-        .valentine-theme .text-orange-300,
-        .valentine-theme .text-orange-400,
-        .valentine-theme .text-orange-500 { color: #f9a8d4 !important; }
-        .valentine-theme .bg-orange-500,
-        .valentine-theme .hover\:bg-orange-600:hover,
-        .valentine-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #db2777, #fb7185) !important; color: #fff1f2 !important; }
-        .valentine-theme .bg-orange-400\/10,
-        .valentine-theme .bg-orange-500\/10,
-        .valentine-theme .bg-orange-500\/15,
-        .valentine-theme .bg-orange-500\/20,
-        .valentine-theme .bg-orange-500\/25 { background-color: rgba(244, 114, 182, 0.18) !important; }
-        .valentine-theme .border-orange-300,
-        .valentine-theme .border-orange-400\/30,
-        .valentine-theme .border-orange-400\/40,
-        .valentine-theme .border-orange-500\/30 { border-color: rgba(249, 168, 212, 0.55) !important; }
-        .valentine-theme-bg { background: radial-gradient(circle at 20% 15%, rgba(251,113,133,.24), transparent 25%), radial-gradient(circle at 80% 20%, rgba(244,114,182,.2), transparent 28%), linear-gradient(180deg, #4c0519, #170711); }
-        .valentine-heart { color: rgba(255, 182, 213, 0.82); font-size: 22px; animation: valentine-fall linear infinite; text-shadow: 0 0 16px rgba(255, 120, 180, 0.45); }
-        @keyframes valentine-fall { 0% { transform: translateY(-12vh) rotate(0deg); opacity: 0; } 10% { opacity: .9; } 100% { transform: translateY(120vh) rotate(360deg); opacity: 0; } }
-
-        .japan-theme {
-          background: #030303 !important;
-          color: #f9c2cc;
-          font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Trebuchet MS", system-ui, sans-serif;
-          letter-spacing: 0.025em;
-        }
-
-        .japan-theme .text-white,
-        .japan-theme .text-zinc-100,
-        .japan-theme .text-zinc-200 {
-          color: #f9c2cc !important;
-          text-shadow: 0 0 14px rgba(185, 28, 28, 0.22);
-        }
-
-        .japan-theme .text-zinc-300,
-        .japan-theme .text-zinc-400,
-        .japan-theme .text-zinc-500 {
-          color: #ef9ca8 !important;
-        }
-
-        .japan-theme .bg-zinc-950,
-        .japan-theme .bg-zinc-900,
-        .japan-theme .bg-zinc-950\/70,
-        .japan-theme .bg-zinc-950\/72,
-        .japan-theme .bg-zinc-950\/80,
-        .japan-theme .bg-zinc-950\/84,
-        .japan-theme .bg-zinc-950\/90,
-        .japan-theme .bg-zinc-950\/92,
-        .japan-theme .bg-zinc-900\/70,
-        .japan-theme .bg-zinc-900\/80,
-        .japan-theme .bg-zinc-900\/85 {
-          background-color: rgba(6, 6, 6, 0.88) !important;
-          backdrop-filter: blur(16px);
-        }
-
-        .japan-theme .sticky.bg-zinc-950\/90,
-        .japan-theme .bg-black,
-        .japan-theme .bg-black\/70,
-        .japan-theme .bg-black\/78 {
-          background-color: rgba(3, 3, 3, 0.94) !important;
-        }
-
-        .japan-theme .hover\:bg-zinc-800:hover {
-          background-color: rgba(55, 8, 12, 0.96) !important;
-        }
-
-        .japan-theme .border-zinc-800,
-        .japan-theme .border-zinc-700 {
-          border-color: rgba(185, 28, 28, 0.38) !important;
-        }
-
-        .japan-theme .text-orange-100,
-        .japan-theme .text-orange-200,
-        .japan-theme .text-orange-300,
-        .japan-theme .text-orange-400,
-        .japan-theme .text-orange-500 {
-          color: #b91c1c !important;
-        }
-
-        .japan-theme .bg-orange-400\/10,
-        .japan-theme .bg-orange-400\/15,
-        .japan-theme .bg-orange-400\/20,
-        .japan-theme .bg-orange-500\/10,
-        .japan-theme .bg-orange-500\/15,
-        .japan-theme .bg-orange-500\/20,
-        .japan-theme .bg-orange-500\/25 {
-          background-color: rgba(185, 28, 28, 0.18) !important;
-        }
-
-        .japan-theme .bg-orange-500,
-        .japan-theme .hover\:bg-orange-600:hover,
-        .japan-theme .hover\:bg-orange-500:hover {
-          background: linear-gradient(135deg, #7f1d1d, #b91c1c, #ef4444) !important;
-          color: #ffe4e6 !important;
-        }
-
-        .japan-theme .border-orange-300,
-        .japan-theme .border-orange-300\/40,
-        .japan-theme .border-orange-400\/30,
-        .japan-theme .border-orange-400\/40,
-        .japan-theme .border-orange-400\/80,
-        .japan-theme .border-orange-500\/30 {
-          border-color: rgba(185, 28, 28, 0.7) !important;
-        }
-
-        .japan-theme input,
-        .japan-theme textarea,
-        .japan-theme select {
-          background-color: rgba(18, 5, 7, 0.96) !important;
-          border-color: rgba(185, 28, 28, 0.46) !important;
-          color: #f9c2cc !important;
-        }
-
-        .japan-theme input::placeholder,
-        .japan-theme textarea::placeholder {
-          color: rgba(249, 194, 204, 0.58) !important;
-        }
-
-        .japan-theme .shadow-orange-500\/20,
-        .japan-theme .shadow-orange-950\/20,
-        .japan-theme .shadow-orange-950\/30,
-        .japan-theme .shadow-orange-950\/40,
-        .japan-theme .shadow-orange-950\/50 {
-          box-shadow: 0 20px 55px rgba(185, 28, 28, 0.22) !important;
-        }
-
-        .japan-theme h1,
-        .japan-theme h2,
-        .japan-theme h3,
-        .japan-theme .font-black {
-          letter-spacing: 0.045em;
-        }
-
-        .japan-theme-bg {
-          background: #000000;
-        }
-
-        .japan-red-sun,
-        .japan-wave-lines,
-        .japan-vertical-text,
-        .japan-fuji,
-        .japan-pagoda,
-        .japan-cherry-branch,
-        .japan-blossom {
-          display: none !important;
-        }
-
-        .japan-leaf {
-          width: 12px;
-          height: 8px;
-          border-radius: 60% 40% 60% 40%;
-          background: linear-gradient(135deg, #b91c1c, #ef4444);
-          animation: japan-leaf-fall linear infinite;
-          box-shadow: 0 0 10px rgba(185, 28, 28, 0.42);
-        }
-
-        @keyframes japan-leaf-fall {
-          0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 0; }
-          8% { opacity: 1; }
-          100% { transform: translate3d(180px, 100vh, 0) rotate(520deg); opacity: 0.9; }
-        }
-
-        .japan-supra-run {
-          position: absolute;
-          left: 0;
-          top: 0;
-          transition: transform 0.08s linear, opacity 0.18s ease-out;
-        }
-
-        .japan-supra-burnout .japan-supra-wheel {
-          animation: japan-wheel-spin 0.18s linear infinite;
-        }
-
-        .japan-supra-jumping {
-          transition: transform 0.2s ease-out, opacity 0.18s ease-out;
-        }
-
-        .japan-smoke-pack {
-          position: absolute;
-          left: -24px;
-          top: 8px;
-          z-index: -1;
-        }
-
-        .japan-smoke {
-          position: absolute;
-          display: block;
-          height: 22px;
-          width: 22px;
-          border-radius: 9999px;
-          background: rgba(180, 180, 180, 0.86);
-          filter: blur(2.5px);
-          animation: japan-smoke-puff 0.9s ease-out infinite;
-        }
-
-        .japan-smoke.smoke-one { left: 0; top: 4px; animation-delay: 0s; }
-        .japan-smoke.smoke-two { left: -14px; top: 13px; height: 28px; width: 28px; animation-delay: 0.15s; }
-        .japan-smoke.smoke-three { left: -30px; top: 1px; height: 18px; width: 18px; animation-delay: 0.32s; }
-        .japan-smoke.smoke-four { left: -42px; top: 18px; height: 34px; width: 34px; animation-delay: 0.48s; }
-
-        @keyframes japan-smoke-puff {
-          0% { transform: translate3d(0, 0, 0) scale(0.4); opacity: 0; }
-          18% { opacity: 0.92; }
-          100% { transform: translate3d(-48px, -12px, 0) scale(1.9); opacity: 0; }
-        }
-
-        @keyframes japan-wheel-spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .japan-supra-hanger {
-          transform: scaleX(0.405) scaleY(0.27);
-          transform-origin: top center;
-        }
-
-        .japan-supra {
-          position: relative;
-          width: 210px;
-          height: 38px;
-          border-radius: 22px 58px 10px 12px;
-          background: linear-gradient(180deg, #ffb15f 0%, #ff7a18 34%, #f97316 56%, #b63a0a 100%);
-          box-shadow: 0 10px 18px rgba(249, 115, 22, 0.28), inset 0 -5px 10px rgba(0, 0, 0, 0.24);
-        }
-
-        .japan-supra-roof {
-          position: absolute;
-          left: 64px;
-          top: -20px;
-          width: 88px;
-          height: 28px;
-          border-radius: 32px 40px 7px 7px;
-          background: linear-gradient(180deg, #ffbd74 0%, #f97316 100%);
-          clip-path: polygon(10% 100%, 30% 8%, 82% 12%, 100% 100%);
-        }
-
-        .japan-supra-window {
-          position: absolute;
-          top: -15px;
-          height: 17px;
-          background: linear-gradient(180deg, #e0f2fe, #64748b 78%);
-          border: 2px solid rgba(255, 255, 255, 0.38);
-          transform: skewX(-17deg);
-        }
-
-        .japan-supra-window.front { left: 106px; width: 34px; border-radius: 5px 12px 4px 3px; }
-        .japan-supra-window.rear { left: 72px; width: 29px; border-radius: 13px 5px 3px 3px; }
-
-        .japan-supra::before {
-          content: "";
-          position: absolute;
-          right: 10px;
-          top: 8px;
-          height: 10px;
-          width: 46px;
-          border-radius: 999px;
-          background: rgba(255, 247, 237, 0.25);
-          transform: skewX(-20deg);
-        }
-
-        .japan-supra-door-line {
-          position: absolute;
-          left: 94px;
-          top: 7px;
-          height: 26px;
-          width: 2px;
-          background: rgba(124, 45, 18, 0.55);
-          transform: skewX(-10deg);
-        }
-
-        .japan-supra-graphic {
-          position: absolute;
-          left: 66px;
-          top: 14px;
-          width: 88px;
-          height: 10px;
-          border-top: 3px solid rgba(248, 250, 252, 0.75);
-          border-bottom: 2px solid rgba(30, 41, 59, 0.7);
-          transform: skewX(-18deg);
-        }
-
-        .japan-supra-green-splash {
-          display: none;
-        }
-
-        .japan-supra-light {
-          position: absolute;
-          top: 16px;
-          width: 11px;
-          height: 6px;
-          border-radius: 4px;
-        }
-
-        .japan-supra-light.front {
-          right: 6px;
-          background: #fff7ed;
-          box-shadow: 0 0 10px rgba(255, 247, 237, 0.76);
-        }
-
-        .japan-supra-light.rear {
-          left: 8px;
-          background: #7f1d1d;
-          box-shadow: 0 0 10px rgba(127, 29, 29, 0.58);
-        }
-
-        .japan-supra-wheel {
-          position: absolute;
-          bottom: -10px;
-          width: 30px;
-          height: 30px;
-          border-radius: 999px;
-          background: #111827;
-          border: 4px solid #e5e7eb;
-          box-shadow: inset 0 0 0 4px #4b5563;
-        }
-
-        .japan-supra-wheel::after {
-          content: "";
-          position: absolute;
-          inset: 5px;
-          border-radius: 999px;
-          background: conic-gradient(from 0deg, #f8fafc 0 12%, #6b7280 12% 20%, #f8fafc 20% 32%, #6b7280 32% 40%, #f8fafc 40% 52%, #6b7280 52% 60%, #f8fafc 60% 72%, #6b7280 72% 80%, #f8fafc 80% 92%, #6b7280 92% 100%);
-        }
-
-        .japan-supra-wheel.wheel-front { right: 24px; }
-        .japan-supra-wheel.wheel-rear { left: 28px; }
-
-        .japan-supra-wing {
-          position: absolute;
-          left: -10px;
-          top: -29px;
-          width: 66px;
-          height: 9px;
-          border-radius: 3px;
-          background: #111827;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
-          transform: skewX(-14deg);
-        }
-
-        .japan-supra-wing::before,
-        .japan-supra-wing::after {
-          content: "";
-          position: absolute;
-          bottom: -18px;
-          width: 5px;
-          height: 19px;
-          background: #e5e7eb;
-        }
-
-        .japan-supra-wing::before { left: 12px; }
-        .japan-supra-wing::after { right: 12px; }
-
-        .japan-supra-skirt {
-          position: absolute;
-          left: 22px;
-          right: 12px;
-          bottom: 3px;
-          height: 5px;
-          border-radius: 999px;
-          background: rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes japan-supra-drive {
-          0% { transform: translateX(-180px); opacity: 0; }
-          5% { opacity: 1; }
-          88% { opacity: 1; }
-          100% { transform: translateX(calc(100vw + 220px)); opacity: 0; }
-        }
-
-        .cyber-gameboy-clock {
-          position: relative;
-          display: inline-block;
-          height: 58px;
-          width: 82px;
-          border-radius: 12px 12px 18px 12px;
-          border: 3px solid rgba(16, 185, 129, 0.85);
-          background: linear-gradient(180deg, #064e3b, #022c22 64%, #020617);
-          box-shadow: 0 0 18px rgba(52, 211, 153, 0.32), inset 0 0 0 2px rgba(209, 250, 229, 0.08);
-          animation: cyber-gameboy-glow 1.8s ease-in-out infinite;
-        }
-
-        .cyber-gameboy-screen {
-          position: absolute;
-          left: 10px;
-          top: 8px;
-          height: 28px;
-          width: 50px;
-          border-radius: 6px;
-          border: 2px solid rgba(6, 78, 59, 0.9);
-          background: linear-gradient(180deg, #bbf7d0, #4ade80);
-          box-shadow: inset 0 0 8px rgba(2, 44, 34, 0.45), 0 0 10px rgba(74, 222, 128, 0.45);
-          overflow: hidden;
-        }
-
-        .cyber-gameboy-screen::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: repeating-linear-gradient(0deg, rgba(2, 44, 34, 0.18) 0 1px, transparent 1px 4px);
-          opacity: 0.55;
-        }
-
-        .cyber-gameboy-label {
-          position: absolute;
-          left: 4px;
-          top: 2px;
-          z-index: 1;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 5px;
-          font-weight: 1000;
-          letter-spacing: 0.08em;
-          color: #064e3b;
-        }
-
-        .cyber-gameboy-time {
-          position: absolute;
-          left: 4px;
-          top: 11px;
-          z-index: 1;
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 11px;
-          font-weight: 1000;
-          letter-spacing: -0.04em;
-          color: #022c22;
-        }
-
-        .cyber-gameboy-speaker {
-          position: absolute;
-          right: 9px;
-          top: 10px;
-          height: 24px;
-          width: 10px;
-          background: repeating-linear-gradient(90deg, rgba(209, 250, 229, 0.34) 0 2px, transparent 2px 4px);
-          border-radius: 999px;
-          transform: rotate(-12deg);
-        }
-
-        .cyber-gameboy-dpad {
-          position: absolute;
-          left: 12px;
-          bottom: 9px;
-          height: 14px;
-          width: 14px;
-        }
-
-        .cyber-gameboy-dpad span:first-child,
-        .cyber-gameboy-dpad span:last-child {
-          position: absolute;
-          border-radius: 3px;
-          background: #020617;
-          box-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
-        }
-
-        .cyber-gameboy-dpad span:first-child {
-          left: 5px;
-          top: 0;
-          height: 14px;
-          width: 4px;
-        }
-
-        .cyber-gameboy-dpad span:last-child {
-          left: 0;
-          top: 5px;
-          height: 4px;
-          width: 14px;
-        }
-
-        .cyber-gameboy-buttons {
-          position: absolute;
-          right: 10px;
-          bottom: 11px;
-          display: flex;
-          gap: 5px;
-          transform: rotate(-18deg);
-        }
-
-        .cyber-gameboy-buttons span {
-          height: 8px;
-          width: 8px;
-          border-radius: 999px;
-          background: #34d399;
-          box-shadow: 0 0 8px rgba(52, 211, 153, 0.75);
-        }
-
-        @keyframes cyber-gameboy-glow {
-          0%, 100% { transform: translateY(0); filter: brightness(1); }
-          50% { transform: translateY(-1px); filter: brightness(1.14); }
-        }
-
-        .cyber-theme { color: #d1fae5; }
-        .cyber-theme .text-white,
-        .cyber-theme .text-zinc-100,
-        .cyber-theme .text-zinc-200 { color: #d1fae5 !important; }
-        .cyber-theme .text-zinc-300,
-        .cyber-theme .text-zinc-400,
-        .cyber-theme .text-zinc-500 { color: rgba(167, 243, 208, 0.75) !important; }
-        .cyber-theme .text-orange-100,
-        .cyber-theme .text-orange-200,
-        .cyber-theme .text-orange-300,
-        .cyber-theme .text-orange-400,
-        .cyber-theme .text-orange-500 { color: #6ee7b7 !important; }
-        .cyber-theme .bg-orange-500,
-        .cyber-theme .hover\:bg-orange-600:hover,
-        .cyber-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #059669, #34d399) !important; color: #022c22 !important; }
-        .cyber-theme-bg { background: radial-gradient(circle at 50% 20%, rgba(16,185,129,.18), transparent 30%), linear-gradient(180deg, #011b13, #020617); }
-        .cyber-grid { background-image: linear-gradient(rgba(52,211,153,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,.1) 1px, transparent 1px); background-size: 46px 46px; }
-        .cyber-code { animation: cyber-rain linear infinite; text-shadow: 0 0 12px rgba(52,211,153,.55); }
-        @keyframes cyber-rain { 0% { transform: translateY(-20vh); opacity: 0; } 10% { opacity: .9; } 100% { transform: translateY(130vh); opacity: 0; } }
-
-        .arctic-theme { color: #eff6ff; }
-        .arctic-theme .text-white,
-        .arctic-theme .text-zinc-100,
-        .arctic-theme .text-zinc-200 { color: #eff6ff !important; }
-        .arctic-theme .text-zinc-300,
-        .arctic-theme .text-zinc-400,
-        .arctic-theme .text-zinc-500 { color: rgba(219, 234, 254, 0.76) !important; }
-        .arctic-theme .text-orange-100,
-        .arctic-theme .text-orange-200,
-        .arctic-theme .text-orange-300,
-        .arctic-theme .text-orange-400,
-        .arctic-theme .text-orange-500 { color: #bae6fd !important; }
-        .arctic-theme .bg-orange-500,
-        .arctic-theme .hover\:bg-orange-600:hover,
-        .arctic-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #0ea5e9, #e0f2fe) !important; color: #082f49 !important; }
-        .arctic-theme-bg { background: radial-gradient(circle at 20% 18%, rgba(186,230,253,.28), transparent 25%), linear-gradient(180deg, #082f49, #020617); }
         .arctic-snow { animation: arctic-snow linear infinite; filter: drop-shadow(0 0 8px rgba(255,255,255,.55)); }
         @keyframes arctic-snow { 0% { transform: translateY(-12vh); opacity: 0; } 12% { opacity: .9; } 100% { transform: translateY(120vh) translateX(22px); opacity: 0; } }
-
-        .volcano-theme { color: #fee2e2; }
-        .volcano-theme .text-white,
-        .volcano-theme .text-zinc-100,
-        .volcano-theme .text-zinc-200 { color: #fee2e2 !important; }
-        .volcano-theme .text-zinc-300,
-        .volcano-theme .text-zinc-400,
-        .volcano-theme .text-zinc-500 { color: rgba(254, 202, 202, 0.78) !important; }
-        .volcano-theme .text-orange-100,
-        .volcano-theme .text-orange-200,
-        .volcano-theme .text-orange-300,
-        .volcano-theme .text-orange-400,
-        .volcano-theme .text-orange-500 { color: #fb7185 !important; }
-        .volcano-theme .bg-orange-500,
-        .volcano-theme .hover\:bg-orange-600:hover,
-        .volcano-theme .hover\:bg-orange-500:hover { background: linear-gradient(135deg, #dc2626, #fb923c) !important; color: #fff7ed !important; }
-        .volcano-theme-bg { background: radial-gradient(circle at 50% 80%, rgba(239,68,68,.32), transparent 34%), linear-gradient(180deg, #2b0505, #09090b); }
-        .volcano-mountain { clip-path: polygon(50% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #7f1d1d, #111827); }
-        .volcano-spark { animation: volcano-spark linear infinite; box-shadow: 0 0 14px rgba(251, 146, 60, .75); }
-        @keyframes volcano-spark { 0% { transform: translateY(0) scale(0.7); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(-92vh) translateX(28px) scale(0.25); opacity: 0; } }
-
-        .volcano-eruption-core {
-          height: 70px;
-          width: 70px;
-          margin-left: -35px;
-          margin-top: -35px;
-          border-radius: 9999px;
-          background: radial-gradient(circle, #fff7ed 0%, #fb923c 32%, #dc2626 62%, transparent 72%);
-          box-shadow: 0 0 0 rgba(251, 146, 60, 0);
-          animation: volcano-centre-eruption 60s ease-out infinite;
-        }
-
-        .volcano-eruption-shockwave {
-          height: 42px;
-          width: 42px;
-          margin-left: -21px;
-          margin-top: -21px;
-          border-radius: 9999px;
-          border: 2px solid rgba(251, 146, 60, 0.9);
-          animation: volcano-shockwave 60s ease-out infinite;
-        }
-
-        .volcano-eruption-particle {
-          background: radial-gradient(circle, #fff7ed 0%, #fb923c 38%, #dc2626 78%);
-          box-shadow: 0 0 26px rgba(251, 146, 60, 0.95), 0 0 54px rgba(220, 38, 38, 0.58);
-          opacity: 0;
-          animation: volcano-eruption-particle 60s cubic-bezier(.12,.78,.18,1) infinite;
-          animation-delay: var(--eruption-delay);
-        }
-
-        @keyframes volcano-centre-eruption {
-          0% { transform: scale(1); opacity: 1; box-shadow: 0 0 60px rgba(251, 146, 60, 0.95), 0 0 140px rgba(220, 38, 38, 0.52); }
-          3% { transform: scale(3.6); opacity: 0.58; box-shadow: 0 0 140px rgba(251, 146, 60, 0.85), 0 0 260px rgba(220, 38, 38, 0.55); }
-          5%, 92%, 100% { transform: scale(0.1); opacity: 0; box-shadow: 0 0 0 rgba(251, 146, 60, 0); }
-          93% { transform: scale(1); opacity: 1; box-shadow: 0 0 60px rgba(251, 146, 60, 0.95), 0 0 140px rgba(220, 38, 38, 0.52); }
-          96% { transform: scale(3.6); opacity: 0.58; box-shadow: 0 0 140px rgba(251, 146, 60, 0.85), 0 0 260px rgba(220, 38, 38, 0.55); }
-          98% { transform: scale(0.15); opacity: 0; }
-        }
-
-        @keyframes volcano-shockwave {
-          0% { transform: scale(1); opacity: 0.9; }
-          4% { transform: scale(38); opacity: 0; }
-          5%, 92%, 100% { transform: scale(0.2); opacity: 0; }
-          93% { transform: scale(1); opacity: 0.9; }
-          97% { transform: scale(38); opacity: 0; }
-        }
-
-        @keyframes volcano-eruption-particle {
-          0% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(1); opacity: 1; }
-          4% { transform: translate(-50%, -50%) translate3d(var(--eruption-x), var(--eruption-y), 0) scale(0.95); opacity: 0.95; }
-          6%, 92%, 100% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.4); opacity: 0; }
-          93% { transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(1); opacity: 1; }
-          97% { transform: translate(-50%, -50%) translate3d(var(--eruption-x), var(--eruption-y), 0) scale(0.95); opacity: 0.95; }
-          99% { transform: translate(-50%, -50%) translate3d(calc(var(--eruption-x) * 1.32), calc(var(--eruption-y) * 1.32), 0) scale(0.15); opacity: 0; }
-        }
-
-        .god-theme {
-          background: #f8f3e8 !important;
-          color: #6b4f34;
-        }
-
-        .god-theme .bg-zinc-950,
-        .god-theme .bg-zinc-900,
-        .god-theme .bg-zinc-950\/70,
-        .god-theme .bg-zinc-950\/80,
-        .god-theme .bg-zinc-900\/80,
-        .god-theme .bg-zinc-900\/85,
-        .god-theme .bg-black,
-        .god-theme .bg-black\/70,
-        .god-theme .bg-black\/78 {
-          background-color: rgba(249, 244, 232, 0.9) !important;
-          backdrop-filter: blur(14px);
-        }
-
-        .god-theme .text-white,
-        .god-theme .text-zinc-100,
-        .god-theme .text-zinc-200 {
-          color: #6b4f34 !important;
-        }
-
-        .god-theme .text-zinc-300,
-        .god-theme .text-zinc-400,
-        .god-theme .text-zinc-500 {
-          color: rgba(107, 79, 52, 0.74) !important;
-        }
-
-        .god-theme .text-orange-100,
-        .god-theme .text-orange-200,
-        .god-theme .text-orange-300,
-        .god-theme .text-orange-400,
-        .god-theme .text-orange-500 {
-          color: #8bb7d8 !important;
-        }
-
-        .god-theme .bg-orange-500,
-        .god-theme .hover\:bg-orange-600:hover,
-        .god-theme .hover\:bg-orange-500:hover {
-          background: linear-gradient(135deg, #d9ccb8, #8bb7d8) !important;
-          color: #4e3823 !important;
-        }
-
-        .god-theme .bg-orange-400\/10,
-        .god-theme .bg-orange-500\/10,
-        .god-theme .bg-orange-500\/15,
-        .god-theme .bg-orange-500\/20,
-        .god-theme .bg-orange-500\/25 {
-          background-color: rgba(139, 183, 216, 0.16) !important;
-        }
-
-        .god-theme .border-orange-300,
-        .god-theme .border-orange-300\/40,
-        .god-theme .border-orange-400\/30,
-        .god-theme .border-orange-400\/40,
-        .god-theme .border-orange-400\/80,
-        .god-theme .border-orange-500\/30,
-        .god-theme .border-zinc-700,
-        .god-theme .border-zinc-800 {
-          border-color: rgba(107, 79, 52, 0.22) !important;
-        }
-
-        .god-theme input,
-        .god-theme textarea,
-        .god-theme select {
-          background-color: rgba(255, 251, 243, 0.95) !important;
-          color: #6b4f34 !important;
-          border-color: rgba(107, 79, 52, 0.2) !important;
-        }
-
-        .god-theme input::placeholder,
-        .god-theme textarea::placeholder {
-          color: rgba(107, 79, 52, 0.48) !important;
-        }
-
-        .god-theme .shadow-orange-500\/20,
-        .god-theme .shadow-orange-950\/20,
-        .god-theme .shadow-orange-950\/30,
-        .god-theme .shadow-orange-950\/40,
-        .god-theme .shadow-orange-950\/50 {
-          box-shadow: 0 18px 44px rgba(107, 79, 52, 0.12) !important;
-        }
-
-        .god-theme-bg {
-          background:
-            radial-gradient(circle at 50% 16%, rgba(255, 252, 244, 0.85), transparent 16%),
-            radial-gradient(circle at 50% 28%, rgba(139, 183, 216, 0.18), transparent 34%),
-            linear-gradient(180deg, #fffdf8 0%, #f8f3e8 52%, #efe5d3 100%);
-        }
-
-        .god-sun-wrap {
-          position: relative;
-          width: 150px;
-          height: 150px;
-          animation: god-sun-spin 26s linear infinite;
-        }
-
-        .god-sun-core {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: 82px;
-          height: 82px;
-          transform: translate(-50%, -50%);
-          border-radius: 9999px;
-          background: radial-gradient(circle, #fffdf8 0%, #f3ead8 48%, #d9ccb8 100%);
-          box-shadow: 0 0 40px rgba(255, 252, 244, 0.9), 0 0 90px rgba(217, 204, 184, 0.65);
-        }
-
-        .god-rotating-ray {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: 8px;
-          height: 72px;
-          margin-left: -4px;
-          margin-top: -72px;
-          transform-origin: center 72px;
-          border-radius: 999px;
-          background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(217,204,184,0.15));
-          animation: god-ray-float 5.2s ease-in-out infinite;
-        }
-
-        .god-rotating-ray:nth-child(odd) {
-          height: 82px;
-          margin-top: -82px;
-          transform-origin: center 82px;
-          background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(139,183,216,0.12));
-        }
-
-        @keyframes god-ray-float {
-          0%, 100% { opacity: 0.45; filter: blur(0px); }
-          50% { opacity: 0.9; filter: blur(0.5px); }
-        }
-
-        @keyframes god-sun-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .god-dove {
-          position: absolute;
-          left: -16%;
-          width: 54px;
-          height: 28px;
-          animation: god-dove-fly linear infinite;
-          opacity: 0;
-        }
-
-        .god-dove-body {
-          position: absolute;
-          left: 20px;
-          top: 10px;
-          width: 18px;
-          height: 10px;
-          border-radius: 999px;
-          background: #fffdf8;
-          box-shadow: 0 0 10px rgba(255,255,255,0.45);
-        }
-
-        .god-dove-wing {
-          position: absolute;
-          top: 4px;
-          width: 22px;
-          height: 12px;
-          border-radius: 100% 100% 20% 20%;
-          background: linear-gradient(180deg, #ffffff, #dbeafe);
-          animation: god-wing-flap 1s ease-in-out infinite;
-        }
-
-        .god-dove-wing.left {
-          left: 4px;
-          transform-origin: right center;
-        }
-
-        .god-dove-wing.right {
-          right: 4px;
-          transform-origin: left center;
-        }
-
-        @keyframes god-wing-flap {
-          0%, 100% { transform: rotate(10deg) translateY(0); }
-          50% { transform: rotate(-18deg) translateY(-4px); }
-        }
-
-        @keyframes god-dove-fly {
-          0% { transform: translateX(0) translateY(0) scale(0.88); opacity: 0; }
-          6% { opacity: 0.95; }
-          50% { transform: translateX(60vw) translateY(-18px) scale(1); opacity: 0.95; }
-          94% { opacity: 0.95; }
-          100% { transform: translateX(124vw) translateY(8px) scale(0.92); opacity: 0; }
-        }
-
-        .cherry-clean-sky {
-          background:
-            linear-gradient(
-              180deg,
-              rgba(120, 210, 255, 0.78) 0%,
-              rgba(165, 225, 255, 0.58) 34%,
-              rgba(255, 223, 238, 0.26) 68%,
-              rgba(23, 16, 29, 0.84) 100%
-            );
-        }
-
-        .cherry-clean-overlay {
-          background:
-            radial-gradient(circle at 18% 18%, rgba(255, 210, 235, 0.28), transparent 24%),
-            radial-gradient(circle at 82% 10%, rgba(255, 255, 255, 0.18), transparent 18%),
-            linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(18, 12, 24, 0.42));
-        }
-
-        .cherry-bush-blob {
-          background: radial-gradient(circle at 35% 30%, rgba(255,245,250,0.95) 0%, rgba(255,193,224,0.88) 34%, rgba(244,143,191,0.72) 62%, rgba(215,104,164,0.42) 100%);
-        }
-
-        .cherry-blossom-dot {
-          background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.95) 0%, rgba(255,221,236,0.92) 38%, rgba(255,177,211,0.9) 72%, rgba(255,140,188,0.72) 100%);
-          box-shadow: 0 0 12px rgba(255, 190, 220, 0.4);
-        }
-
-        .cherry-ground-fade {
-          background: linear-gradient(180deg, rgba(150,215,255,0.10), rgba(255,206,228,0.10) 44%, rgba(10,10,18,0.40) 100%);
-        }
-
-        .cherry-soft-cloud {
-          animation-name: cloud-drift;
-          animation-timing-function: ease-in-out;
-          animation-iteration-count: infinite;
-          animation-duration: 24s;
-        }
-
-        .cherry-theme .text-zinc-400 {
-          color: rgba(255, 238, 246, 0.84) !important;
-        }
-
-        .cherry-theme .text-zinc-500 {
-          color: rgba(255, 220, 234, 0.68) !important;
-        }
-
-        .cherry-theme .text-orange-200,
-        .cherry-theme .text-orange-300,
-        .cherry-theme .text-orange-400 {
-          color: #ffd3e7 !important;
-        }
-
-        .cherry-theme .bg-zinc-900 {
-          background-color: rgba(17, 17, 24, 0.78) !important;
-          backdrop-filter: blur(14px);
-        }
-
-        .cherry-theme .bg-zinc-950 {
-          background-color: rgba(10, 10, 16, 0.84) !important;
-          backdrop-filter: blur(14px);
-        }
-
-        .cherry-theme .border-zinc-800 {
-          border-color: rgba(255, 208, 229, 0.14) !important;
-        }
-
-        .cherry-theme .bg-orange-500,
-        .cherry-theme .hover\\:bg-orange-600:hover,
-        .cherry-theme .hover\\:bg-orange-500:hover {
-          background: linear-gradient(135deg, #ff5fa7, #ff8cc4) !important;
-        }
-
-        .cherry-theme .border-orange-400\\/40,
-        .cherry-theme .border-orange-500\\/30,
-        .cherry-theme .border-orange-300,
-        .cherry-theme .border-orange-400\\/80 {
-          border-color: rgba(255, 180, 214, 0.54) !important;
-        }
-
-        .cherry-theme .shadow-orange-500\\/20,
-        .cherry-theme .shadow-orange-950\\/40 {
-          box-shadow: 0 0 24px rgba(255, 125, 180, 0.16) !important;
-        }
-
-        @keyframes cloud-drift {
-          0% {
-            transform: translateX(0px);
-          }
-          50% {
-            transform: translateX(22px);
-          }
-          100% {
-            transform: translateX(0px);
-          }
-        }
-
-        @keyframes petal-fall {
-          0% {
-            transform: translate3d(-12vw, -14vh, 0) rotate(0deg) scale(1);
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.92;
-          }
-          42% {
-            transform: translate3d(18vw, 32vh, 0) rotate(180deg) scale(1.02);
-            opacity: 0.82;
-          }
-          76% {
-            transform: translate3d(40vw, 74vh, 0) rotate(340deg) scale(0.96);
-            opacity: 0.56;
-          }
-          100% {
-            transform: translate3d(62vw, 116vh, 0) rotate(520deg) scale(0.92);
-            opacity: 0;
-          }
-        }
-
-        .cherry-petal {
-          border-radius: 60% 40% 70% 30% / 45% 55% 45% 55%;
-          background: linear-gradient(
-            180deg,
-            rgba(255, 247, 251, 0.98),
-            rgba(255, 185, 220, 0.92)
-          );
-          box-shadow: 0 0 10px rgba(255, 205, 226, 0.28);
-          animation-name: petal-fall;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-        }
 
 
         .minecraft-achievement-toast {
@@ -10497,12 +8824,12 @@ export default function App() {
         </div>
 
         <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
-          <section className="grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
+          <section className="forge-hero grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
                 {view === 'stages' || view === 'topic' ? (
                   <span className="inline-flex items-center gap-3">
-                    {activeThemeId === 'cyber' ? (
+                    {activeTheme.id === 'cyber' ? (
                       <span className="cyber-gameboy-clock">
                         <span className="cyber-gameboy-speaker" />
                         <span className="cyber-gameboy-screen">
@@ -10593,7 +8920,7 @@ export default function App() {
                   return (
                     <article
                       key={subject.id}
-                      className="min-h-[190px] rounded-3xl border-2 border-orange-300 bg-orange-500/20 p-5 text-left shadow-xl shadow-orange-500/20"
+                      className="palette-panel min-h-[190px] rounded-3xl border-2 border-orange-300 bg-orange-500/20 p-5 text-left shadow-xl shadow-orange-500/20"
                     >
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
@@ -10879,6 +9206,8 @@ export default function App() {
                   label="Themes"
                 />
               </div>
+              <ThemePalette theme={selectedTheme} colours={colours} unlocked={paletteUnlocked}
+                onChange={(next) => { if (paletteUnlocked) savePalette(selectedTheme.id, next); }} />
               <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {themes.map((theme) => (
                   <AchievementCard

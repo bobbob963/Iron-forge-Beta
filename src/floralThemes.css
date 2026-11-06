@@ -1,0 +1,98 @@
+/* The artwork sits in the header; controls and revision text stay on opaque surfaces. */
+.cherry-theme {
+  --color-zinc-950: #171321;
+  --color-zinc-900: #292134;
+  --color-zinc-800: #403347;
+  --color-zinc-700: #59485f;
+  --color-zinc-500: #bcadbf;
+  --color-zinc-400: #d2c2d0;
+  --color-zinc-300: #e6d9e2;
+  --color-zinc-200: #f0e5eb;
+  --color-zinc-100: #faf1f4;
+  --color-orange-100: #ffedf0;
+  --color-orange-200: #f8d4df;
+  --color-orange-300: #ecb5cb;
+  --color-orange-400: #e6a4bd;
+  --color-orange-500: #aa5c7e;
+  --color-orange-600: #894265;
+  --color-orange-950: #201525;
+  --floral-backdrop: radial-gradient(ellipse at 75% 0%, #493448 0%, transparent 57%), linear-gradient(140deg, #231d30, #181522 70%);
+  --floral-art: url('./assets/sakura-bough.svg');
+  --floral-art-width: min(23%, 18rem);
+  --floral-art-opacity: .92;
+  background-color: #181522;
+}
+
+.valentine-theme {
+  --color-zinc-950: #1e151b;
+  --color-zinc-900: #30202a;
+  --color-zinc-800: #4b313c;
+  --color-zinc-700: #64414b;
+  --color-zinc-500: #bda6ab;
+  --color-zinc-400: #d2b9bc;
+  --color-zinc-300: #e7cfd0;
+  --color-zinc-200: #f2dfda;
+  --color-zinc-100: #fff2e9;
+  --color-orange-100: #ffebdc;
+  --color-orange-200: #f9cdb7;
+  --color-orange-300: #eeb69e;
+  --color-orange-400: #e5a68f;
+  --color-orange-500: #a85d63;
+  --color-orange-600: #85414e;
+  --color-orange-950: #28151b;
+  --floral-backdrop: radial-gradient(ellipse at 74% -12%, #6a3342 0%, transparent 52%), linear-gradient(150deg, #301b27, #1c151b 65%);
+  --floral-art: url('./assets/valentine-letter.svg');
+  --floral-art-width: min(16%, 12rem);
+  --floral-art-opacity: .95;
+  background-color: #21171f;
+}
+
+.floral-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--floral-backdrop);
+  background-size: 100% 60rem;
+  background-repeat: no-repeat;
+}
+
+:is(.cherry-theme, .valentine-theme) .forge-hero {
+  isolation: isolate;
+  position: relative;
+}
+
+@media (min-width: 1140px) {
+  :is(.cherry-theme, .valentine-theme) .forge-hero::before {
+    position: absolute;
+    content: '';
+    z-index: -1;
+    pointer-events: none;
+    inset: -2.8rem 31% auto auto;
+    width: var(--floral-art-width);
+    aspect-ratio: 1.55;
+    background: var(--floral-art) right center / contain no-repeat;
+    opacity: var(--floral-art-opacity);
+  }
+  .valentine-theme .forge-hero::before { top: -.6rem; right: 34%; }
+}
+
+:is(.cherry-theme, .valentine-theme) .forge-hero h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+
+.valentine-theme .forge-hero h1 span { font-style: italic; }
+
+:is(.cherry-theme, .valentine-theme) .taskbar-solid {
+  background: var(--color-zinc-950);
+}
+
+:is(.cherry-theme, .valentine-theme) [class~='shadow-orange-500/20'] {
+  box-shadow: 0 6px 20px rgb(10 5 15 / .22);
+}
+
+:is(.cherry-theme, .valentine-theme) :focus-visible {
+  outline: 2px solid var(--color-orange-300);
+  outline-offset: 2px;
+}

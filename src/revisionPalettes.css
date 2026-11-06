@@ -1,0 +1,146 @@
+/* Ocean uses daylight surfaces. Keep dark ink on cards and light ink on solid controls. */
+.ocean-theme {
+  color-scheme: light;
+  color: #123e46;
+  --color-zinc-100: #123e46;
+  --color-zinc-200: #174650;
+  --color-zinc-300: #315961;
+  --color-zinc-400: #3a6066;
+  --color-zinc-500: #42666a;
+  --color-zinc-600: #547779;
+  --color-zinc-700: #91b5b3;
+  --color-zinc-800: #bbd9d5;
+  --color-zinc-900: #f4fbf8;
+  --color-zinc-950: #deefeb;
+  --color-orange-100: #1d4d54;
+  --color-orange-200: #185d63;
+  --color-orange-300: #17666b;
+  --color-orange-400: #14757b;
+  --color-orange-500: #076c71;
+  --color-orange-600: #00565e;
+  --color-orange-950: #3b7678;
+  --color-green-100: #174d3d;
+  --color-green-200: #195843;
+  --color-green-300: #176549;
+  --color-red-100: #642f36;
+  --color-red-200: #79373f;
+  --color-red-300: #9a3947;
+  --color-pink-100: #365b63;
+}
+.ocean-theme .text-white { color: #103d45; }
+.ocean-theme :is(.ocean-primary, .bg-orange-500, .bg-cyan-600) { color: white; }
+.ocean-primary { background-color: #076c71; color: white; }
+.ocean-primary:hover { background-color: #00565e; }
+.ocean-theme :is(.text-teal-900, .text-cyan-200) { color: #14595f; }
+.ocean-theme input, .ocean-theme select, .ocean-theme textarea { color-scheme: light; }
+.ocean-theme-sky {
+  background: radial-gradient(ellipse at 24% 6%, #fbf5d9 0, transparent 34%),
+    linear-gradient(164deg, #c5e5dd 5%, #e5f1e8 40%, #9ccfca 89%);
+}
+.ocean-theme-water {
+  background: repeating-radial-gradient(ellipse at 30% -95%, transparent 0 57px, #438d8a28 58px 59px, transparent 60px 83px),
+    linear-gradient(175deg, #acdcd454, #8cbeba91);
+}
+
+.royal-theme {
+  color-scheme: dark;
+  --color-zinc-300: #e2d9ec;
+  --color-zinc-400: #c3b6d2;
+  --color-zinc-500: #ab9abf;
+  --color-zinc-700: #594966;
+  --color-zinc-800: #40334f;
+  --color-zinc-900: #231d30;
+  --color-zinc-950: #171320;
+  --color-orange-100: #f4e6ff;
+  --color-orange-200: #e5c8ff;
+  --color-orange-300: #d7acfb;
+  --color-orange-400: #bd87f3;
+  --color-orange-500: #8b48c1;
+  --color-orange-600: #6e379d;
+  --color-orange-950: #261232;
+}
+.royal-theme-bg {
+  background: repeating-radial-gradient(ellipse at 80% -22%, transparent 0 85px, #cda6ef15 86px 87px, transparent 88px 116px),
+    radial-gradient(ellipse at 70% 0%, #4b305e, transparent 46%),
+    linear-gradient(148deg, #251b38, #130f1e 74%);
+}
+.royal-theme .royal-lightning { animation-name: royal-horizon-glow; }
+@keyframes royal-horizon-glow {
+  0%, 55%, 100% { opacity: 0; }
+  76% { opacity: .27; }
+}
+
+.gold-theme {
+  color-scheme: dark;
+  --color-zinc-300: #e7dbc6;
+  --color-zinc-400: #ccbea7;
+  --color-zinc-500: #baaa91;
+  --color-zinc-700: #63523d;
+  --color-zinc-800: #4c3c2c;
+  --color-zinc-900: #2c241c;
+  --color-zinc-950: #1e1914;
+  --color-orange-100: #fff2d6;
+  --color-orange-200: #eed8a6;
+  --color-orange-300: #ecc886;
+  --color-orange-400: #d7a551;
+  --color-orange-500: #946520;
+  --color-orange-600: #785019;
+  --color-orange-950: #342618;
+}
+.gold-theme-bg {
+  background: repeating-radial-gradient(ellipse at 90% -30%, transparent 0 93px, #e8c98e22 94px 95px, transparent 96px 102px),
+    radial-gradient(ellipse at 83% 5%, #71533499, transparent 43%),
+    linear-gradient(155deg, #403020, #211a15 53%, #141211);
+}
+.gold-money {
+  width: 17px;
+  height: 17px;
+  border: 2px double #e7c890;
+  border-radius: 50%;
+  color: #775126;
+  background: linear-gradient(120deg,#e4cb93,#c99a55 65%,#f4dfad);
+  font: bold 10px Georgia, serif;
+  animation: money-fall linear infinite;
+}
+.gold-runway { position: absolute; inset: 72px 0 auto; height: 54px; overflow: hidden; pointer-events: none; }
+.gold-runner { width: 56px; animation: gold-traverse 19s linear infinite; }
+.gold-runner .gold-thief { transform: scale(.58); transform-origin: 50% 100%; }
+@keyframes gold-traverse {
+  0% { transform: translateX(-70px); }
+  39%, 100% { transform: translateX(calc(100vw + 70px)); }
+}
+
+.arctic-theme {
+  color-scheme: dark;
+  --color-zinc-300: #d6e7ed;
+  --color-zinc-400: #acc6d2;
+  --color-zinc-500: #99b6c3;
+  --color-zinc-700: #416274;
+  --color-zinc-800: #2d495b;
+  --color-zinc-900: #192f40;
+  --color-zinc-950: #0f212f;
+  --color-orange-100: #e2f8ff;
+  --color-orange-200: #c9eff9;
+  --color-orange-300: #9bdde9;
+  --color-orange-400: #6cc8d9;
+  --color-orange-500: #26778a;
+  --color-orange-600: #1c6275;
+  --color-orange-950: #122733;
+}
+.arctic-theme-bg {
+  background: radial-gradient(ellipse at 72% -9%, #65b4b583, transparent 33%),
+    radial-gradient(ellipse at 15% 7%, #5476a077, transparent 38%),
+    linear-gradient(155deg,#143443,#182d44 44%,#0d1825);
+}
+.arctic-ridgeline {
+  position: absolute; inset: 0 0 auto; height: clamp(210px, 24vw, 420px);
+  background: linear-gradient(150deg,#d0f3f433 2%,#8fcad725 45%,#172c3a55);
+  clip-path: polygon(0 93%,9% 76%,13% 81%,25% 51%,32% 67%,40% 33%,48% 55%,58% 41%,66% 65%,78% 29%,83% 44%,87% 36%,100% 74%,100% 100%,0 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-runway, .gold-money, .royal-lightning { display: none; }
+  :is(.ocean-fish,.ocean-fish-tail,.ocean-fish-body,.ocean-bubble,.gold-ember,.arctic-snow,.royal-star) {
+    animation: none !important;
+  }
+}

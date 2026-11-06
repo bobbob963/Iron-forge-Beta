@@ -1,0 +1,375 @@
+/* These landscapes sit behind the page. The left edge stays quiet for the title and study material. */
+.forge-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; isolation: isolate; }
+.forge-scene-art { position: absolute; top: 4rem; right: 0; width: min(62vw, 58rem); height: auto; mask-image: linear-gradient(to right, transparent, black 25%); }
+@media (min-width: 768px) {
+  :is(.japan-theme-bg, .volcano-theme-bg, .god-theme-bg) .forge-scene-art {
+    right: max(16vw, calc((100% - 82rem) / 2 + 11rem));
+    mask-image: linear-gradient(to right, transparent, black 28%, black 79%, transparent);
+  }
+}
+.japan-theme {
+  --color-zinc-950: #12171e; --color-zinc-900: #202630; --color-zinc-800: #373e48;
+  --color-zinc-700: #505761; --color-zinc-300: #d9d7d3; --color-zinc-400: #c2bfbb; --color-zinc-500: #b3ada7;
+  --color-orange-200: #ffd7c4; --color-orange-300: #ffb49b; --color-orange-400: #f7a38b;
+  --color-orange-500: #a54036; --color-orange-600: #81332e; --color-red-600: #9c4039; --color-red-700: #81332e;
+  background: #141820; color: #f7f1e8;
+}
+.japan-theme-bg { background: radial-gradient(ellipse 60% 350px at 88% 150px,#49454a 0%,transparent 90%), linear-gradient(180deg,#222731,#141820 510px); }
+.japan-theme .forge-hero h1 { color: #fff2e6; }
+.japan-theme .forge-hero h1 span { color: #ffb49b; }
+.japan-panel { background-color: #262a32; }
+.japan-car-lane { position: fixed; top: 4.4rem; left: 0; right: 0; height: 0; z-index: 20; pointer-events: none; }
+.japan-supra-run { position: absolute; left: 0; top: 0; will-change: transform; }
+.japan-supra-run[hidden], .japan-supra-run:not(.japan-supra-burnout) .japan-smoke-pack { display: none; }
+.japan-supra-burnout .japan-supra-wheel { animation: japan-wheel-spin .18s linear infinite; }
+.japan-smoke-pack {
+  position: absolute;
+  left: -24px;
+  top: 8px;
+  z-index: -1;
+}
+
+.japan-smoke {
+  position: absolute;
+  display: block;
+  height: 22px;
+  width: 22px;
+  border-radius: 9999px;
+  background: rgba(180, 180, 180, 0.86);
+  filter: blur(2.5px);
+  animation: japan-smoke-puff 0.9s ease-out infinite;
+}
+
+.japan-smoke.smoke-one { left: 0; top: 4px; animation-delay: 0s; }
+.japan-smoke.smoke-two { left: -14px; top: 13px; height: 28px; width: 28px; animation-delay: 0.15s; }
+.japan-smoke.smoke-three { left: -30px; top: 1px; height: 18px; width: 18px; animation-delay: 0.32s; }
+.japan-smoke.smoke-four { left: -42px; top: 18px; height: 34px; width: 34px; animation-delay: 0.48s; }
+
+@keyframes japan-smoke-puff {
+  0% { transform: translate3d(0, 0, 0) scale(0.4); opacity: 0; }
+  18% { opacity: 0.92; }
+  100% { transform: translate3d(-48px, -12px, 0) scale(1.9); opacity: 0; }
+}
+
+@keyframes japan-wheel-spin {
+  to { transform: rotate(360deg); }
+}
+
+.japan-supra-hanger {
+  transform: scale(.41);
+  transform-origin: left top;
+}
+
+.japan-supra {
+  position: relative;
+  width: 210px;
+  height: 38px;
+  border-radius: 22px 58px 10px 12px;
+  background: linear-gradient(180deg, #ffb15f 0%, #ff7a18 34%, #f97316 56%, #b63a0a 100%);
+  box-shadow: 0 10px 18px rgba(249, 115, 22, 0.28), inset 0 -5px 10px rgba(0, 0, 0, 0.24);
+}
+
+.japan-supra-roof {
+  position: absolute;
+  left: 64px;
+  top: -20px;
+  width: 88px;
+  height: 28px;
+  border-radius: 32px 40px 7px 7px;
+  background: linear-gradient(180deg, #ffbd74 0%, #f97316 100%);
+  clip-path: polygon(10% 100%, 30% 8%, 82% 12%, 100% 100%);
+}
+
+.japan-supra-window {
+  position: absolute;
+  top: -15px;
+  height: 17px;
+  background: linear-gradient(180deg, #e0f2fe, #64748b 78%);
+  border: 2px solid rgba(255, 255, 255, 0.38);
+  transform: skewX(-17deg);
+}
+
+.japan-supra-window.front { left: 106px; width: 34px; border-radius: 5px 12px 4px 3px; }
+.japan-supra-window.rear { left: 72px; width: 29px; border-radius: 13px 5px 3px 3px; }
+
+.japan-supra::before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  height: 10px;
+  width: 46px;
+  border-radius: 999px;
+  background: rgba(255, 247, 237, 0.25);
+  transform: skewX(-20deg);
+}
+
+.japan-supra-door-line {
+  position: absolute;
+  left: 94px;
+  top: 7px;
+  height: 26px;
+  width: 2px;
+  background: rgba(124, 45, 18, 0.55);
+  transform: skewX(-10deg);
+}
+
+.japan-supra-graphic {
+  position: absolute;
+  left: 66px;
+  top: 14px;
+  width: 88px;
+  height: 10px;
+  border-top: 3px solid rgba(248, 250, 252, 0.75);
+  border-bottom: 2px solid rgba(30, 41, 59, 0.7);
+  transform: skewX(-18deg);
+}
+
+
+
+.japan-supra-light {
+  position: absolute;
+  top: 16px;
+  width: 11px;
+  height: 6px;
+  border-radius: 4px;
+}
+
+.japan-supra-light.front {
+  right: 6px;
+  background: #fff7ed;
+  box-shadow: 0 0 10px rgba(255, 247, 237, 0.76);
+}
+
+.japan-supra-light.rear {
+  left: 8px;
+  background: #7f1d1d;
+  box-shadow: 0 0 10px rgba(127, 29, 29, 0.58);
+}
+
+.japan-supra-wheel {
+  position: absolute;
+  bottom: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #111827;
+  border: 4px solid #e5e7eb;
+  box-shadow: inset 0 0 0 4px #4b5563;
+}
+
+.japan-supra-wheel::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, #f8fafc 0 12%, #6b7280 12% 20%, #f8fafc 20% 32%, #6b7280 32% 40%, #f8fafc 40% 52%, #6b7280 52% 60%, #f8fafc 60% 72%, #6b7280 72% 80%, #f8fafc 80% 92%, #6b7280 92% 100%);
+}
+
+.japan-supra-wheel.wheel-front { right: 24px; }
+.japan-supra-wheel.wheel-rear { left: 28px; }
+
+.japan-supra-wing {
+  position: absolute;
+  left: -10px;
+  top: -29px;
+  width: 66px;
+  height: 9px;
+  border-radius: 3px;
+  background: #111827;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.45);
+  transform: skewX(-14deg);
+}
+
+.japan-supra-wing::before,
+.japan-supra-wing::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  width: 5px;
+  height: 19px;
+  background: #e5e7eb;
+}
+
+.japan-supra-wing::before { left: 12px; }
+.japan-supra-wing::after { right: 12px; }
+
+.japan-supra-skirt {
+  position: absolute;
+  left: 22px;
+  right: 12px;
+  bottom: 3px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+
+.cyber-theme {
+  --color-zinc-950: #0b1c1b; --color-zinc-900: #142825; --color-zinc-800: #2a443e;
+  --color-zinc-700: #3d5951; --color-zinc-300: #d3e2da; --color-zinc-400: #b6c9bf; --color-zinc-500: #a6b9ae;
+  --color-orange-200: #b5f2d6; --color-orange-300: #83e3b7; --color-orange-400: #73dab6;
+  --color-orange-500: #14604b; --color-orange-600: #11503e; --color-emerald-500: #17664c; --color-emerald-600: #0b4e3b;
+  color: #e0f1e9; background: #091c19;
+}
+.cyber-theme-bg { background: linear-gradient(135deg,#132e28,#091c19 440px); }
+.cyber-grid { position:absolute; inset:0; background-image:linear-gradient(#69ce9820 1px,transparent 1px),linear-gradient(90deg,#69ce9820 1px,transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(155deg,transparent 3%,black 26%,transparent 72%); }
+.cyber-traces { color:#77dfae; opacity:.54; }
+.cyber-theme .forge-hero h1 span { color:#83e3b7; }
+.cyber-gameboy-clock {
+  position: relative;
+  display: inline-block;
+  height: 58px;
+  width: 82px;
+  border-radius: 12px 12px 18px 12px;
+  border: 3px solid rgba(16, 185, 129, 0.85);
+  background: linear-gradient(180deg, #064e3b, #022c22 64%, #020617);
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.32), inset 0 0 0 2px rgba(209, 250, 229, 0.08);
+
+}
+
+.cyber-gameboy-screen {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  height: 28px;
+  width: 50px;
+  border-radius: 6px;
+  border: 2px solid rgba(6, 78, 59, 0.9);
+  background: linear-gradient(180deg, #bbf7d0, #4ade80);
+  box-shadow: inset 0 0 8px rgba(2, 44, 34, 0.45), 0 0 10px rgba(74, 222, 128, 0.45);
+  overflow: hidden;
+}
+
+.cyber-gameboy-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(2, 44, 34, 0.18) 0 1px, transparent 1px 4px);
+  opacity: 0.55;
+}
+
+.cyber-gameboy-label {
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  z-index: 1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 5px;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  color: #064e3b;
+}
+
+.cyber-gameboy-time {
+  position: absolute;
+  left: 4px;
+  top: 11px;
+  z-index: 1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: -0.04em;
+  color: #022c22;
+}
+
+.cyber-gameboy-speaker {
+  position: absolute;
+  right: 9px;
+  top: 10px;
+  height: 24px;
+  width: 10px;
+  background: repeating-linear-gradient(90deg, rgba(209, 250, 229, 0.34) 0 2px, transparent 2px 4px);
+  border-radius: 999px;
+  transform: rotate(-12deg);
+}
+
+.cyber-gameboy-dpad {
+  position: absolute;
+  left: 12px;
+  bottom: 9px;
+  height: 14px;
+  width: 14px;
+}
+
+.cyber-gameboy-dpad span:first-child,
+.cyber-gameboy-dpad span:last-child {
+  position: absolute;
+  border-radius: 3px;
+  background: #020617;
+  box-shadow: 0 0 6px rgba(52, 211, 153, 0.35);
+}
+
+.cyber-gameboy-dpad span:first-child {
+  left: 5px;
+  top: 0;
+  height: 14px;
+  width: 4px;
+}
+
+.cyber-gameboy-dpad span:last-child {
+  left: 0;
+  top: 5px;
+  height: 4px;
+  width: 14px;
+}
+
+.cyber-gameboy-buttons {
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  display: flex;
+  gap: 5px;
+  transform: rotate(-18deg);
+}
+
+.cyber-gameboy-buttons span {
+  height: 8px;
+  width: 8px;
+  border-radius: 999px;
+  background: #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.75);
+}
+
+
+.volcano-theme {
+  --color-zinc-950: #1b181b; --color-zinc-900: #292429; --color-zinc-800: #443b3e;
+  --color-zinc-700: #605453; --color-zinc-300: #e2d9d3; --color-zinc-400: #c5b9af; --color-zinc-500: #bcaea6;
+  --color-orange-200: #ffd6ae; --color-orange-300: #ffba84; --color-orange-400: #f7a56e;
+  --color-orange-500: #a44227; --color-orange-600: #84351f; --color-red-600: #a44227; --color-red-700: #84351f;
+  background:#1c191c; color:#f8eae0;
+}
+.volcano-theme-bg { background: radial-gradient(ellipse 70% 330px at 84% 165px,#61392e,transparent 82%),linear-gradient(#302729,#1c191c 570px); }
+.volcano-theme .forge-hero h1 span { color:#ffbb8d; }
+.volcano-panel { background-color:#342727; }
+.volcano-ember { fill:#ffb16a; opacity:0; animation: volcano-vent 2.2s ease-out both; }
+@keyframes volcano-vent { 0% { opacity:0; } 14% {opacity:.96;} 100% {transform:translate(var(--rise-x),var(--rise-y)); opacity:0;} }
+
+.god-theme {
+  --color-zinc-950:#fcf8ee; --color-zinc-900:#f4eddd; --color-zinc-800:#cec3a9; --color-zinc-700:#b2a68a;
+  --color-zinc-600:#716a58; --color-zinc-500:#635d51; --color-zinc-400:#585447; --color-zinc-300:#45453f;
+  --color-zinc-200:#383c3a; --color-zinc-100:#252e30;
+  --color-orange-100:#694412; --color-orange-200:#744b10; --color-orange-300:#795214; --color-orange-400:#84570e;
+  --color-orange-500:#7b520e; --color-orange-600:#634009; --color-orange-950:#55492d;
+  --color-red-200:#851e24; --color-red-300:#9b2c2d; --color-green-100:#255937; --color-green-200:#225a31; --color-green-300:#225a31;
+  --color-emerald-200:#1f6451; --color-purple-200:#623a7d; --color-sky-100:#18536c; --color-yellow-200:#725010;
+  --color-pink-100:#634621; --color-pink-200:#6b4929; --color-pink-300:#94375d;
+  --color-red-100:#82252e; --color-red-400:#a94336; --color-blue-100:#284c67; --color-blue-200:#284c67;
+  --color-sky-200:#18536c; --color-cyan-200:#18536c; --color-amber-200:#705013; --color-rose-200:#84334e;
+  --color-amber-300:#825916; --color-rose-300:#94375d; --color-fuchsia-200:#623a7d; --color-yellow-100:#725010;
+  color:#293333; background:#f9f4e7;
+}
+.god-theme-bg {background:radial-gradient(ellipse 70% 350px at 80% 150px,#ead8b3,transparent 82%),linear-gradient(180deg,#fffbf0,#ede6d4 530px,#f5eee0);}
+.god-theme .text-white { color:#263031; }
+.god-theme :is(.bg-orange-500,.god-button) { color:#fff9ea; }
+.god-button { background-color:#775215; }
+.god-button:hover { background-color:#624310; }
+.god-accent { color:#efcf8b; }
+.god-theme .god-accent { color:#765018; }
+.god-theme .forge-hero h1 span {color:#805419;}
+.god-panel { background-color:#eee4d0; }
+.god-theme :is(input,select,textarea) { color-scheme:light; }
+.god-theme .bg-zinc-950:focus-visible, .god-theme .bg-zinc-900:focus-visible { outline-color:#765018; }
+@media (prefers-reduced-motion:reduce) {
+  .volcano-ember, .japan-car-lane { display:none; }
+}
