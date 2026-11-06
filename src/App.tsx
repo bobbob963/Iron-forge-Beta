@@ -8721,7 +8721,7 @@ export default function App() {
                 )}
               </div>
               <h1 className="text-4xl font-black tracking-tight md:text-7xl">
-                Iron <span className={`forge-title-word ${selectedTheme.panel}`}>Forge</span>
+                Iron <span className="text-orange-400">Forge</span>
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 md:text-lg md:leading-8">
                 Pick a subject, open a stage, test yourself, and unlock the next

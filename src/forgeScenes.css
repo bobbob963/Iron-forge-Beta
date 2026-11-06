@@ -16,6 +16,7 @@
 }
 .japan-theme-bg { background: radial-gradient(ellipse 60% 350px at 88% 150px,#49454a 0%,transparent 90%), linear-gradient(180deg,#222731,#141820 510px); }
 .japan-theme .forge-hero h1 { color: #fff2e6; }
+.japan-theme .forge-hero h1 span { color: #ffb49b; }
 .japan-panel { background-color: #262a32; }
 .japan-car-lane { position: fixed; top: 4.4rem; left: 0; right: 0; height: 0; z-index: 20; pointer-events: none; }
 .japan-supra-run { position: absolute; left: 0; top: 0; will-change: transform; }
@@ -214,6 +215,7 @@
 .cyber-theme-bg { background: linear-gradient(135deg,#132e28,#091c19 440px); }
 .cyber-grid { position:absolute; inset:0; background-image:linear-gradient(#69ce9820 1px,transparent 1px),linear-gradient(90deg,#69ce9820 1px,transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(155deg,transparent 3%,black 26%,transparent 72%); }
 .cyber-traces { color:#77dfae; opacity:.54; }
+.cyber-theme .forge-hero h1 span { color:#83e3b7; }
 .cyber-gameboy-clock {
   position: relative;
   display: inline-block;
@@ -338,6 +340,7 @@
   background:#1c191c; color:#f8eae0;
 }
 .volcano-theme-bg { background: radial-gradient(ellipse 70% 330px at 84% 165px,#61392e,transparent 82%),linear-gradient(#302729,#1c191c 570px); }
+.volcano-theme .forge-hero h1 span { color:#ffbb8d; }
 .volcano-panel { background-color:#342727; }
 .volcano-ember { fill:#ffb16a; opacity:0; animation: volcano-vent 2.2s ease-out both; }
 @keyframes volcano-vent { 0% { opacity:0; } 14% {opacity:.96;} 100% {transform:translate(var(--rise-x),var(--rise-y)); opacity:0;} }
@@ -363,6 +366,7 @@
 .god-button:hover { background-color:#624310; }
 .god-accent { color:#efcf8b; }
 .god-theme .god-accent { color:#765018; }
+.god-theme .forge-hero h1 span {color:#805419;}
 .god-panel { background-color:#eee4d0; }
 .god-theme :is(input,select,textarea) { color-scheme:light; }
 .god-theme .bg-zinc-950:focus-visible, .god-theme .bg-zinc-900:focus-visible { outline-color:#765018; }
