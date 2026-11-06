@@ -2,9 +2,12 @@ import './revisionPalettes.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CyberThemeBackground, GodThemeBackground, JapanCarOverlay, JapanThemeBackground, VolcanoThemeBackground } from './ForgeScenes';
 import StageTopicList from './StageTopicList';
+import BreakCountdown from './BreakCountdown';
+import { formatClock, isRevisionView, timerMinutes, useRevisionClock } from './revisionClock';
 import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
 import './floralThemes.css';
+import { CherryClouds, CherryPetalsOverlay, ValentineHearts } from './ThemeAtmosphere';
 import {
   Flame,
   Hammer,
@@ -6325,10 +6328,6 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
   return seededShuffle([...selectedQuickQuestions, ...selectedExamQuestions]);
 }
 
-function FloralBackdrop() {
-  return <div aria-hidden="true" className="floral-backdrop" />;
-}
-
 function OceanThemeBackground() {
   const bubbles = Array.from({ length: 16 }, (_, i) => i);
 
@@ -6364,7 +6363,7 @@ function OceanThemeBackground() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 ocean-theme-sky" />
       <div className="absolute inset-x-0 bottom-0 h-[46%] ocean-theme-water" />
       <div className="absolute inset-x-0 top-[48%] h-px bg-cyan-100/25" />
@@ -6405,7 +6404,7 @@ function OceanThemeBackground() {
             bottom: `${-10 - (i % 4) * 6}%`,
             width: `${7 + (i % 4) * 4}px`,
             height: `${7 + (i % 4) * 4}px`,
-            animationDelay: `${i * 0.7}s`,
+            animationDelay: `${-i * 0.7}s`,
             animationDuration: `${9 + (i % 5) * 1.3}s`,
           }}
         />
@@ -6422,7 +6421,7 @@ function RoyalThemeBackground() {
   ];
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 royal-theme-bg" />
       <div className="absolute left-[12%] top-[12%] h-72 w-72 rounded-full bg-purple-400/16 blur-3xl" />
       <div className="absolute right-[10%] top-[18%] h-80 w-80 rounded-full bg-fuchsia-400/12 blur-3xl" />
@@ -6450,7 +6449,7 @@ function RoyalThemeBackground() {
             top: `${9 + ((i * 19) % 78)}%`,
             width: `${2 + (i % 3)}px`,
             height: `${2 + (i % 3)}px`,
-            animationDelay: `${i * 0.35}s`,
+            animationDelay: `${-i * 0.35}s`,
           }}
         />
       ))}
@@ -6459,11 +6458,11 @@ function RoyalThemeBackground() {
 }
 
 function GoldThemeBackground() {
-  const embers = Array.from({ length: 9 }, (_, i) => i);
-  const money = Array.from({ length: 7 }, (_, i) => i);
+  const embers = Array.from({ length: 22 }, (_, i) => i);
+  const money = Array.from({ length: 14 }, (_, i) => i);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 gold-theme-bg" />
       <div className="absolute left-[10%] top-[16%] h-72 w-72 rounded-full bg-amber-400/12 blur-3xl" />
       <div className="absolute right-[12%] top-[12%] h-80 w-80 rounded-full bg-yellow-300/10 blur-3xl" />
@@ -6474,11 +6473,11 @@ function GoldThemeBackground() {
       {money.map((_, i) => (
         <span
           key={`money-${i}`}
-          className="gold-money absolute flex items-center justify-center"
+          className="gold-money absolute flex items-center justify-center rounded-md border border-yellow-200/70 bg-yellow-300 text-[10px] font-black text-yellow-950 shadow-lg shadow-yellow-900/30"
           style={{
             left: `${4 + ((i * 13) % 92)}%`,
             top: `${-18 - (i % 5) * 8}vh`,
-            animationDelay: `${i * 0.85}s`,
+            animationDelay: `${-i * 0.85}s`,
             animationDuration: `${7 + (i % 4) * 1.4}s`,
           }}
         >
@@ -6495,7 +6494,7 @@ function GoldThemeBackground() {
             bottom: `${-8 - (i % 3) * 5}%`,
             width: `${3 + (i % 4)}px`,
             height: `${3 + (i % 4)}px`,
-            animationDelay: `${i * 0.45}s`,
+            animationDelay: `${-i * 0.45}s`,
             animationDuration: `${7 + (i % 5) * 1.2}s`,
           }}
         />
@@ -6508,28 +6507,48 @@ function GoldThiefOverlay() {
   const thief = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let jumping = false;
-    function onPointerMove(event: PointerEvent) {
-      if (jumping || reducedMotion.matches || event.clientY > 160 || !thief.current) return;
-      const rect = thief.current.getBoundingClientRect();
-      if (event.clientX < rect.left - 8 || event.clientX > rect.right + 8 ||
-          event.clientY < rect.top - 12 || event.clientY > rect.bottom + 12) return;
-      jumping = true;
-      const jump = thief.current.animate(
-        [{ translate: '0 0' }, { translate: '0 -14px' }, { translate: '0 0' }],
-        { duration: 480, easing: 'ease-out' }
-      );
-      jump.onfinish = () => { jumping = false; };
+    const actor = thief.current;
+    if (!actor) return;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let pointerX = -Infinity;
+    let pointerY = -Infinity;
+    function trackPointer(event: PointerEvent) {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
     }
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    return () => window.removeEventListener('pointermove', onPointerMove);
+    function clearPointer() { pointerX = pointerY = -Infinity; }
+    function dodge() {
+      const bounds = actor!.parentElement!.getBoundingClientRect();
+      const blocked = pointerY <= 193 && Math.abs(pointerX - (bounds.left + 28)) < 90;
+      actor!.classList.toggle('gold-thief-dodge', blocked);
+      frame = requestAnimationFrame(dodge);
+    }
+    function sync() {
+      cancelAnimationFrame(frame);
+      actor!.classList.remove('gold-thief-dodge');
+      if (!document.hidden && !motion.matches) frame = requestAnimationFrame(dodge);
+    }
+    window.addEventListener('pointermove', trackPointer, {passive: true});
+    document.addEventListener('pointerleave', clearPointer);
+    window.addEventListener('blur', clearPointer);
+    document.addEventListener('visibilitychange', sync);
+    motion.addEventListener('change', sync);
+    sync();
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('pointermove', trackPointer);
+      document.removeEventListener('pointerleave', clearPointer);
+      window.removeEventListener('blur', clearPointer);
+      document.removeEventListener('visibilitychange', sync);
+      motion.removeEventListener('change', sync);
+    };
   }, []);
 
   return (
     <div aria-hidden="true" className="gold-runway">
       <div className="gold-runner">
-        <div ref={thief} className="gold-thief">
+        <div ref={thief} className="gold-thief gold-thief-under-taskbar">
           <div className="gold-thief-head">
             <span className="gold-thief-mask" />
             <span className="gold-thief-eye eye-left" />
@@ -6546,10 +6565,10 @@ function GoldThiefOverlay() {
 
 
 function ArcticThemeBackground() {
-  const snow = Array.from({ length: 18 }, (_, i) => i);
+  const snow = Array.from({ length: 32 }, (_, i) => i);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 arctic-theme-bg" />
       <div className="arctic-ridgeline" />
       <div className="absolute bottom-[-8%] left-[-10%] h-40 w-[120%] rounded-[100%] bg-white/18 blur-xl" />
@@ -6562,7 +6581,7 @@ function ArcticThemeBackground() {
             top: `${-10 - (i % 7) * 8}vh`,
             width: `${3 + (i % 4)}px`,
             height: `${3 + (i % 4)}px`,
-            animationDelay: `${i * 0.35}s`,
+            animationDelay: `${-i * 0.35}s`,
             animationDuration: `${8 + (i % 6) * 1.2}s`,
           }}
         />
@@ -6573,7 +6592,13 @@ function ArcticThemeBackground() {
 
 
 function ThemeBackground({ activeThemeId, volcanoEruptionKey }) {
-  if (activeThemeId === 'cherry' || activeThemeId === 'valentine') return <FloralBackdrop />;
+  if (activeThemeId === 'cherry' || activeThemeId === 'valentine') {
+    return (
+      <div aria-hidden="true" className="floral-backdrop">
+        {activeThemeId === 'cherry' ? <CherryClouds /> : <ValentineHearts />}
+      </div>
+    );
+  }
   if (activeThemeId === 'ocean') return <OceanThemeBackground />;
   if (activeThemeId === 'royal') return <RoyalThemeBackground />;
   if (activeThemeId === 'gold') return <GoldThemeBackground />;
@@ -6732,7 +6757,7 @@ function ProgressRing({ value, label = 'Recall' }) {
 }
 
 function formatRevisionDuration(seconds = 0) {
-  const safeSeconds = Math.max(0, Number(seconds) || 0);
+  const safeSeconds = Math.floor(Math.max(0, Number(seconds) || 0));
   const minutes = Math.floor(safeSeconds / 60);
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
@@ -6942,8 +6967,7 @@ function loadSavedProgress() {
 }
 
 export default function App() {
-  const savedProgress =
-    typeof window !== 'undefined' ? loadSavedProgress() : null;
+  const [savedProgress] = useState(() => typeof window !== 'undefined' ? loadSavedProgress() : null);
   const [username, setUsername] = useState(savedProgress?.username || '');
   const [usernameInput, setUsernameInput] = useState('');
   const [saveEnabled, setSaveEnabled] = useState(
@@ -6955,17 +6979,10 @@ export default function App() {
   const [tutorialStep, setTutorialStep] = useState(0);
   const [tutorialCanContinue, setTutorialCanContinue] = useState(false);
   const [workMinutes, setWorkMinutes] = useState(
-    savedProgress?.workMinutes || 30
+    timerMinutes(savedProgress?.workMinutes, 30, 180)
   );
   const [breakMinutes, setBreakMinutes] = useState(
-    savedProgress?.breakMinutes || 5
-  );
-  const [revisionSeconds, setRevisionSeconds] = useState(
-    savedProgress?.revisionSeconds || 0
-  );
-  const [breakAlarm, setBreakAlarm] = useState(false);
-  const [lastBreakMarker, setLastBreakMarker] = useState(
-    savedProgress?.lastBreakMarker || 0
+    timerMinutes(savedProgress?.breakMinutes, 5, 60)
   );
   const [subjectSlots, setSubjectSlots] = useState(
     savedProgress?.subjectSlots || Array(9).fill('')
@@ -7139,9 +7156,7 @@ export default function App() {
         unlocked,
         workMinutes,
         breakMinutes,
-        revisionSeconds,
-        revisionSecondsBySubject,
-        lastBreakMarker,
+        ...clock,
         subjectSlots,
         selectedSection,
         allThemesUnlocked,
@@ -7203,9 +7218,8 @@ export default function App() {
   const [dailyAnswers, setDailyAnswers] = useState({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
   const [dailyRunKey, setDailyRunKey] = useState(0);
-  const [revisionSecondsBySubject, setRevisionSecondsBySubject] = useState(
-    savedProgress?.revisionSecondsBySubject || {}
-  );
+  const { clock, startBreak, restartWorkBlock, resetClock } = useRevisionClock(savedProgress, view, selectedSubjectId, workMinutes);
+  const { revisionSeconds, revisionSecondsBySubject, breakEndsAt } = clock;
   const [achievementToast, setAchievementToast] = useState(null);
   const achievementToastStartedRef = useRef(false);
   const previousUnlockedThemeIdsRef = useRef([]);
@@ -7294,38 +7308,7 @@ export default function App() {
     setView('stages');
   }
 
-  const formattedRevisionTime = useMemo(() => {
-    const minutes = Math.floor(revisionSeconds / 60);
-    const seconds = revisionSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  }, [revisionSeconds]);
-
-  useEffect(() => {
-    const revisionViews = ['general', 'stages', 'topic', 'daily', 'superTest'];
-    if (!revisionViews.includes(view)) return;
-
-    const timer = window.setInterval(() => {
-      setRevisionSeconds((previous) => {
-        const next = previous + 1;
-        const workSeconds = Math.max(1, Number(workMinutes) || 30) * 60;
-        const currentMarker = Math.floor(next / workSeconds);
-
-        if (currentMarker > 0 && currentMarker > lastBreakMarker) {
-          setLastBreakMarker(currentMarker);
-          setBreakAlarm(true);
-        }
-
-        return next;
-      });
-
-      setRevisionSecondsBySubject((previous) => ({
-        ...previous,
-        [selectedSubjectId]: (previous[selectedSubjectId] || 0) + 1,
-      }));
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [view, workMinutes, lastBreakMarker, selectedSubjectId]);
+  const formattedRevisionTime = formatClock(revisionSeconds);
 
   useEffect(() => {
     if (!saveEnabled) return;
@@ -7340,9 +7323,7 @@ export default function App() {
       unlocked,
       workMinutes,
       breakMinutes,
-      revisionSeconds,
-      revisionSecondsBySubject,
-      lastBreakMarker,
+      ...clock,
       subjectSlots,
       selectedSection,
       allThemesUnlocked,
@@ -7359,9 +7340,7 @@ export default function App() {
     unlocked,
     workMinutes,
     breakMinutes,
-    revisionSeconds,
-    revisionSecondsBySubject,
-    lastBreakMarker,
+    clock,
     subjectSlots,
     selectedSection,
     allThemesUnlocked,
@@ -7618,9 +7597,7 @@ export default function App() {
       unlocked,
       workMinutes,
       breakMinutes,
-      revisionSeconds,
-      revisionSecondsBySubject,
-      lastBreakMarker,
+      ...clock,
       subjectSlots,
       selectedSection,
       allThemesUnlocked,
@@ -7649,6 +7626,7 @@ export default function App() {
         activeThemeId={activeTheme.id}
         volcanoEruptionKey={volcanoEruptionKey}
       />
+      {activeTheme.id === 'cherry' && <CherryPetalsOverlay />}
       {activeTheme.id === 'gold' && (
         <GoldThiefOverlay />
       )}
@@ -7724,17 +7702,17 @@ export default function App() {
         </div>
       )}
 
-      {breakAlarm && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
-          <div className="absolute inset-0 break-burst" />
+      {breakEndsAt !== null && (
+        <div role="dialog" aria-modal="true" aria-labelledby="revision-break-title" className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
+          {breakEndsAt === 0 && <div className="absolute inset-0 break-burst" />}
           <div className="forge-scroll-panel relative w-full max-w-lg rounded-3xl border border-orange-300/40 bg-zinc-950/92 p-8 text-center shadow-2xl shadow-orange-950/50">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/20 text-orange-200">
               <Flame className="h-10 w-10" />
             </div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-orange-300">
-              Break unlocked
+              Revision paused
             </p>
-            <div className="real-alarm-clock mx-auto mb-6">
+            <div className="real-alarm-clock mx-auto mb-6" aria-hidden="true" style={breakEndsAt > 0 ? { animation: 'none' } : undefined}>
               <div className="alarm-bell alarm-bell-left" />
               <div className="alarm-bell alarm-bell-right" />
               <div className="alarm-handle" />
@@ -7750,26 +7728,22 @@ export default function App() {
               <div className="alarm-leg alarm-leg-left" />
               <div className="alarm-leg alarm-leg-right" />
             </div>
-            <h2 className="mt-3 text-5xl font-black text-white md:text-6xl">
+            <h2 id="revision-break-title" className="mt-3 text-5xl font-black text-white md:text-6xl">
               BREAK TIME
             </h2>
-            <p className="mt-2 text-xl font-black uppercase tracking-[0.32em] text-orange-200">
-              Alarm triggered
-            </p>
-            <p className="mt-3 text-zinc-300">
-              You have revised for {workMinutes} minutes. Take a {breakMinutes}{' '}
-              minute break, then come back and keep forging.
-            </p>
+            {breakEndsAt === 0 ? (
+              <p className="mt-3 text-zinc-300">You finished your {workMinutes}-minute revision block. Take a {breakMinutes}-minute break.</p>
+            ) : <BreakCountdown endsAt={breakEndsAt} />}
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
-                onClick={() => setBreakAlarm(false)}
+                onClick={() => breakEndsAt === 0 ? startBreak(breakMinutes) : restartWorkBlock()}
                 className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600"
               >
-                Start break
+                {breakEndsAt === 0 ? 'Start break' : 'Resume revision'}
               </button>
               <button
                 onClick={() => {
-                  setBreakAlarm(false);
+                  restartWorkBlock();
                   setView('settings');
                 }}
                 className="rounded-2xl border border-zinc-700 bg-zinc-900 px-6 py-3 font-bold text-zinc-200 hover:bg-zinc-800"
@@ -8827,10 +8801,10 @@ export default function App() {
           <section className="forge-hero grid gap-5 md:grid-cols-[1.3fr_0.7fr] md:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-sm font-semibold text-orange-200">
-                {view === 'stages' || view === 'topic' ? (
+                {isRevisionView(view) ? (
                   <span className="inline-flex items-center gap-3">
                     {activeTheme.id === 'cyber' ? (
-                      <span className="cyber-gameboy-clock">
+                      <span className="cyber-gameboy-clock" aria-hidden="true" style={{ '--clock-digits': formattedRevisionTime.length } as React.CSSProperties}>
                         <span className="cyber-gameboy-speaker" />
                         <span className="cyber-gameboy-screen">
                           <span className="cyber-gameboy-label">
@@ -8854,8 +8828,8 @@ export default function App() {
                         <span className="mini-alarm-bell left" />
                         <span className="mini-alarm-bell right" />
                         <span className="mini-alarm-face">
-                          <span className="mini-alarm-hand hour" />
-                          <span className="mini-alarm-hand minute" />
+                          <span className="mini-alarm-hand hour" style={{ transform: `translate(-50%, -100%) rotate(${(revisionSeconds % 43200) / 120}deg)` }} />
+                          <span className="mini-alarm-hand minute" style={{ transform: `translate(-50%, -100%) rotate(${(revisionSeconds % 3600) / 10}deg)` }} />
                         </span>
                       </span>
                     )}
@@ -8863,7 +8837,7 @@ export default function App() {
                       <span className="text-[10px] uppercase tracking-[0.22em] text-orange-200/80">
                         Revision clock
                       </span>
-                      <span className="text-base font-black text-white">
+                      <span role="timer" aria-label="Elapsed revision time" className="text-base font-black tabular-nums text-white">
                         {formattedRevisionTime}
                       </span>
                     </span>
@@ -9653,7 +9627,7 @@ export default function App() {
                   </div>
                   <div className="rounded-2xl border border-zinc-800 bg-zinc-950 px-5 py-4 text-right">
                     <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                      Current session
+                      Revision time since reset
                     </p>
                     <p className="mt-1 text-2xl font-black text-white">
                       {formattedRevisionTime}
@@ -9670,9 +9644,8 @@ export default function App() {
                       </h3>
                     </div>
                     <p className="mt-2 text-sm text-zinc-400">
-                      On the Stages page and inside an open stage test, the top
-                      badge becomes a live revision clock. When it reaches your
-                      work time, the break alarm appears.
+                      The clock counts the time you spend on revision pages. It pauses
+                      when you leave the tab or take a break. Changing your work minutes starts a new work block.
                     </p>
 
                     <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -9685,11 +9658,11 @@ export default function App() {
                           min="1"
                           max="180"
                           value={workMinutes}
-                          onChange={(event) =>
-                            setWorkMinutes(
-                              Math.max(1, Number(event.target.value) || 30)
-                            )
-                          }
+                          onChange={(event) => {
+                            const minutes = timerMinutes(event.target.value, 30, 180);
+                            setWorkMinutes(minutes);
+                            restartWorkBlock(minutes);
+                          }}
                           className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400"
                         />
                       </label>
@@ -9703,9 +9676,7 @@ export default function App() {
                           max="60"
                           value={breakMinutes}
                           onChange={(event) =>
-                            setBreakMinutes(
-                              Math.max(1, Number(event.target.value) || 5)
-                            )
+                            setBreakMinutes(timerMinutes(event.target.value, 5, 60))
                           }
                           className="mt-2 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400"
                         />
@@ -9714,9 +9685,7 @@ export default function App() {
 
                     <button
                       onClick={() => {
-                        setRevisionSeconds(0);
-                        setLastBreakMarker(0);
-                        setBreakAlarm(false);
+                        resetClock();
                         unlockThemeAction('revisionClockReset');
                       }}
                       className="mt-5 rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800"

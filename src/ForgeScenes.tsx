@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
 import './forgeScenes.css';
+import { CyberRain, GodSunAndDoves, JapanLeaves, VolcanoEruption } from './ThemeAtmosphere';
 
 export function JapanThemeBackground() {
   return (
@@ -15,6 +16,7 @@ export function JapanThemeBackground() {
           <path d="M348 68h82m-9 5h68m26 44h96m-24 5h50" />
         </g>
       </svg>
+      <JapanLeaves />
     </div>
   );
 }
@@ -27,6 +29,7 @@ export function CyberThemeBackground() {
         <path d="M34 216h80l53-53h110l59-59h109l42-42h218M98 229h58l52-52h94l56-56h100l42-42h205M266 260v-32l34-34h78l51-51h116l27-27h133M360 50h75l31-31h130" />
         <g fill="#91ebcc">{[[34,216],[98,229],[266,260],[360,50],[596,19],[545,143]].map(([x,y]) => <circle key={x} cx={x} cy={y} r="3" />)}</g>
       </svg>
+      <CyberRain />
     </div>
   );
 }
@@ -50,6 +53,7 @@ export function VolcanoThemeBackground() {
             style={{'--rise-x': `${(i-4)*8}px`, '--rise-y': `${-34-i%4*12}px`, animationDelay: `${i*.12}s`} as CSSProperties} />
         ))}
       </svg>
+      <VolcanoEruption />
     </div>
   );
 }
@@ -69,6 +73,7 @@ export function GodThemeBackground() {
         <path d="m438 88 5 30 23 8-23 6-5 32-6-32-24-6 24-8Z" fill="#b3874b" />
         <circle cx="438" cy="126" r="4" fill="#fff8df" />
       </svg>
+      <GodSunAndDoves />
     </div>
   );
 }
@@ -101,7 +106,7 @@ export function JapanCarOverlay({ onJumpUnlock }: { onJumpUnlock: () => void }) 
       let previous = performance.now();
       let blockedAt = 0;
       let jumpedAt = 0;
-      const speed = (window.innerWidth + 200) / (3800 + Math.random() * 1200);
+      const speed = (window.innerWidth + 200) / (2400 + Math.random() * 2200);
       const laneTop = car.parentElement!.getBoundingClientRect().top;
       car.hidden = false;
       function tick(now: number) {
@@ -119,13 +124,13 @@ export function JapanCarOverlay({ onJumpUnlock }: { onJumpUnlock: () => void }) 
         const lift = jumpedAt ? -13 * Math.sin(Math.PI * Math.min((now - jumpedAt) / 550, 1)) : 0;
         car!.style.transform = `translate3d(${x}px, ${lift}px, 0)`;
         if (x < window.innerWidth + 10) frame = requestAnimationFrame(tick);
-        else { car!.hidden = true; nextRun = window.setTimeout(drive, 12000 + Math.random() * 14000); }
+        else { car!.hidden = true; nextRun = window.setTimeout(drive, 2000 + Math.random() * 25000); }
       }
       frame = requestAnimationFrame(tick);
     }
     function restart() {
       stop();
-      if (!motion.matches && !document.hidden) nextRun = window.setTimeout(drive, 1100);
+      if (!motion.matches && !document.hidden) nextRun = window.setTimeout(drive, 900);
     }
     window.addEventListener('pointermove', trackPointer, {passive:true});
     window.addEventListener('blur', leave);
@@ -145,7 +150,12 @@ export function JapanCarOverlay({ onJumpUnlock }: { onJumpUnlock: () => void }) 
   return (
     <div className="japan-car-lane" aria-hidden="true">
       <div className="japan-supra-run" ref={carRef} hidden>
-        <div className="japan-smoke-pack"><span className="japan-smoke smoke-one" /><span className="japan-smoke smoke-two" /></div>
+        <div className="japan-smoke-pack">
+          <span className="japan-smoke smoke-one" />
+          <span className="japan-smoke smoke-two" />
+          <span className="japan-smoke smoke-three" />
+          <span className="japan-smoke smoke-four" />
+        </div>
         <div className="japan-supra-hanger">
           <div className="japan-supra">
             <div className="japan-supra-wing" />

@@ -64,12 +64,6 @@
     radial-gradient(ellipse at 70% 0%, #4b305e, transparent 46%),
     linear-gradient(148deg, #251b38, #130f1e 74%);
 }
-.royal-theme .royal-lightning { animation-name: royal-horizon-glow; }
-@keyframes royal-horizon-glow {
-  0%, 55%, 100% { opacity: 0; }
-  76% { opacity: .27; }
-}
-
 .gold-theme {
   color-scheme: dark;
   --color-zinc-300: #e7dbc6;
@@ -93,21 +87,21 @@
     linear-gradient(155deg, #403020, #211a15 53%, #141211);
 }
 .gold-money {
-  width: 17px;
-  height: 17px;
-  border: 2px double #e7c890;
-  border-radius: 50%;
-  color: #775126;
-  background: linear-gradient(120deg,#e4cb93,#c99a55 65%,#f4dfad);
-  font: bold 10px Georgia, serif;
-  animation: money-fall linear infinite;
+  height: 24px;
+  width: 42px;
+  transform: rotate(-10deg);
+  animation-name: money-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.36);
 }
-.gold-runway { position: absolute; inset: 72px 0 auto; height: 54px; overflow: hidden; pointer-events: none; }
-.gold-runner { width: 56px; animation: gold-traverse 19s linear infinite; }
-.gold-runner .gold-thief { transform: scale(.58); transform-origin: 50% 100%; }
+.gold-runway { position: absolute; inset: 108px 0 auto; height: 0; z-index: 31; pointer-events: none; }
+.gold-runner { width: 56px; animation: gold-traverse 15s linear infinite; }
+.gold-runner .gold-thief { transform: rotate(180deg) scaleX(-1) scale(.62); transform-origin: top center; }
+.gold-runner .gold-thief-dodge { transform: translateY(34px) rotate(180deg) scaleX(-1) scale(.62); }
 @keyframes gold-traverse {
-  0% { transform: translateX(-70px); }
-  39%, 100% { transform: translateX(calc(100vw + 70px)); }
+  0% { transform: translateX(-120px); }
+  34.667%, 100% { transform: translateX(calc(100vw + 140px)); }
 }
 
 .arctic-theme {
