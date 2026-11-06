@@ -2,15 +2,19 @@ import './revisionPalettes.css';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CyberThemeBackground, GodThemeBackground, JapanCarOverlay, JapanThemeBackground, VolcanoThemeBackground } from './ForgeScenes';
 import StageTopicList from './StageTopicList';
+import { formatRevisionDuration } from './revisionDuration';
 import BreakCountdown from './BreakCountdown';
 import CreatorAccessDialog from './CreatorAccessDialog';
 import ForgeTour from './ForgeTour';
 import { getTourSteps, readTour, rememberTour, tourView, type TourCheckpoint } from './revisionTour';
 import { formatClock, isRevisionView, timerMinutes, useRevisionClock } from './revisionClock';
+import { countStagesForYear, mergeRecallHistory, readRecallHistory, stageCountLabel } from './revisionResults';
+import { SubjectStats, WeeklyRevisionSummary } from './RevisionStats';
 import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
 import { biologySuperTest } from './biologySuperTest';
 import { biologyWrittenQuestions, markBiologyWritten } from './biologyWrittenQuestions';
+import { markTextAnswer } from './writtenMarking';
 import './floralThemes.css';
 import { CherryClouds, CherryPetalsOverlay, ValentineHearts } from './ThemeAtmosphere';
 import {
@@ -5928,36 +5932,7 @@ function answerTokens(value) {
 
 function isBroadAnswerCorrect(question, userAnswer) {
   if (question.marks) return markBiologyWritten(question, userAnswer);
-  const cleanUserAnswer = normaliseAnswer(userAnswer);
-  const cleanCorrectAnswer = normaliseAnswer(question.answer);
-
-  if (!cleanUserAnswer) return false;
-  if (cleanUserAnswer === cleanCorrectAnswer) return true;
-  if (
-    cleanCorrectAnswer.length >= 4 &&
-    cleanUserAnswer.includes(cleanCorrectAnswer)
-  )
-    return true;
-
-  const correctTokens = answerTokens(question.answer);
-  const userTokens = answerTokens(userAnswer);
-  const userTokenSet = new Set(userTokens);
-  const matchedTokens = correctTokens.filter((token) =>
-    userTokenSet.has(token)
-  );
-
-  if (correctTokens.length === 1) {
-    const target = correctTokens[0];
-    return userTokens.some(
-      (token) => target.includes(token) || token.includes(target)
-    );
-  }
-
-  if (correctTokens.length === 2) return matchedTokens.length >= 1;
-
-  return (
-    matchedTokens.length >= Math.max(2, Math.ceil(correctTokens.length * 0.5))
-  );
+  return markTextAnswer(question, userAnswer);
 }
 
 function isQuizAnswerCorrect(question, answer) {
@@ -6694,20 +6669,22 @@ function getOcrPastPaperSection(subject, selectedSection) {
   };
 }
 
-function GeneralHub({ selectedSubject, sections = [] }) {
+type GeneralNotesSection = { title: string; points: string[]; buttonLabel?: string; buttonUrl?: string };
+
+function GeneralHub({ selectedSubject, sections = [], touring = false }: {
+  selectedSubject: { title: string };
+  sections?: GeneralNotesSection[];
+  touring?: boolean;
+}) {
   return (
-    <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-      <div className="flex items-center gap-2">
-        <LibraryBig className="h-6 w-6 text-orange-400" />
-        <h2 className="text-2xl font-black text-white">
-          General {selectedSubject.title} Knowledge
-        </h2>
-      </div>
-      <p className="mt-2 text-sm text-zinc-400">
-        This is the broader knowledge you need before attacking the locked
-        stages.
-      </p>
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <details key={touring ? 'tour' : 'notes'} open={touring || undefined} className="revision-disclosure">
+      <summary aria-label="General knowledge" className="revision-disclosure-heading">
+        <LibraryBig className="revision-disclosure-icon" aria-hidden="true" />
+        <h2>General knowledge</h2>
+        <span className="revision-disclosure-context">{selectedSubject.title}</span>
+        <ChevronDown className="revision-disclosure-chevron" aria-hidden="true" />
+      </summary>
+      <div className="revision-disclosure-body grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {sections.map((section, index) => (
           <div
             key={section.title}
@@ -6740,14 +6717,14 @@ function GeneralHub({ selectedSubject, sections = [] }) {
           </div>
         ))}
       </div>
-    </div>
+    </details>
   );
 }
 
-function ProgressRing({ value, label = 'Recall' }) {
+function ProgressRing({ value, label = 'Recall' }: { value: number | null; label?: string }) {
   const radius = 42;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (value / 100) * circumference;
+  const strokeDashoffset = circumference - ((value ?? 0) / 100) * circumference;
 
   return (
     <div className="relative h-28 w-28 shrink-0">
@@ -6775,24 +6752,13 @@ function ProgressRing({ value, label = 'Recall' }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-        <span className="text-xl font-black">{value}%</span>
+        <span className="text-xl font-black">{value === null ? '—' : `${value}%`}</span>
         <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
           {label}
         </span>
       </div>
     </div>
   );
-}
-
-function formatRevisionDuration(seconds = 0) {
-  const safeSeconds = Math.floor(Math.max(0, Number(seconds) || 0));
-  const minutes = Math.floor(safeSeconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (hours > 0) return `${hours}h ${remainingMinutes}m`;
-  if (minutes > 0) return `${minutes}m`;
-  return `${safeSeconds}s`;
 }
 
 type QuizQuestion = { q: string; answer: string; options?: string[]; type?: string; topicTitle?: string };
@@ -7011,11 +6977,40 @@ function loadSavedProgress() {
 
 export default function App() {
   const [savedProgress] = useState(() => typeof window !== 'undefined' ? loadSavedProgress() : null);
+  const [recallHistory, setRecallHistory] = useState(() => readRecallHistory(savedProgress?.recallHistory));
+  const lastProgressWrite = useRef<string | null>(null);
+  function persistProgress(progress: { recallHistory: typeof recallHistory }) {
+    let history = progress.recallHistory;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && stored !== lastProgressWrite.current) {
+      // Another tab may have marked a test since this view last saved its clock.
+      const remote = readRecallHistory(loadSavedProgress()?.recallHistory);
+      history = mergeRecallHistory(history, remote);
+      if (history !== progress.recallHistory) setRecallHistory(previous => mergeRecallHistory(previous, remote));
+    }
+    const snapshot = JSON.stringify({ ...progress, recallHistory: history });
+    localStorage.setItem(STORAGE_KEY, snapshot);
+    lastProgressWrite.current = snapshot;
+  }
   const [username, setUsername] = useState(savedProgress?.username || '');
   const [usernameInput, setUsernameInput] = useState('');
   const [saveEnabled, setSaveEnabled] = useState(
     savedProgress?.saveEnabled ?? false
   );
+  useEffect(() => {
+    if (!saveEnabled) return;
+    function syncRecall() {
+      if (document.hidden) return;
+      const other = readRecallHistory(loadSavedProgress()?.recallHistory);
+      setRecallHistory(current => mergeRecallHistory(current, other));
+    }
+    window.addEventListener('focus', syncRecall);
+    document.addEventListener('visibilitychange', syncRecall);
+    return () => {
+      window.removeEventListener('focus', syncRecall);
+      document.removeEventListener('visibilitychange', syncRecall);
+    };
+  }, [saveEnabled]);
   const [tutorialCompleted, setTutorialCompleted] = useState(() => {
     try {
       const status = localStorage.getItem(TUTORIAL_STATUS_KEY);
@@ -7156,13 +7151,14 @@ export default function App() {
         workMinutes,
         breakMinutes,
         ...clock,
+        recallHistory,
         subjectSlots,
         selectedSection,
         allThemesUnlocked,
         themeActions,
       };
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      persistProgress(progress);
     }
 
     setSubjectSaveMessage(
@@ -7184,7 +7180,8 @@ export default function App() {
   }, [selectedSubject, selectedSection]);
 
   const sectionGeneralContent = [
-    ...(generalContent[selectedSubject.id] || []),
+    ...(selectedSection === 'Year 10 EOYs' ? generalContent[selectedSubject.id] || [] :
+      sectionTopics.map(topic => ({ title: topic.title, points: topic.notes }))),
     getOcrPastPaperSection(selectedSubject, selectedSection),
   ];
 
@@ -7234,7 +7231,8 @@ export default function App() {
   const [dailyAnswers, setDailyAnswers] = useState<Record<number, string>>({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
   const [dailyRunKey, setDailyRunKey] = useState(0);
-  const { clock, startBreak, restartWorkBlock, resetClock } = useRevisionClock(savedProgress, tour ? 'home' : view, selectedSubjectId, workMinutes);
+  const { clock, yearActivity, subjectActivity, legacySeconds, startBreak, restartWorkBlock, resetClock } =
+    useRevisionClock(savedProgress, tour ? 'home' : view, selectedSubject.id, workMinutes, selectedSection, saveEnabled);
   const { revisionSeconds, revisionSecondsBySubject, breakEndsAt } = clock;
   const [achievementToast, setAchievementToast] = useState(null);
   const achievementToastStartedRef = useRef(false);
@@ -7273,7 +7271,6 @@ export default function App() {
     if (firstUnlockedTopic) setSelectedTopicId(firstUnlockedTopic.id);
   }, [visibleSubjects, selectedSubjectId, unlocked]);
 
-  const allTopics = subjects.flatMap((subject) => subject.topics);
   const sectionSubject = useMemo(
     () => ({ ...selectedSubject, topics: sectionTopics, section: selectedSection }),
     [selectedSubject, sectionTopics, selectedSection]
@@ -7362,13 +7359,14 @@ export default function App() {
       workMinutes,
       breakMinutes,
       ...clock,
+      recallHistory,
       subjectSlots,
       selectedSection,
       allThemesUnlocked,
       themeActions,
     };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    persistProgress(progress);
   }, [
     saveEnabled,
     username,
@@ -7379,6 +7377,7 @@ export default function App() {
     workMinutes,
     breakMinutes,
     clock,
+    recallHistory,
     subjectSlots,
     selectedSection,
     allThemesUnlocked,
@@ -7404,34 +7403,18 @@ export default function App() {
   );
   const nextTopic = sectionTopics[subjectTopicIndex + 1];
   const passed = submitted && score === 100;
-  const unlockedCount = allTopics.filter((topic) => unlocked[topic.id]).length;
-  const totalProgress = Math.round((unlockedCount / allTopics.length) * 100);
-  const subjectUnlockedCount = sectionTopics.filter(
-    (topic) => unlocked[topic.id]
-  ).length;
-  const maxForgedInAnySubject = Math.max(
-    ...visibleSubjects.map(
-      (subject) => subject.topics.filter((topic) => unlocked[topic.id]).length
-    )
-  );
-  const totalForgedStages = unlockedCount;
-  const selectedHomeSubjects = useMemo(() => {
-    const pickedSubjectIds = [...new Set(subjectSlots.filter(Boolean))];
-    const pickedSubjects = pickedSubjectIds
-      .map((subjectId) =>
-        visibleSubjects.find((subject) => subject.id === subjectId)
-      )
-      .filter(Boolean);
-
-    return pickedSubjects.length ? pickedSubjects : visibleSubjects;
-  }, [subjectSlots, visibleSubjects]);
+  const yearStages = useMemo(() => countStagesForYear(subjects, selectedSection, unlocked), [selectedSection, unlocked]);
+  const totalProgress = yearStages.overall.total ? Math.round(100 * yearStages.overall.unlocked / yearStages.overall.total) : 0;
+  const subjectUnlockedCount = yearStages.bySubject[selectedSubject.id].unlocked;
+  const totalForgedStages = useMemo(() => subjects.reduce((count, subject) =>
+    count + subject.topics.filter(topic => unlocked[topic.id]).length, 0), [unlocked]);
+  const yearRecall = recallHistory[selectedSection];
+  const currentHistory = yearRecall?.[selectedSubject.id] ?? [];
+  const recallPercentage = currentHistory.at(-1)?.percent ?? null;
 
   const subjectRevisionStats = useMemo(() => {
-    return selectedHomeSubjects.map((subject) => {
-      const forged = subject.topics.filter(
-        (topic) => unlocked[topic.id]
-      ).length;
-      const total = subject.topics.length || 1;
+    return visibleSubjects.map((subject) => {
+      const { unlocked: forged, total } = yearStages.bySubject[subject.id];
       const revisionSecondsForSubject =
         revisionSecondsBySubject[subject.id] || 0;
 
@@ -7439,36 +7422,34 @@ export default function App() {
         subject,
         forged,
         total,
-        recall: Math.round((forged / total) * 100),
+        recall: yearRecall?.[subject.id]?.at(-1)?.percent ?? null,
         revisionSeconds: revisionSecondsForSubject,
       };
     });
-  }, [selectedHomeSubjects, unlocked, revisionSecondsBySubject]);
+  }, [visibleSubjects, yearStages, yearRecall, revisionSecondsBySubject]);
 
-  const subjectMostNeedingWork = subjectRevisionStats.reduce(
+  const subjectMostNeedingWork = subjectRevisionStats.reduce<(typeof subjectRevisionStats)[number] | null>(
     (lowest, current) => {
+      if (!current.total) return lowest;
       if (!lowest) return current;
       if (current.revisionSeconds !== lowest.revisionSeconds) {
         return current.revisionSeconds < lowest.revisionSeconds
           ? current
           : lowest;
       }
-      return current.recall < lowest.recall ? current : lowest;
+      return (current.recall ?? 0) < (lowest.recall ?? 0) ? current : lowest;
     },
     null
   );
 
-  const recallPercentage = useMemo(() => {
-    const unlockedInSubject = sectionTopics.filter(
-      (topic) => unlocked[topic.id]
-    ).length;
-    const unlockScore = sectionTopics.length
-      ? Math.round((unlockedInSubject / sectionTopics.length) * 100)
-      : 0;
-    if (dailySubmitted) return Math.round((unlockScore + dailyScore) / 2);
-    if (submitted) return Math.round((unlockScore + score) / 2);
-    return unlockScore;
-  }, [sectionTopics, unlocked, dailySubmitted, dailyScore, submitted, score]);
+  function recordRecall(percent: number) {
+    if (tour) return;
+    const year = selectedSection;
+    const subjectId = selectedSubject.id;
+    const at = Date.now();
+    const id = crypto.randomUUID?.() ?? `${at}-${Math.random().toString(36).slice(2)}`;
+    setRecallHistory(previous => mergeRecallHistory(previous, { [year]: { [subjectId]: [{ at, percent, id }] } }));
+  }
 
   function unlockThemeAction(actionKey) {
     if (!actionKey) return;
@@ -7485,7 +7466,8 @@ export default function App() {
 
   function isThemeUnlocked(theme) {
     if (allThemesUnlocked) return true;
-    if (theme.requiresRecall100) return recallPercentage === 100;
+    if (theme.requiresRecall100) return recallPercentage === 100 ||
+      (recallPercentage === null && sectionTopics.length > 0 && subjectUnlockedCount === sectionTopics.length);
     return totalForgedStages >= theme.unlockAt;
   }
 
@@ -7496,7 +7478,7 @@ export default function App() {
   const nextThemeToUnlock = themes.find((theme) => !isThemeUnlocked(theme));
   const nextThemeTarget = nextThemeToUnlock?.unlockAt || totalForgedStages || 1;
   const nextThemeProgress = nextThemeToUnlock?.requiresRecall100
-    ? recallPercentage
+    ? (recallPercentage ?? 0)
     : nextThemeToUnlock
     ? Math.min(100, Math.round((totalForgedStages / nextThemeTarget) * 100))
     : 100;
@@ -7587,14 +7569,23 @@ export default function App() {
   }
 
   function changeSection(section) {
+    if (section === selectedSection) return;
     setSelectedSection(section);
+    setSubmitted(false);
+    setAnswers({});
+    setDailySubmitted(false);
+    setDailyAnswers({});
+    setSuperTestSubmitted(false);
+    setSuperTestAnswers({});
     if (view === 'topic' || view === 'daily' || view === 'superTest') {
       goToStages();
     }
   }
 
   function submitQuiz() {
+    if (submitted || tour) return;
     setSubmitted(true);
+    recordRecall(score);
     if (score === 100 && nextTopic) {
       setUnlocked((prev) => ({ ...prev, [nextTopic.id]: true }));
     }
@@ -7637,13 +7628,14 @@ export default function App() {
       workMinutes,
       breakMinutes,
       ...clock,
+      recallHistory,
       subjectSlots,
       selectedSection,
       allThemesUnlocked,
       themeActions,
     };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    persistProgress(progress);
     setUsername(cleanName);
     setSaveEnabled(true);
     setSavePrompt(null);
@@ -8644,9 +8636,7 @@ export default function App() {
                 </div>
                 {visibleSubjects.map((subject) => {
                   const Icon = subject.icon;
-                  const subjectUnlocked = subject.topics.filter(
-                    (topic) => unlocked[topic.id]
-                  ).length;
+                  const stageCount = yearStages.bySubject[subject.id];
                   const isSelected = selectedSubject.id === subject.id;
                   return (
                     <button
@@ -8668,8 +8658,7 @@ export default function App() {
                       <div>
                         <p className="font-black text-white">{subject.title}</p>
                         <p className="text-xs text-zinc-500">
-                          {subjectUnlocked}/{subject.topics.length} stages
-                          unlocked
+                          {stageCountLabel(stageCount)}
                         </p>
                       </div>
                     </button>
@@ -8748,13 +8737,13 @@ export default function App() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-widest text-orange-300">
-                    Progress
+                    Progress · {selectedSection}
                   </p>
                   <h2 className="mt-2 text-2xl font-black text-white">
-                    {unlockedCount}/{allTopics.length}
+                    {yearStages.overall.unlocked}/{yearStages.overall.total}
                   </h2>
                   <p className="mt-2 text-sm text-zinc-400">
-                    Total stages unlocked.
+                    Stages unlocked across all subjects
                   </p>
                 </div>
                 <ProgressRing value={totalProgress} label="Total" />
@@ -8764,16 +8753,13 @@ export default function App() {
 
           {view === 'home' && (
             <section className="mt-6 space-y-6">
+              <WeeklyRevisionSummary year={selectedSection} sessions={yearActivity.weekSessions} seconds={yearActivity.weekSeconds}
+                lifetimeSeconds={yearActivity.lifetimeSeconds} />
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 {(() => {
                   const subject = selectedSubject;
                   const Icon = subject.icon;
-                  const subjectUnlocked = subject.topics.filter(
-                    (topic) => unlocked[topic.id]
-                  ).length;
-                  const recall = Math.round(
-                    (subjectUnlocked / subject.topics.length) * 100
-                  );
+                  const stageCount = yearStages.bySubject[subject.id];
                   return (
                     <article
                       key={subject.id}
@@ -8795,15 +8781,15 @@ export default function App() {
                               {subject.title}
                             </h2>
                             <p className="mt-1 max-w-xs text-sm leading-6 text-zinc-400">
-                              {subject.description}
+                              {selectedSection === 'Year 10 EOYs' ? subject.description :
+                                [...new Set(sectionTopics.map(topic => topic.topicGroup))].join(' · ')}
                             </p>
                             <p className="mt-3 text-sm font-black text-orange-200">
-                              {subjectUnlocked}/{subject.topics.length} stages
-                              unlocked
+                              {stageCountLabel(stageCount)}
                             </p>
                           </div>
                         </div>
-                        <ProgressRing value={recall} label="Recall" />
+                        <ProgressRing value={recallPercentage} label="Recall" />
                       </div>
                       <button onClick={goToStages} className="mt-4 rounded-xl border border-orange-300/50 px-4 py-2 font-bold text-orange-200 hover:bg-orange-400/10">
                         Open stages
@@ -8822,7 +8808,7 @@ export default function App() {
                         </h3>
                       </div>
                       <p className="mt-2 text-sm leading-6 text-zinc-400">
-                        Themes now unlock every 11 total forged stages.
+                        Stages from both years count towards theme unlocks.
                       </p>
                     </div>
                     <button
@@ -8872,9 +8858,7 @@ export default function App() {
                       </h3>
                     </div>
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-                      This shows how much revision time you have put into each
-                      selected subject, so you can see what needs work instead
-                      of just guessing.
+                      Revision time and the latest marked recall score for each of your {selectedSection} subjects.
                     </p>
                   </div>
                   {subjectMostNeedingWork && (
@@ -8926,7 +8910,7 @@ export default function App() {
                                   {subject.title}
                                 </h4>
                                 <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                                  {forged}/{total} stages forged
+                                  {stageCountLabel({ unlocked: forged, total })}
                                 </p>
                               </div>
                             </div>
@@ -8940,7 +8924,7 @@ export default function App() {
                           <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-800">
                             <div
                               className="h-full rounded-full bg-orange-400 transition-all duration-700"
-                              style={{ width: `${recall}%` }}
+                              style={{ width: `${recall ?? 0}%` }}
                             />
                           </div>
 
@@ -8949,7 +8933,7 @@ export default function App() {
                               {formatRevisionDuration(revisionSeconds)} revised
                             </span>
                             <span className="font-bold text-orange-200">
-                              {recall}% recall
+                              {recall === null ? 'No score yet' : `${recall}% recall`}
                             </span>
                           </div>
                         </button>
@@ -9034,11 +9018,19 @@ export default function App() {
           )}
 
           {view === 'general' && (
-            <section className="mt-6">
+            <section className="mt-6 space-y-4">
               <GeneralHub
+                key={`${selectedSubject.id}:${selectedSection}:${Boolean(tour)}`}
                 selectedSubject={selectedSubject}
                 sections={sectionGeneralContent}
+                touring={Boolean(tour)}
               />
+              <SubjectStats key={`${selectedSubject.id}:${selectedSection}`} year={selectedSection} subject={selectedSubject.title}
+                weeklySessions={subjectActivity.weekSessions} weeklySeconds={subjectActivity.weekSeconds}
+                lifetimeSeconds={subjectActivity.lifetimeSeconds} recallHistory={currentHistory}
+                stageProgress={yearStages.bySubject[selectedSubject.id]}
+                yearWeeklySessions={yearActivity.weekSessions} yearWeeklySeconds={yearActivity.weekSeconds}
+                yearLifetimeSeconds={yearActivity.lifetimeSeconds} />
             </section>
           )}
 
@@ -9053,8 +9045,7 @@ export default function App() {
                     </h2>
                   </div>
                   <p className="mt-2 text-sm text-zinc-400">
-                    Every 11 total forged stages unlocks a new theme. Total
-                    forged stages: {totalForgedStages}. Next unlock:{' '}
+                    {totalForgedStages} stages unlocked across both years. Next unlock:{' '}
                     {nextThemeToUnlock?.name || 'All themes unlocked'}.
                   </p>
                 </div>
@@ -9101,7 +9092,7 @@ export default function App() {
                         checkpoint
                       </p>
                       <p className="mt-1 text-sm text-zinc-400">
-                        Based on unlocked stages and recent test score.
+                        {recallPercentage === null ? 'Mark a test in this year to measure recall.' : `Latest marked test in ${selectedSection}.`}
                       </p>
                     </div>
                     <ProgressRing value={recallPercentage} label="Recall" />
@@ -9260,9 +9251,7 @@ export default function App() {
                           </h2>
                         </div>
                         <p className="mt-2 text-sm text-zinc-400">
-                          A mixed recall test from across the whole subject, now
-                          using tougher multiple choice, written answers and
-                          GCSE past-paper-style questions.
+                          Mixed recall questions from {selectedSubject.title} in {selectedSection}.
                         </p>
                       </div>
                       <ProgressRing
@@ -9280,7 +9269,12 @@ export default function App() {
 
                     <div className="mt-5 flex flex-wrap gap-3">
                       <button
-                        onClick={() => setDailySubmitted(true)}
+                        disabled={dailySubmitted}
+                        onClick={() => {
+                          if (dailySubmitted || tour) return;
+                          setDailySubmitted(true);
+                          recordRecall(dailyScore);
+                        }}
                         className={`rounded-2xl px-5 py-3 font-bold text-white active:scale-[0.99] ${activeTheme.button}`}
                       >
                         Mark Daily Test
@@ -9407,7 +9401,11 @@ export default function App() {
                         </p>
                       </div>
                       <button
-                        onClick={() => setSuperTestSubmitted(true)}
+                        onClick={() => {
+                          if (superTestSubmitted || tour) return;
+                          setSuperTestSubmitted(true);
+                          recordRecall(superTestScore);
+                        }}
                         className="rounded-2xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600"
                       >
                         Strike the final anvil
@@ -9470,7 +9468,7 @@ export default function App() {
                   </div>
                   <div className="rounded-2xl border border-zinc-800 bg-zinc-950 px-5 py-4 text-right">
                     <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-                      Revision time since reset
+                      {selectedSection} time since reset
                     </p>
                     <p className="mt-1 text-2xl font-black text-white">
                       {formattedRevisionTime}
@@ -9490,6 +9488,11 @@ export default function App() {
                       The clock counts the time you spend on revision pages. It pauses
                       when you leave the tab or take a break. Changing your work minutes starts a new work block.
                     </p>
+                    {legacySeconds > 0 && (
+                      <p className="mt-3 rounded-xl border border-zinc-800 px-3 py-2 text-sm text-zinc-300">
+                        Earlier revision time · {formatClock(legacySeconds)}. Your previous save recorded this time without a year or date.
+                      </p>
+                    )}
 
                     <div className="mt-5 grid gap-4 sm:grid-cols-2">
                       <label className="block">

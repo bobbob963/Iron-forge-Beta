@@ -1,8 +1,11 @@
+import { biologyResponse } from './writtenMarking.ts'
+
 export interface BiologyWrittenQuestion {
   type: 'written'
   q: string
   answer: string
   marks: RegExp[]
+  rejects?: RegExp
 }
 
 /** Each expression covers alternative ways to express one required idea. */
@@ -10,21 +13,11 @@ export function writtenQuestion(q: string, answer: string, ...marks: RegExp[]): 
   return { type: 'written', q, answer, marks }
 }
 
-export function markBiologyWritten(question: Pick<BiologyWrittenQuestion, 'marks'>, response: unknown) {
+export function markBiologyWritten(question: Pick<BiologyWrittenQuestion, 'marks' | 'rejects'>, response: unknown) {
   if (typeof response !== 'string') return false
-  const text = response.normalize('NFKC').toLowerCase()
-    .replace(/[‐‑–—-]/g, ' ').replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim()
-  if (!text || !question.marks.length) return false
-  return question.marks.every(mark => {
-    // A learner can distinguish two terms, e.g. "the liver, not the kidney".
-    // Count a concept only when the learner actually asserts it.
-    const matches = text.matchAll(new RegExp(mark.source, 'gi'))
-    for (const match of matches) {
-      const preceding = text.slice(0, match.index)
-      if (!/\b(?:not|never|no|isn't|aren't)(?:\s+(?:the|a|an))?\s+$/.test(preceding)) return true
-    }
-    return false
-  })
+  const text = biologyResponse(response)
+  if (!text || !question.marks.length || question.rejects?.test(text)) return false
+  return question.marks.every(mark => mark.test(text))
 }
 
 export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> = {
@@ -32,7 +25,7 @@ export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> =
     writtenQuestion('In aerobic respiration, which sugar is broken down and which molecule then transfers energy to processes such as muscle contraction?',
       'Glucose is broken down and ATP transfers energy.', /\b(?:glucose|c6h12o6)\b/, /\b(?:atp|adenosine triphosphate)\b/),
     writtenQuestion('A muscle cell has many organelles where most of its ATP is made during aerobic respiration. Name the organelle.',
-      'Mitochondrion.', /\bmitochondri(?:on|a)\b/),
+      'Mitochondrion.', /\bmitoch?ondri(?:on|a|um)\b/),
   ],
   'bio-obtaining-nutrition': [
     writtenQuestion('A sunflower makes sugars from carbon dioxide and water in the light. Name this process.',
@@ -44,7 +37,7 @@ export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> =
     writtenQuestion('A student tests a potato for starch. Name the reagent and give its final colour if starch is present.',
       'Iodine solution turns blue-black.', /\b(?:iodine|lugol'?s?)\b/, /\b(?:blue\s*black|black\s*blue)\b/),
     writtenQuestion('Fat beneath the skin stores energy. State one other function of this fat in a cold environment.',
-      'It insulates the body, reducing heat loss.', /\b(?:insulat\w*|(?:reduc\w*|slow\w*|prevent\w*|limit\w*|less)\s+(?:the\s+)?heat\s+loss|(?:keep\w*|trap\w*|retain\w*|conserv\w*)\s+(?:(?:the|body|us|you|it|our|in)\s+)*(?:heat|warmth|warm))\b/),
+      'It insulates the body, reducing heat loss.', /\b(?:insulat\w*|(?:reduc\w*|slow\w*|prevent\w*|limit\w*|less)\s+(?:the\s+)?heat\s+(?:loss|transfer)|(?:keep\w*|trap\w*|retain\w*|conserv\w*|hold\w* on to)\s+(?:(?:the|body|us|you|it|our|in)\s+)*(?:heat|warmth|warm)|(?:heat|warmth) (?:escapes?|leaves?|is lost) (?:more slowly|less (?:quickly|easily)))\b/),
   ],
   'bio-ingestion-mechanical-digestion': [
     writtenQuestion('Two equal masses of food are given the same enzyme. Why is the finely chewed food digested faster?',
@@ -55,19 +48,19 @@ export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> =
   ],
   'bio-chemical-digestion': [
     writtenQuestion('A protein molecule is too large to absorb. Which class of enzymes digests protein, and what small molecules can be absorbed after it is completely digested?',
-      'Proteases digest proteins into amino acids.', /\b(?:proteases?|peptidases?|proteinases?)\b/, /\bamino acids?\b/),
+      'Proteases digest proteins into amino acids.', /\b(?:proteases?|peptidases?|proteinases?|proteolytic enzymes?)\b/, /\bamino acids?\b/),
     writtenQuestion('An enzyme breaks starch into maltose in the mouth. Name the enzyme.',
       'Salivary amylase.', /\b(?:amylase|ptyalin)\b/),
   ],
   'bio-absorption': [
     writtenQuestion('What do the many villi of the small intestine increase, allowing more nutrients to be absorbed at once?',
-      'The surface area available for absorption.', /\b(?:surface area|absorptive area|area (?:available )?for absorption)\b/),
+      'The surface area available for absorption.', /\b(?:surface area|absorptive (?:area|surface)|area (?:available )?for absorption|(?:more|larger|greater|bigger) (?:exposed )?surface)\b/),
     writtenQuestion('A villus has a lining only one cell thick. What does this mean for the distance a molecule travels to reach the blood?',
       'It has a short diffusion distance.', /\b(?:short(?:er|ened)?|small(?:er)?|reduc(?:ed|es)|less|minim(?:al|i[sz]ed)|decreas(?:ed|es))\b/),
   ],
   'bio-obtaining-oxygen': [
     writtenQuestion('Oxygen moves from the air in an alveolus into the blood without using ATP. Name the process.',
-      'Diffusion.', /\bdiffus(?:ion|es?)\b/),
+      'Diffusion.', /\bdiffus(?:ion|es?|ing)\b/),
     writtenQuestion('Name the gas that moves from the blood into an alveolus to be breathed out.',
       'Carbon dioxide.', /\b(?:carbon dioxide|co2)\b/),
   ],
@@ -128,13 +121,13 @@ export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> =
   'bio-y11-t3-variation': [
     writtenQuestion('Identical twins inherit the same alleles for height but grow to different heights. Give one environmental factor that could explain this.',
       'They may have had different diets while growing.',
-      /\b(?:diet\w*|nutrition\w*|malnourish\w*|food|protein|illness\w*|disease\w*|infection\w*|sleep|nutrients?|healthcare)\b/),
+      /\b(?:diet\w*|nutri(?:ti\w*|ent\w*)|(?:mal|under|well )nourish\w*|food|protein|illness\w*|disease\w*|infection\w*|sleep|healthcare|(?:what|how much) (?:they|each|one) (?:eat|ate|eats)|(?:ate|eats?) (?:differently|more|less))\b/),
     writtenQuestion('A virus infects a bacterium and uses the bacterium to make new virus particles. What name is given to a virus with this type of host?',
       'A bacteriophage.', /\b(?:bacteriophages?|phages?)\b/),
   ],
   'bio-y11-t3-dna': [
     writtenQuestion('A DNA template is read from 3′ to 5′ and has the base triplet TAC. Write only the three complementary mRNA bases in order.',
-      'AUG.', /^a[\s,.]*u[\s,.]*g[.!]?$/),
+      'AUG.', /^(?:(?:the )?(?:bases|triplet|answer|sequence) (?:is|are) )?a[\s,.]*u[\s,.]*g[.!]?$/),
     writtenQuestion('During translation, which molecule carries a specific amino acid to the ribosome?',
       'Transfer RNA (tRNA).', /\b(?:t\s*rna|transfer\s*(?:rna|ribonucleic acid))\b/),
   ],
@@ -165,14 +158,14 @@ export const biologyWrittenQuestions: Record<string, BiologyWrittenQuestion[]> =
   'bio-y11-t3-alleles': [
     writtenQuestion('Two pea plants are both tall but one is TT and the other Tt. In genetic terms, what do they have in common, and what is different?',
       'They share the same phenotype but have different genotypes.',
-      /\b(?:same|identical|share\w*|common|matching)\b.{0,20}\bphenotypes?\b|\bphenotypes?\b.{0,18}\b(?:same|identical|shared|match\w*)\b/,
-      /\b(?:different|distinct|differing)\b.{0,14}\bgenotypes?\b|\bgenotypes?\b.{0,20}\b(?:differ\w*|distinct|vary|varies)\b/),
+      /\b(?:same|identical|shared?|common|matching) (?:a |an |the )?(?:observable |physical |outward |visible )?(?:phenotypes?|characteristics?|traits?|appearance)\b|\bphenotypes? (?:is |are )?(?:the )?(?:same|identical|shared|match\w*)\b|\b(?:both (?:are |look )?tall|(?:look|appear) (?:the same|alike))\b/,
+      /\b(?:different|distinct|differing) (?:genotypes?|allele combinations?|combinations? of alleles|genetic make ?ups?)\b|\b(?:genotypes?|allele combinations?|combinations? of alleles) (?:is |are )?(?:differ\w*|distinct|vary|varies)\b|\bhomozygous\b.{0,55}\bheterozygous\b|\bheterozygous\b.{0,55}\bhomozygous\b/),
     writtenQuestion('An organism carries two different alleles of one gene. Give the genetic term for this genotype.',
       'Heterozygous.', /\bheterozyg(?:ous|ote)\b/),
   ],
   'bio-y11-t3-crosses': [
     writtenQuestion('A heterozygous tall pea plant is crossed with a short plant (Tt × tt). Write the expected ratio of tall offspring to short offspring.',
-      '1:1.', /\b(?:1\s*(?::|to)\s*1(?!\d)|one\s+to\s+one|(?:equal|even)\s+(?:numbers|proportions|ratio|split)|50\s*%?\s*(?:to|and|:|\/)\s*50\s*%?)\b/),
+      '1:1.', /\b(?:1\s*(?::|to)\s*1(?!\d)|one\s+to\s+one|half (?:are )?tall.{0,20}half (?:are )?short|(?:equal|even)\s+(?:numbers|proportions|ratio|split)|50\s*%?\s*(?:to|and|:|\/| )\s*50\s*%?)\b/),
     writtenQuestion('Two unaffected parents have a child with a simple autosomal recessive condition. What term describes the genotype of each parent?',
       'Each is a heterozygous carrier.', /\b(?:heterozyg(?:ous|ote)s?|carriers?)\b/),
   ],

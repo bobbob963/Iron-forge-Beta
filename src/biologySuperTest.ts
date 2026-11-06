@@ -1,4 +1,4 @@
-import { writtenQuestion, type BiologyWrittenQuestion } from './biologyWrittenQuestions';
+import { writtenQuestion, type BiologyWrittenQuestion } from './biologyWrittenQuestions.ts';
 
 // Each stage contributes an application question to its year's final test.
 export const biologySuperTest: Record<string, BiologyWrittenQuestion> = {
@@ -57,11 +57,14 @@ export const biologySuperTest: Record<string, BiologyWrittenQuestion> = {
     'The amoeba has a larger surface area to volume ratio.',
     /\b(?:larger|higher|greater|bigger|high|large|more surface area (?:per|relative to))\b/
   ),
-  'bio-exercise': writtenQuestion(
+  'bio-exercise': {
+    ...writtenQuestion(
     'As a cyclist speeds up, their breathing rate rises. Which gas must their working muscles take up faster, and which waste gas must be removed faster?',
     'The muscles take up more oxygen and release more carbon dioxide.',
-    /\b(?:oxygen|o2)\b/, /\b(?:carbon dioxide|co2)\b/
-  ),
+      /\b(?:oxygen|o2)\b/, /\b(?:carbon dioxide|co2)\b/
+    ),
+    rejects: /\b(?:absorb\w*|take[sn]? (?:up|in)|need\w*|use[sd]?)\s+(?:more |the )?(?:carbon dioxide|co2)\b|\b(?:release\w*|remov\w*|excret\w*|breathe[sd]? out)\s+(?:more |the )?(?:oxygen|o2)\b/,
+  },
   'bio-thermoregulation': writtenQuestion(
     'A hiker starts to shiver on a cold day. What do their muscles repeatedly do, and how does this help restore body temperature?',
     'The muscles contract repeatedly, releasing heat.',

@@ -1,5 +1,9 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
+import {
+  activitySummary, addRevisionTime, mergeNewerYears, mondayStart, nextMonday, restoreActivity,
+  selectYear, unassignedTime, updateYear, type SavedClock, type YearClock,
+} from './revisionActivity';
 
 const revisionViews = new Set(['general', 'stages', 'topic', 'daily', 'superTest']);
 export const isRevisionView = (view: string) => revisionViews.has(view);
@@ -21,34 +25,64 @@ export function formatClock(value: number) {
   return hours ? `${hours}:${String(minutes).padStart(2, '0')}:${remainder}` : `${minutes}:${remainder}`;
 }
 
-interface ClockState {
-  revisionSeconds: number;
-  revisionSecondsBySubject: Record<string, number>;
-  nextBreakAtSeconds: number;
-  // null during revision, zero at the break prompt, or the break's end time in milliseconds.
-  breakEndsAt: number | null;
+function useCurrentWeek() {
+  const [week, setWeek] = useState(() => mondayStart(Date.now()));
+  useEffect(() => {
+    let timer: number;
+    function refresh() {
+      window.clearTimeout(timer);
+      const now = Date.now();
+      setWeek(mondayStart(now));
+      timer = window.setTimeout(refresh, nextMonday(now) - now);
+    }
+    refresh();
+    document.addEventListener('visibilitychange', refresh);
+    window.addEventListener('focus', refresh);
+    window.addEventListener('pageshow', refresh);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener('visibilitychange', refresh);
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('pageshow', refresh);
+    };
+  }, []);
+  return week;
 }
 
-function restoreClock(saved: Partial<ClockState> | null, workSeconds: number): ClockState {
-  const total = seconds(saved?.revisionSeconds);
-  const deadline = seconds(saved?.nextBreakAtSeconds);
-  const end = saved?.breakEndsAt;
-  const breakEndsAt = typeof end === 'number' && Number.isFinite(end) && end >= 0 ? end : null;
-  return {
-    revisionSeconds: total,
-    revisionSecondsBySubject: Object.fromEntries(
-      Object.entries(saved?.revisionSecondsBySubject ?? {}).map(([key, value]) => [key, seconds(value)])
-    ),
-    nextBreakAtSeconds: deadline > total || (breakEndsAt !== null && deadline === total)
-      ? deadline : (Math.floor(total / workSeconds) + 1) * workSeconds,
-    breakEndsAt,
-  };
-}
-
-export function useRevisionClock(saved: Partial<ClockState> | null, view: string, subject: string, workMinutes: number) {
+export function useRevisionClock(saved: SavedClock | null, view: string, subject: string, workMinutes: number, year = saved?.selectedSection ?? 'Year 10 EOYs', saveEnabled = false) {
   const workSeconds = workMinutes * 60;
-  const [clock, setClock] = useState(() => restoreClock(saved, workSeconds));
-  const activeSubject = isRevisionView(view) && clock.breakEndsAt === null ? subject : null;
+  const [ledger, setLedger] = useState(() => restoreActivity(saved, year, workSeconds));
+  const yearClock = useMemo(() => selectYear(ledger, year, workSeconds), [ledger, year, workSeconds]);
+  const week = useCurrentWeek();
+  const activeSubject = isRevisionView(view) && yearClock.breakEndsAt === null ? subject : null;
+  const clock = useMemo(() => ({
+    revisionSeconds: yearClock.revisionSeconds,
+    revisionSecondsBySubject: yearClock.revisionSecondsBySubject,
+    nextBreakAtSeconds: yearClock.nextBreakAtSeconds,
+    breakEndsAt: yearClock.breakEndsAt,
+    revisionActivity: ledger,
+  }), [ledger, yearClock]);
+
+  useLayoutEffect(() => {
+    if (!saveEnabled) return;
+    function refreshFromOtherTab() {
+      if (document.hidden) return;
+      try {
+        const latest = JSON.parse(localStorage.getItem('ironForgeProgressV1') || 'null');
+        if (latest?.revisionActivity?.version !== 1) return;
+        const remote = restoreActivity(latest, year, workSeconds);
+        setLedger(previous => mergeNewerYears(previous, remote));
+      } catch { /* Keep tracking this visit when storage is unavailable. */ }
+    }
+    document.addEventListener('visibilitychange', refreshFromOtherTab);
+    window.addEventListener('focus', refreshFromOtherTab);
+    window.addEventListener('pageshow', refreshFromOtherTab);
+    return () => {
+      document.removeEventListener('visibilitychange', refreshFromOtherTab);
+      window.removeEventListener('focus', refreshFromOtherTab);
+      window.removeEventListener('pageshow', refreshFromOtherTab);
+    };
+  }, [saveEnabled, year, workSeconds]);
 
   useLayoutEffect(() => {
     if (!activeSubject) return;
@@ -58,23 +92,11 @@ export function useRevisionClock(saved: Partial<ClockState> | null, view: string
     function settle() {
       if (last === null) return;
       const now = Math.round(performance.now());
-      const elapsed = (now - last) / 1000;
+      const elapsed = now - last;
       last = now;
       if (elapsed <= 0) return;
-      setClock(previous => {
-        if (previous.breakEndsAt !== null) return previous;
-        const total = Math.min(previous.nextBreakAtSeconds, Math.round((previous.revisionSeconds + elapsed) * 1000) / 1000);
-        const subjectTime = (previous.revisionSecondsBySubject[subjectId] ?? 0) + (total - previous.revisionSeconds);
-        return {
-          ...previous,
-          revisionSeconds: total,
-          revisionSecondsBySubject: {
-            ...previous.revisionSecondsBySubject,
-            [subjectId]: Math.round(subjectTime * 1000) / 1000,
-          },
-          breakEndsAt: total >= previous.nextBreakAtSeconds ? 0 : null,
-        };
-      });
+      const startAt = Date.now() - elapsed;
+      setLedger(previous => addRevisionTime(previous, year, subjectId, workSeconds, startAt, elapsed));
     }
     function stop() {
       window.clearInterval(tick);
@@ -102,17 +124,25 @@ export function useRevisionClock(saved: Partial<ClockState> | null, view: string
       window.removeEventListener('pageshow', syncVisibility);
       stop();
     };
-  }, [activeSubject]);
+  }, [activeSubject, year, workSeconds]);
 
+  function changeYearClock(update: (record: YearClock) => YearClock) {
+    setLedger(previous => updateYear(previous, year, update(selectYear(previous, year, workSeconds))));
+  }
   function restartWorkBlock(minutes = workMinutes) {
-    setClock(previous => ({ ...previous, breakEndsAt: null, nextBreakAtSeconds: previous.revisionSeconds + minutes * 60 }));
+    changeYearClock(previous => ({ ...previous, workSeconds: minutes * 60, breakEndsAt: null, nextBreakAtSeconds: previous.revisionSeconds + minutes * 60 }));
   }
   function startBreak(minutes: number) {
     const end = Date.now() + minutes * 60000;
-    setClock(previous => ({ ...previous, breakEndsAt: end }));
+    changeYearClock(previous => ({ ...previous, breakEndsAt: end }));
   }
   function resetClock() {
-    setClock(previous => ({ ...previous, revisionSeconds: 0, nextBreakAtSeconds: workSeconds, breakEndsAt: null }));
+    changeYearClock(previous => ({ ...previous, revisionSeconds: 0, nextBreakAtSeconds: workSeconds, breakEndsAt: null }));
   }
-  return { clock, startBreak, restartWorkBlock, resetClock };
+  return {
+    clock, startBreak, restartWorkBlock, resetClock,
+    yearActivity: activitySummary(yearClock, week),
+    subjectActivity: activitySummary(yearClock, week, subject),
+    legacySeconds: unassignedTime(ledger),
+  };
 }
