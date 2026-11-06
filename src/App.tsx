@@ -6268,7 +6268,8 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
     }))
   );
 
-  const examQuestions = (GCSE_DAILY_EXAM_QUESTIONS[subject.id] || []).map(
+  const examBank = subject.section === 'Year 10 EOYs' ? GCSE_DAILY_EXAM_QUESTIONS[subject.id] : [];
+  const examQuestions = (examBank || []).map(
     (question) => ({
       ...question,
       options: hardenMultipleChoiceOptions(
@@ -7315,6 +7316,30 @@ function QuizBlock({
 
 const STORAGE_KEY = 'ironForgeProgressV1';
 const PROGRESS_VERSION = 2;
+const YEAR_PREFERENCE_KEY = 'ironForgeRevisionYear';
+const subjectSections = ['Year 10 EOYs', 'Year 11'];
+
+function initialRevisionYear(profileYear) {
+  try {
+    const deviceYear = localStorage.getItem(YEAR_PREFERENCE_KEY);
+    if (subjectSections.includes(deviceYear)) return deviceYear;
+  } catch {
+    // A browser can disable local storage for this site.
+  }
+  return subjectSections.includes(profileYear) ? profileYear : subjectSections[0];
+}
+
+function SubjectYearField({ value, onChange }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-bold uppercase tracking-widest text-orange-300">Year for all subjects</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)}
+        className="mt-2 w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-bold text-white focus:border-orange-400">
+        {subjectSections.map((year) => <option key={year}>{year}</option>)}
+      </select>
+    </label>
+  );
+}
 
 const defaultUnlockedStages = {
   'lang-section-a-overview': true,
@@ -7387,8 +7412,15 @@ export default function App() {
   );
   const [subjectSaveMessage, setSubjectSaveMessage] = useState('');
   const [selectedSection, setSelectedSection] = useState(
-    savedProgress?.selectedSection || 'Year 10 EOYs'
+    () => initialRevisionYear(savedProgress?.selectedSection)
   );
+  useEffect(() => {
+    try {
+      localStorage.setItem(YEAR_PREFERENCE_KEY, selectedSection);
+    } catch {
+      // The selected year still applies for this session.
+    }
+  }, [selectedSection]);
   const [selectedTopicId, setSelectedTopicId] = useState(
     savedProgress?.selectedTopicId || subjects[0].topics[0].id
   );
@@ -7429,7 +7461,6 @@ export default function App() {
     visibleSubjects[0] ||
     subjects[0];
 
-  const subjectSections = ['Year 10 EOYs', 'Year 11'];
 
   const tutorialSlides = [
     {
@@ -7639,8 +7670,8 @@ export default function App() {
 
   const allTopics = subjects.flatMap((subject) => subject.topics);
   const sectionSubject = useMemo(
-    () => ({ ...selectedSubject, topics: sectionTopics }),
-    [selectedSubject, sectionTopics]
+    () => ({ ...selectedSubject, topics: sectionTopics, section: selectedSection }),
+    [selectedSubject, sectionTopics, selectedSection]
   );
 
   const dailyQuestions = useMemo(
@@ -7948,7 +7979,7 @@ export default function App() {
     setDailyAnswers({});
     setDailySubmitted(false);
     setSubjectsOpen(false);
-    if (view === 'topic') setView('stages');
+    if (view === 'topic' || view === 'superTest' || view === 'daily') setView('stages');
   }
 
   function openTopic(topic) {
@@ -8288,13 +8319,16 @@ export default function App() {
             </div>
 
             <h2 className="text-3xl font-black text-white">
-              Choose your subject slots
+              Choose your year and subjects
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
               Pick the subjects you want in your taskbar. This uses the same
               subject slots as Settings. Empty every slot to show every subject.
             </p>
 
+            <div className="mt-4 max-w-xs">
+              <SubjectYearField value={selectedSection} onChange={changeSection} />
+            </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {subjectSlots.map((slotSubjectId, index) => (
                 <label
@@ -10332,6 +10366,8 @@ export default function App() {
               </button>
               <button
                 onClick={startDailyTest}
+                disabled={!dailyQuestions.length}
+                title={dailyQuestions.length ? undefined : 'No daily questions for this year yet'}
                 className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${
                   view === 'daily'
                     ? activeTheme.button + ' text-white'
@@ -10417,11 +10453,9 @@ export default function App() {
             {subjectsOpen && (
               <div className="absolute left-0 top-14 z-50 max-h-[calc(100dvh-6rem)] w-72 max-w-full overflow-y-auto overscroll-contain rounded-3xl border border-orange-400/30 bg-zinc-950 p-3 shadow-2xl shadow-black/60 sm:left-20">
                 <div className="mb-2 px-3 py-2">
-                  <p className="text-xs font-bold uppercase tracking-widest text-orange-300">
+                  <SubjectYearField value={selectedSection} onChange={changeSection} />
+                  <p className="mt-4 text-xs font-bold uppercase tracking-widest text-orange-300">
                     Choose Subject
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-500">
-                    Dashboard content changes to the selected subject.
                   </p>
                 </div>
                 {visibleSubjects.map((subject) => {
@@ -10557,10 +10591,9 @@ export default function App() {
                     (subjectUnlocked / subject.topics.length) * 100
                   );
                   return (
-                    <button
+                    <article
                       key={subject.id}
-                      onClick={goToStages}
-                      className={`group min-h-[190px] rounded-3xl border-2 border-orange-300 bg-orange-500/20 p-5 text-left shadow-xl shadow-orange-500/20 transition active:scale-[0.99]`}
+                      className="min-h-[190px] rounded-3xl border-2 border-orange-300 bg-orange-500/20 p-5 text-left shadow-xl shadow-orange-500/20"
                     >
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
@@ -10571,30 +10604,8 @@ export default function App() {
                             <p className="text-xs font-black uppercase tracking-[0.28em] text-orange-200">
                               Selected Subject
                             </p>
-                            <div
-                              className="mt-4 max-w-sm"
-                              onClick={(event) => event.stopPropagation()}
-                              onMouseDown={(event) => event.stopPropagation()}
-                            >
-                              <label className="mb-2 block text-xs font-black uppercase tracking-[0.24em] text-pink-100/90">
-                                Section
-                              </label>
-                              <select
-                                value={selectedSection}
-                                onClick={(event) => event.stopPropagation()}
-                                onMouseDown={(event) => event.stopPropagation()}
-                                onChange={(event) => {
-                                  event.stopPropagation();
-                                  changeSection(event.target.value);
-                                }}
-                                className="w-full rounded-2xl border border-pink-200/30 bg-zinc-950/70 px-4 py-3 text-sm font-black text-white outline-none backdrop-blur-md focus:border-pink-200"
-                              >
-                                {subjectSections.map((section) => (
-                                  <option key={section} value={section}>
-                                    {section}
-                                  </option>
-                                ))}
-                              </select>
+                            <div className="my-3 max-w-sm">
+                              <SubjectYearField value={selectedSection} onChange={changeSection} />
                             </div>
                             <h2 className="mt-1 text-2xl font-black text-white">
                               {subject.title}
@@ -10610,7 +10621,10 @@ export default function App() {
                         </div>
                         <ProgressRing value={recall} label="Recall" />
                       </div>
-                    </button>
+                      <button onClick={goToStages} className="mt-4 rounded-xl border border-orange-300/50 px-4 py-2 font-bold text-orange-200 hover:bg-orange-400/10">
+                        Open stages
+                      </button>
+                    </article>
                   );
                 })()}
 
@@ -10764,6 +10778,8 @@ export default function App() {
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <button
                   onClick={startDailyTest}
+                  disabled={!dailyQuestions.length}
+                  title={dailyQuestions.length ? undefined : 'No daily questions for this year yet'}
                   className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 text-left transition hover:bg-zinc-800 active:scale-[0.99]"
                 >
                   <div className="flex items-center justify-between gap-4">
@@ -10904,6 +10920,8 @@ export default function App() {
 
                 <button
                   onClick={startDailyTest}
+                  disabled={!dailyQuestions.length}
+                  title={dailyQuestions.length ? undefined : 'No daily questions for this year yet'}
                   className="w-full rounded-3xl border border-orange-400/40 bg-orange-400/10 p-5 text-left transition hover:bg-orange-400/15 active:scale-[0.99]"
                 >
                   <div className="flex items-center justify-between gap-4">
