@@ -8,10 +8,11 @@ type StageTopicListProps<T extends StageSummary> = {
   unlocked: Record<string, boolean>;
   onOpenStage: (stage: T) => void;
   activeStageId?: string;
+  tourStageId?: string;
 };
 
 export default function StageTopicList<T extends StageSummary>({
-  stages, unlocked, onOpenStage, activeStageId,
+  stages, unlocked, onOpenStage, activeStageId, tourStageId,
 }: StageTopicListProps<T>) {
   const listId = useId();
   const groups = useMemo(() => {
@@ -28,11 +29,11 @@ export default function StageTopicList<T extends StageSummary>({
   );
 
   if (!groups.length) {
-    return <p className="rounded-2xl border border-zinc-800 p-4 text-zinc-300">No stages for this year yet. Choose another year or subject.</p>;
+    return <p data-tour="stage-list" className="rounded-2xl border border-zinc-800 p-4 text-zinc-300">No stages for this year yet. Choose another year or subject.</p>;
   }
 
   return (
-    <div className="space-y-2">
+    <div data-tour="stage-list" className="space-y-2">
       {groups.map(([title, members], index) => {
         const isOpen = expanded === title;
         const panelId = `${listId}-topic-${index}`;
@@ -40,6 +41,7 @@ export default function StageTopicList<T extends StageSummary>({
           <div key={title} className="overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900">
             <button
               type="button"
+              data-tour={members.some(stage => stage.id === tourStageId) ? 'topic-group' : undefined}
               aria-expanded={isOpen}
               aria-controls={panelId}
               onClick={() => setExpanded(isOpen ? null : title)}
@@ -56,6 +58,7 @@ export default function StageTopicList<T extends StageSummary>({
                   <li key={stage.id}>
                     <button
                       type="button"
+                      data-tour={stage.id === tourStageId ? 'stage-option' : undefined}
                       disabled={isLocked}
                       title={isLocked ? 'Score 100% on the preceding stage to unlock this one.' : undefined}
                       aria-current={stage.id === activeStageId ? 'step' : undefined}

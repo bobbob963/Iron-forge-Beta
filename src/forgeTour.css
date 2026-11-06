@@ -1,0 +1,100 @@
+.forge-tour-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  isolation: isolate;
+  pointer-events: none;
+  font-family: inherit;
+}
+.forge-tour-light { position: absolute; inset: 0; }
+.forge-tour-ring {
+  fill: none;
+  stroke: #ffc27e;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px #fa9b4e90);
+}
+.forge-tour-card {
+  --tour-surface: #201e20;
+  --tour-border: #ab7953;
+  position: absolute;
+  width: min(342px, calc(100vw - 24px));
+  margin: 0;
+  border: 1px solid var(--tour-border);
+  border-radius: 16px;
+  background: var(--tour-surface);
+  color: #fff9f3;
+  box-shadow: 0 12px 44px #07070b83, 0 2px 7px #06050866;
+  pointer-events: auto;
+  text-align: left;
+  color-scheme: dark;
+}
+.forge-tour-card-inner {
+  padding: 15px 19px 14px;
+  max-height: calc(100dvh - 26px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.forge-tour-card::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--tour-surface);
+  border: solid var(--tour-border);
+  border-width: 1px 0 0 1px;
+  pointer-events: none;
+}
+.forge-tour-card[data-side="bottom"]::before { left: var(--tour-tip); top: -1px; transform: translate(-50%, -50%) rotate(45deg); }
+.forge-tour-card[data-side="top"]::before { left: var(--tour-tip); bottom: -1px; transform: translate(-50%, 50%) rotate(225deg); }
+.forge-tour-card[data-side="right"]::before { left: -1px; top: var(--tour-tip); transform: translate(-50%, -50%) rotate(-45deg); }
+.forge-tour-card[data-side="left"]::before { right: -1px; top: var(--tour-tip); transform: translate(50%, -50%) rotate(135deg); }
+.forge-tour-card[data-side="none"]::before, .forge-tour-card:not([data-side])::before { display: none; }
+.forge-tour-header { display: flex; align-items: center; justify-content: space-between; min-height: 25px; }
+.forge-tour-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #ffbf86;
+  font-weight: 750;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: .025em;
+  font-variant-numeric: tabular-nums;
+}
+.forge-tour-card h2 { margin: 9px 0 0; color: #fffaf6; font-weight: 800; font-size: 22px; line-height: 1.16; letter-spacing: -.035em; }
+.forge-tour-card p { margin: 7px 0 0; color: #e3d9d2; font-size: 14px; line-height: 1.5; }
+.forge-tour-card button { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.forge-tour-card .forge-tour-close {
+  width: 28px;
+  height: 28px;
+  margin: -3px -5px -3px 0;
+  border-radius: 8px;
+  color: #d0c6c0;
+  background: transparent;
+}
+.forge-tour-close:hover { color: white; background: #453932; }
+.forge-tour-card .forge-tour-next {
+  margin: 13px 0 0;
+  gap: 10px;
+  padding: 7px 12px;
+  border: 1px solid #f5bc85;
+  border-radius: 8px;
+  background: #f3b574;
+  color: #241710;
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+.forge-tour-next:hover:enabled { background: #ffd0a0; }
+.forge-tour-next:disabled { opacity: .5; cursor: default; }
+.forge-tour-card button:focus-visible { outline: 2px solid #ffe4be; outline-offset: 2px; }
+.forge-tour-progress { height: 3px; margin-top: 16px; border-radius: 8px; overflow: hidden; background: #55423a; }
+.forge-tour-progress span { display: block; height: 100%; border-radius: inherit; background: #edaa6b; }
+@media (prefers-reduced-motion: no-preference) {
+  .forge-tour-progress span { transition: width .18s ease-out; }
+}
+@media (forced-colors: active) {
+  .forge-tour-ring { stroke: Highlight; }
+  .forge-tour-card { border-color: ButtonText; }
+  .forge-tour-progress span { background: Highlight; }
+}

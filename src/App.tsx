@@ -4,6 +4,8 @@ import { CyberThemeBackground, GodThemeBackground, JapanCarOverlay, JapanThemeBa
 import StageTopicList from './StageTopicList';
 import BreakCountdown from './BreakCountdown';
 import CreatorAccessDialog from './CreatorAccessDialog';
+import ForgeTour from './ForgeTour';
+import { getTourSteps, readTour, rememberTour, tourView, type TourCheckpoint } from './revisionTour';
 import { formatClock, isRevisionView, timerMinutes, useRevisionClock } from './revisionClock';
 import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
@@ -6645,6 +6647,7 @@ function AchievementCard({ theme, unlocked, onSelect, selected }) {
       type="button"
       disabled={!unlocked}
       aria-pressed={selected}
+      data-tour={selected ? 'equipped-theme' : undefined}
       onClick={() => onSelect(theme.id)}
       className="theme-choice overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-950 text-left text-zinc-200"
     >
@@ -6705,9 +6708,10 @@ function GeneralHub({ selectedSubject, sections = [] }) {
         stages.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {sections.map((section) => (
+        {sections.map((section, index) => (
           <div
             key={section.title}
+            data-tour={index === 0 ? 'general-notes' : undefined}
             className="rounded-3xl border border-zinc-800 bg-zinc-950 p-5"
           >
             <h3 className="text-xl font-black text-white">{section.title}</h3>
@@ -6791,12 +6795,22 @@ function formatRevisionDuration(seconds = 0) {
   return `${safeSeconds}s`;
 }
 
+type QuizQuestion = { q: string; answer: string; options?: string[]; type?: string; topicTitle?: string };
+
 function QuizBlock({
   questions,
   answers,
   setAnswers,
   submitted,
   titlePrefix = '',
+  onPracticeAnswer,
+}: {
+  questions: QuizQuestion[];
+  answers: Record<number, string | undefined>;
+  setAnswers: React.Dispatch<React.SetStateAction<Record<number, string>>>;
+  submitted: boolean;
+  titlePrefix?: string;
+  onPracticeAnswer?: (answer: string) => void;
 }) {
   return (
     <div className="mt-5 space-y-5">
@@ -6809,6 +6823,7 @@ function QuizBlock({
         return (
           <div
             key={`${item.q}-${index}`}
+            data-tour={onPracticeAnswer ? 'practice-question' : undefined}
             className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4"
           >
             {item.topicTitle && (
@@ -6871,7 +6886,7 @@ function QuizBlock({
               </div>
             ) : (
               <div className="mt-3 grid gap-2">
-                {item.options.map((option) => {
+                {item.options?.map((option) => {
                   const chosen = answers[index] === option;
                   const isCorrectAnswer = option === item.answer;
                   const showCorrect = submitted && isCorrectAnswer;
@@ -6881,10 +6896,12 @@ function QuizBlock({
                   return (
                     <button
                       key={option}
-                      onClick={() =>
-                        !submitted &&
-                        setAnswers((prev) => ({ ...prev, [index]: option }))
-                      }
+                      data-tour={onPracticeAnswer ? 'practice-option' : undefined}
+                      onClick={() => {
+                        if (submitted) return;
+                        if (onPracticeAnswer) onPracticeAnswer(option);
+                        else setAnswers(prev => ({ ...prev, [index]: option }));
+                      }}
                       className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left text-sm transition active:scale-[0.99] ${
                         neutralChosen
                           ? 'border-orange-400 bg-orange-400/10 text-white'
@@ -7009,13 +7026,11 @@ export default function App() {
     // Profiles from before tutorials recorded completion can return straight to revision.
     return Boolean(savedProgress);
   });
+  const [tour, setTour] = useState<TourCheckpoint | null>(() => tutorialCompleted ? null : readTour());
   const [savePrompt, setSavePrompt] = useState<'setup' | 'profile' | null>(
-    !savedProgress && !tutorialCompleted ? 'setup' : null
+    !savedProgress && !tutorialCompleted && !tour ? 'setup' : null
   );
-  const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(Boolean(savedProgress && !tutorialCompleted));
-  const [showTutorialPrompt, setShowTutorialPrompt] = useState(false);
-  const [tutorialStep, setTutorialStep] = useState(0);
-  const [tutorialCanContinue, setTutorialCanContinue] = useState(false);
+  const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(Boolean(savedProgress && !tutorialCompleted && !tour));
   const [workMinutes, setWorkMinutes] = useState(
     timerMinutes(savedProgress?.workMinutes, 30, 180)
   );
@@ -7064,75 +7079,16 @@ export default function App() {
   const visibleSubjects = useMemo(() => {
     const pickedSubjects = selectedSubjectSlots
       .map((subjectId) => subjects.find((subject) => subject.id === subjectId))
-      .filter(Boolean);
+      .filter(subject => subject !== undefined);
 
     return pickedSubjects.length ? pickedSubjects : subjects;
   }, [selectedSubjectSlots]);
 
   const selectedSubject =
-    visibleSubjects.find((subject) => subject.id === selectedSubjectId) ||
+    visibleSubjects.find((subject) => subject.id === (tour?.subjectId ?? selectedSubjectId)) ||
     visibleSubjects[0] ||
     subjects[0];
 
-
-  const tutorialSlides = [
-    {
-      title: 'Welcome to Iron Forge',
-      tag: 'Start here',
-      text: 'Learn how to choose subjects, unlock stages and review your answers.',
-      icon: Hammer,
-    },
-    {
-      title: 'Subject Slots',
-      tag: 'Pick your revision loadout',
-      text: 'Your subject slots decide what appears in the taskbar. Save your subjects in Settings and the taskbar will only show the subjects you actually selected. Empty every slot if you want every subject visible.',
-      icon: ListChecks,
-    },
-    {
-      title: 'Stages',
-      tag: '100% to move on',
-      text: 'Open a stage and answer its questions. Strike the Anvil marks your answers and unlocks the stage notes. Score 100% to unlock the next stage.',
-      icon: Flame,
-    },
-    {
-      title: 'Revision Clock',
-      tag: 'Still active in tests',
-      text: 'The revision clock keeps running on the Stages page and inside open stage tests. It tracks proper revision time and triggers the break alarm when your work block is done.',
-      icon: Timer,
-    },
-    {
-      title: 'Super Test',
-      tag: 'Final Forge',
-      text: 'Unlock every stage for your subject and year to start its written Super Test. A score of 100% lets you reset that year’s stages.',
-      icon: Trophy,
-    },
-    {
-      title: 'Daily Test',
-      tag: 'Keep it fresh',
-      text: 'Daily Test now mixes quick recall, tougher multiple choice, written answers and GCSE-style questions. It reshuffles so it is not just the same test every time.',
-      icon: Shuffle,
-    },
-    {
-      title: 'General and Past Papers',
-      tag: 'Wider revision',
-      text: 'General gives broader notes and OCR GCSE paper links. Use it before past papers or when you need a wider topic refresh.',
-      icon: LibraryBig,
-    },
-    {
-      title: 'Saving and Reopening',
-      tag: 'Do not lose progress',
-      text: `Click ${
-        saveEnabled ? `${username || 'Student'}'s Forge` : 'Not saving'
-      } in the taskbar to change your saving details. You can replay the tutorial from Settings.`,
-      icon: ShieldCheck,
-    },
-    {
-      title: 'Settings and Themes',
-      tag: 'Control panel',
-      text: 'Settings lets you change subject slots, save subjects, timer lengths and themes. More themes unlock as you make progress through the forge.',
-      icon: Settings,
-    },
-  ];
 
   useEffect(() => {
     try {
@@ -7141,23 +7097,18 @@ export default function App() {
   }, [tutorialCompleted]);
 
   useEffect(() => {
-    setTutorialCanContinue(false);
-    if (!showTutorialPrompt || tutorialCompleted) return;
-    const timer = window.setTimeout(() => setTutorialCanContinue(true), 7000);
-    return () => window.clearTimeout(timer);
-  }, [showTutorialPrompt, tutorialStep, tutorialCompleted]);
-  const canAdvanceTutorial = tutorialCompleted || tutorialCanContinue;
+    rememberTour(tutorialCompleted ? null : tour);
+  }, [tour, tutorialCompleted]);
 
   useEffect(() => {
-    if (!(showTutorialPrompt && tutorialCompleted) && savePrompt !== 'profile') return;
+    if (savePrompt !== 'profile') return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
-      if (showTutorialPrompt) setShowTutorialPrompt(false);
-      else setSavePrompt(null);
+      setSavePrompt(null);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [savePrompt, showTutorialPrompt, tutorialCompleted]);
+  }, [savePrompt]);
 
   const finishSubjectSetup = () => {
     const firstPickedSubject = subjectSlots.find(Boolean);
@@ -7166,8 +7117,7 @@ export default function App() {
       setSelectedSubjectId(firstPickedSubject);
     }
 
-    setTutorialStep(0);
-    setShowTutorialPrompt(!tutorialCompleted);
+    if (!tutorialCompleted) setTour({ step: 'subjects', subjectId: firstPickedSubject || selectedSubject.id });
     setShowSubjectSetupPrompt(false);
   };
 
@@ -7223,6 +7173,10 @@ export default function App() {
     window.setTimeout(() => setSubjectSaveMessage(''), 2500);
   };
 
+  const [unlocked, setUnlocked] = useState({
+    ...defaultUnlockedStages,
+    ...(savedProgress?.unlocked || {}),
+  });
   const sectionTopics = useMemo(() => {
     return selectedSubject.topics.filter(
       (topic) => topic.section === selectedSection
@@ -7236,18 +7190,32 @@ export default function App() {
 
   useEffect(() => {
     if (
-      sectionTopics.length > 0 &&
+      !tour && sectionTopics.length > 0 &&
       !sectionTopics.some((topic) => topic.id === selectedTopicId)
     ) {
       setSelectedTopicId(sectionTopics[0].id);
     }
-  }, [selectedSubjectId, selectedSection, sectionTopics, selectedTopicId]);
-  const selectedTopic =
+  }, [tour, selectedSubjectId, selectedSection, sectionTopics, selectedTopicId]);
+  const availableStage = sectionTopics.find(topic => unlocked[topic.id]);
+  const practiceStage = availableStage ?? selectedSubject.topics[0];
+  const selectedTopic = tour ? practiceStage :
     sectionTopics.find((topic) => topic.id === selectedTopicId) ||
     sectionTopics[0] ||
     selectedSubject.topics[0];
 
-  const [view, setView] = useState('home');
+  const [normalView, setView] = useState('home');
+  const tourSteps = useMemo(
+    () => getTourSteps(selectedSubject.title, selectedSection, practiceStage, Boolean(availableStage)),
+    [selectedSubject.title, selectedSection, practiceStage, availableStage]
+  );
+  // A changed year or subject list can invalidate a saved step. Re-open Stages in that case.
+  let tourIndex = tour ? tourSteps.findIndex(step => step.id === tour.step) : 0;
+  if (tourIndex < 0) tourIndex = tourSteps.findIndex(step => step.id === 'stages');
+  if (tour && !tour.answer && ['mark', 'result'].includes(tourSteps[tourIndex].id)) {
+    tourIndex = tourSteps.findIndex(step => step.id === 'answer');
+  }
+  const tourStep = tourSteps[tourIndex].id;
+  const view = tour ? tourView(tourStep) : normalView;
   const canOpenCreatorAccess = view === 'home' || view === 'settings';
 
   useEffect(() => {
@@ -7259,21 +7227,37 @@ export default function App() {
   const [activeThemeId, setActiveThemeId] = useState(
     savedProgress?.activeThemeId || 'forge'
   );
-  const [subjectsOpen, setSubjectsOpen] = useState(false);
-  const [answers, setAnswers] = useState({});
+  const [subjectMenuOpen, setSubjectsOpen] = useState(false);
+  const subjectsOpen = tour ? tourStep === 'pick' : subjectMenuOpen;
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [dailyAnswers, setDailyAnswers] = useState({});
+  const [dailyAnswers, setDailyAnswers] = useState<Record<number, string>>({});
   const [dailySubmitted, setDailySubmitted] = useState(false);
   const [dailyRunKey, setDailyRunKey] = useState(0);
-  const { clock, startBreak, restartWorkBlock, resetClock } = useRevisionClock(savedProgress, view, selectedSubjectId, workMinutes);
+  const { clock, startBreak, restartWorkBlock, resetClock } = useRevisionClock(savedProgress, tour ? 'home' : view, selectedSubjectId, workMinutes);
   const { revisionSeconds, revisionSecondsBySubject, breakEndsAt } = clock;
   const [achievementToast, setAchievementToast] = useState(null);
   const achievementToastStartedRef = useRef(false);
   const previousUnlockedThemeIdsRef = useRef([]);
-  const [unlocked, setUnlocked] = useState({
-    ...defaultUnlockedStages,
-    ...(savedProgress?.unlocked || {}),
-  });
+  const practiceQuestion = practiceStage.questions.find((question: QuizQuestion) => question.options?.length);
+  const practiceMarked = tourStep === 'result';
+
+  function closeTour() {
+    setSubjectsOpen(false);
+    setTour(null);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function advanceTour() {
+    const next = tourSteps[tourIndex + 1];
+    if (next) {
+      setTour(current => current && { ...current, step: next.id });
+      return;
+    }
+    setTutorialCompleted(true);
+    setView('home');
+    closeTour();
+  }
 
   useEffect(() => {
     if (!visibleSubjects.length) return;
@@ -7572,6 +7556,10 @@ export default function App() {
   }
 
   function switchSubject(subject) {
+    if (tour) {
+      setTour(current => current && { ...current, subjectId: subject.id });
+      return;
+    }
     incrementThemeAction('subjectSwitches5');
     setSelectedSubjectId(subject.id);
     const firstUnlockedTopic =
@@ -7586,6 +7574,7 @@ export default function App() {
   }
 
   function openTopic(topic) {
+    if (tour) return;
     if (!unlocked[topic.id]) return;
     setSelectedTopicId(topic.id);
     if (activeTheme.id === 'volcano') {
@@ -7629,6 +7618,7 @@ export default function App() {
   }
 
   function goToStages() {
+    if (tour) return;
     setView('stages');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -7698,7 +7688,7 @@ export default function App() {
         }} />
       )}
 
-      {breakEndsAt !== null && (
+      {breakEndsAt !== null && !tour && (
         <div role="dialog" aria-modal="true" aria-labelledby="revision-break-title" className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
           {breakEndsAt === 0 && <div className="absolute inset-0 break-burst" />}
           <div className="forge-scroll-panel relative w-full max-w-lg rounded-3xl border border-orange-300/40 bg-zinc-950/92 p-8 text-center shadow-2xl shadow-orange-950/50">
@@ -7807,6 +7797,7 @@ export default function App() {
 
       {showSubjectSetupPrompt && view === 'home' && (
         <div
+          role="dialog" aria-modal="true" aria-labelledby="subject-setup-title"
           className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
           style={{ zIndex: 9999 }}
         >
@@ -7823,7 +7814,7 @@ export default function App() {
               <ListChecks className="h-7 w-7" />
             </div>
 
-            <h2 className="text-3xl font-black text-white">
+            <h2 id="subject-setup-title" className="text-3xl font-black text-white">
               Choose your year and subjects
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
@@ -7883,102 +7874,9 @@ export default function App() {
         </div>
       )}
 
-      {showTutorialPrompt && (
-        <div
-          role="dialog" aria-modal="true" aria-labelledby="tutorial-slide-title"
-          className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
-          style={{ zIndex: 9999 }}
-        >
-          <div className="forge-scroll-panel relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
-            {tutorialCompleted && (
-              <button type="button" autoFocus onClick={() => setShowTutorialPrompt(false)}
-                className="absolute right-4 top-4 rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-200 hover:bg-zinc-800">
-                Close tutorial
-              </button>
-            )}
-            {(() => {
-              const slide = tutorialSlides[tutorialStep];
-              const Icon = slide.icon;
-
-              return (
-                <>
-                  <div className="inline-flex rounded-2xl bg-orange-400/10 p-3 text-orange-300">
-                    <Icon className="h-8 w-8" />
-                  </div>
-
-                  <p className="mt-5 text-xs font-black uppercase tracking-[0.28em] text-orange-300">
-                    {slide.tag}
-                  </p>
-
-                  <h2 id="tutorial-slide-title" className="mt-2 text-3xl font-black text-white">
-                    {slide.title}
-                  </h2>
-
-                  <p className="mt-4 text-base leading-7 text-zinc-300">
-                    {slide.text}
-                  </p>
-
-                  <div className="mt-6 flex items-center gap-2">
-                    {tutorialSlides.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`h-2 rounded-full transition-all ${
-                          index === tutorialStep
-                            ? 'w-10 bg-orange-400'
-                            : 'w-2 bg-zinc-700'
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-sm font-bold text-zinc-400">
-                      Step {tutorialStep + 1} of {tutorialSlides.length}
-                    </p>
-
-                    <div className="flex gap-3">
-                      {tutorialStep > 0 && (
-                        <button
-                          onClick={() =>
-                            setTutorialStep((step) => Math.max(0, step - 1))
-                          }
-                          className="rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
-                        >
-                          Back
-                        </button>
-                      )}
-
-                      <button
-                        disabled={!canAdvanceTutorial}
-                        onClick={() => {
-                          if (!canAdvanceTutorial) return;
-
-                          if (tutorialStep >= tutorialSlides.length - 1) {
-                            setTutorialCompleted(true);
-                            setShowTutorialPrompt(false);
-                          } else {
-                            setTutorialStep((step) => step + 1);
-                          }
-                        }}
-                        className={`rounded-2xl px-5 py-3 text-sm font-black text-white active:scale-[0.99] ${
-                          canAdvanceTutorial
-                            ? 'bg-orange-500 hover:bg-orange-600'
-                            : 'cursor-not-allowed bg-zinc-700 opacity-60'
-                        }`}
-                      >
-                        {!canAdvanceTutorial
-                          ? 'Wait 7 seconds'
-                          : tutorialStep >= tutorialSlides.length - 1
-                          ? 'Start forging'
-                          : 'Next'}
-                      </button>
-                    </div>
-                  </div>
-                </>
-              );
-            })()}
-          </div>
-        </div>
+      {tour && (
+        <ForgeTour steps={tourSteps} index={tourIndex} onAdvance={advanceTour}
+          onClose={tutorialCompleted ? closeTour : undefined} />
       )}
       <style>{`
         :where(*, ::before, ::after) {
@@ -8581,7 +8479,7 @@ export default function App() {
 
       `}</style>
 
-      <div className="relative z-10">
+      <div className="relative z-10" inert={Boolean(savePrompt || showSubjectSetupPrompt)}>
         {achievementToast && (
           <div className="minecraft-achievement-toast fixed right-4 top-20 z-[9998] w-[min(92vw,360px)] overflow-hidden rounded-sm border-4 border-zinc-700 bg-zinc-950 shadow-2xl shadow-black/60">
             <div className="minecraft-achievement-notch border-b-4 border-zinc-800 bg-zinc-900 px-4 py-3">
@@ -8623,7 +8521,8 @@ export default function App() {
                 <Home className="h-4 w-4" /> Home
               </button>
               <button
-                onClick={() => setSubjectsOpen((prev) => !prev)}
+                data-tour="subjects"
+                onClick={() => { if (!tour) setSubjectsOpen(prev => !prev); }}
                 className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${
                   subjectsOpen
                     ? activeTheme.button + ' text-white'
@@ -8649,7 +8548,7 @@ export default function App() {
                 <LibraryBig className="h-4 w-4" /> General
               </button>
               <button
-                onClick={goToStages}
+                data-tour="stages" onClick={goToStages}
                 className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${
                   view === 'stages' || view === 'topic'
                     ? activeTheme.button + ' text-white'
@@ -8752,7 +8651,7 @@ export default function App() {
                   return (
                     <button
                       key={subject.id}
-                      onClick={() => switchSubject(subject)}
+                      data-tour="subject-option" onClick={() => switchSubject(subject)}
                       className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${
                         isSelected
                           ? activeTheme.soft + ' ' + activeTheme.accent
@@ -8838,7 +8737,7 @@ export default function App() {
               <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 md:text-lg md:leading-8">
                 Pick a subject, open a stage, test yourself, and unlock the next
                 stage only when you score full marks.
-                {(view === 'stages' || view === 'topic') &&
+                {!tour && (view === 'stages' || view === 'topic') &&
                   ` You are revising now — break alarm triggers every ${workMinutes} minutes for a ${breakMinutes} minute break.`}
               </p>
             </div>
@@ -9267,7 +9166,8 @@ export default function App() {
                   stages={sectionTopics}
                   unlocked={unlocked}
                   onOpenStage={openTopic}
-                  activeStageId={view === 'topic' ? selectedTopic.id : undefined}
+                  activeStageId={view === 'topic' || (tour && tourStep === 'stage') ? selectedTopic.id : undefined}
+                  tourStageId={tour ? practiceStage.id : undefined}
                 />
               </aside>
 
@@ -9279,47 +9179,54 @@ export default function App() {
                     <div className="flex items-center justify-between gap-2">
                       <div>
                         <p className="mb-1 flex items-center gap-2 text-sm font-bold text-orange-300">
-                          <Timer className="h-4 w-4" /> Stage test
+                          <Timer className="h-4 w-4" /> {tour ? 'Tour practice' : 'Stage test'}
                         </p>
                         <h2 className="text-2xl font-black text-white">
                           {selectedTopic.title}
                         </h2>
                       </div>
                       <ProgressRing
-                        value={submitted ? score : 0}
+                        value={tour ? (practiceMarked && tour.answer === practiceQuestion.answer ? 100 : 0) : submitted ? score : 0}
                         label="Score"
                       />
                     </div>
 
                     <QuizBlock
-                      questions={selectedTopic.questions}
-                      answers={answers}
+                      questions={tour ? [practiceQuestion] : selectedTopic.questions}
+                      answers={tour ? { 0: tour.answer } : answers}
                       setAnswers={setAnswers}
-                      submitted={submitted}
+                      submitted={tour ? practiceMarked : submitted}
+                      onPracticeAnswer={tour ? option => setTour(current => current && { ...current, answer: option }) : undefined}
                     />
 
                     <div className="mt-5 flex flex-wrap gap-3">
                       <button
-                        onClick={submitQuiz}
+                        data-tour="mark" onClick={tour ? undefined : submitQuiz}
                         className={`rounded-2xl px-5 py-3 font-bold text-white active:scale-[0.99] ${activeTheme.button}`}
                       >
                         Strike the Anvil
                       </button>
-                      <button
+                      {!tour && <button
                         onClick={resetQuiz}
                         className="inline-flex items-center rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-100 hover:bg-zinc-800 active:scale-[0.99]"
                       >
                         <RotateCcw className="mr-2 h-4 w-4" /> Retry
-                      </button>
+                      </button>}
                     </div>
 
-                    {submitted && !passed && (
+                    {tour && practiceMarked && (
+                      <div data-tour="practice-result" role="status" className="mt-4 rounded-2xl border border-zinc-700 bg-zinc-950 p-4">
+                        <p className="font-bold text-white">{tour.answer === practiceQuestion.answer ? 'You got it!' : 'Here’s the correct answer'}</p>
+                        <p className="mt-1 text-zinc-300">{practiceQuestion.answer}</p>
+                      </div>
+                    )}
+                    {!tour && submitted && !passed && (
                       <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm font-semibold text-red-200">
                         Not forged yet. You need 100%. Re-read the notes and
                         retry.
                       </div>
                     )}
-                    {passed && (
+                    {!tour && passed && (
                       <div className="mt-4 rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-sm font-semibold text-green-200">
                         <div className="flex items-center gap-2">
                           <Trophy className="h-5 w-5" /> {nextTopic ? 'Stage forged. Next stage unlocked.' : 'Final stage forged.'}
@@ -9331,7 +9238,7 @@ export default function App() {
                         )}
                       </div>
                     )}
-                    {submitted && (
+                    {!tour && submitted && (
                       <details className="mt-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
                         <summary className="cursor-pointer font-bold text-orange-300">Stage notes</summary>
                         <ol className="mt-3 list-decimal space-y-2 pl-6 text-zinc-300 marker:font-bold marker:text-orange-400">
@@ -9344,7 +9251,7 @@ export default function App() {
 
                 {view === 'daily' && (
                   <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div data-tour="daily-intro" className="flex flex-wrap items-center justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2">
                           <Shuffle className="h-6 w-6 text-orange-400" />
@@ -9665,8 +9572,8 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => {
-                          setTutorialStep(0);
-                          setShowTutorialPrompt(true);
+                          setSubjectsOpen(false);
+                          setTour({ step: 'subjects', subjectId: selectedSubject.id });
                         }}
                         className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800"
                       >
