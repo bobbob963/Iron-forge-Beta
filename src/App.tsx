@@ -6,6 +6,8 @@ import BreakCountdown from './BreakCountdown';
 import { formatClock, isRevisionView, timerMinutes, useRevisionClock } from './revisionClock';
 import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
+import { biologySuperTest } from './biologySuperTest';
+import { biologyWrittenQuestions, markBiologyWritten } from './biologyWrittenQuestions';
 import './floralThemes.css';
 import { CherryClouds, CherryPetalsOverlay, ValentineHearts } from './ThemeAtmosphere';
 import {
@@ -2735,7 +2737,18 @@ const subjects = [
         ]
       ),
       ...biologyTopic3Stages,
-    ],
+    ].map(topic => {
+      const written = biologyWrittenQuestions[topic.id] ?? [];
+      return {
+        ...topic,
+        questions: [
+          ...topic.questions.slice(0, 2),
+          ...written.slice(0, 1),
+          ...topic.questions.slice(2),
+          ...written.slice(1),
+        ],
+      };
+    }),
   },
   {
     id: 'dt',
@@ -5911,6 +5924,7 @@ function answerTokens(value) {
 }
 
 function isBroadAnswerCorrect(question, userAnswer) {
+  if (question.marks) return markBiologyWritten(question, userAnswer);
   const cleanUserAnswer = normaliseAnswer(userAnswer);
   const cleanCorrectAnswer = normaliseAnswer(question.answer);
 
@@ -5941,6 +5955,10 @@ function isBroadAnswerCorrect(question, userAnswer) {
   return (
     matchedTokens.length >= Math.max(2, Math.ceil(correctTokens.length * 0.5))
   );
+}
+
+function isQuizAnswerCorrect(question, answer) {
+  return question.type === 'written' ? isBroadAnswerCorrect(question, answer) : answer === question.answer;
 }
 
 const GCSE_DAILY_EXAM_QUESTIONS = {
@@ -6270,7 +6288,7 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
     topic.questions.map((question) => ({
       ...question,
       topicTitle: topic.title,
-      type: 'multiple-choice',
+      type: question.type ?? 'multiple-choice',
     }))
   );
 
@@ -6309,16 +6327,21 @@ function getDailyQuestions(subject, count = 10, runKey = 0) {
   const examCount = Math.min(3, examQuestions.length, Math.ceil(count * 0.3));
   const quickCount = Math.max(0, count - examCount);
 
-  const selectedQuickQuestions = seededShuffle(allQuickQuestions)
-    .slice(0, Math.min(quickCount, allQuickQuestions.length))
-    .map((question, index) => {
-      const isWritten = index % 3 === 1;
-      return {
-        ...question,
-        type: isWritten ? 'written' : 'multiple-choice',
-        q: isWritten ? makeWordedQuestionText(question.q) : question.q,
-      };
-    });
+  const authoredWritten = allQuickQuestions.filter(question => question.type === 'written');
+  let selectedQuickQuestions;
+  if (authoredWritten.length) {
+    const choices = allQuickQuestions.filter(question => question.type === 'multiple-choice');
+    const choiceCount = Math.min(choices.length, quickCount - Math.min(authoredWritten.length, Math.ceil(quickCount / 3)));
+    selectedQuickQuestions = [
+      ...seededShuffle(choices).slice(0, choiceCount),
+      ...seededShuffle(authoredWritten).slice(0, quickCount - choiceCount),
+    ];
+  } else {
+    selectedQuickQuestions = seededShuffle(allQuickQuestions).slice(0, quickCount)
+      .map((question, index) => index % 3 === 1
+        ? { ...question, type: 'written', q: makeWordedQuestionText(question.q) }
+        : question);
+  }
 
   const selectedExamQuestions = seededShuffle(examQuestions).slice(
     0,
@@ -6801,6 +6824,7 @@ function QuizBlock({
               <div className="mt-3">
                 <textarea
                   value={answers[index] || ''}
+                  aria-label={item.q}
                   onChange={(event) =>
                     !submitted &&
                     setAnswers((prev) => ({
@@ -7055,7 +7079,7 @@ export default function App() {
     {
       title: 'Stages',
       tag: '100% to move on',
-      text: 'Stages are the main topic path. Read the notes, answer the test, then hit Strike the Anvil. You need 100% before the next stage unlocks.',
+      text: 'Open a stage and answer its questions. Strike the Anvil marks your answers and unlocks the stage notes. Score 100% to unlock the next stage.',
       icon: Flame,
     },
     {
@@ -7067,7 +7091,7 @@ export default function App() {
     {
       title: 'Super Test',
       tag: 'Final Forge',
-      text: 'Once every stage in a subject is unlocked, the Super Test appears. It uses written answers and you need 100% before you can reset that subject.',
+      text: 'Unlock every stage for your subject and year to start its written Super Test. A score of 100% lets you reset that year’s stages.',
       icon: Trophy,
     },
     {
@@ -7208,7 +7232,6 @@ export default function App() {
       setThemeUnlockCodeOpen(false);
     }
   }, [view]);
-  const [stageTab, setStageTab] = useState('test');
   const [activeThemeId, setActiveThemeId] = useState(
     savedProgress?.activeThemeId || 'forge'
   );
@@ -7258,6 +7281,12 @@ export default function App() {
     sectionTopics.every((topic) => unlocked[topic.id]);
 
   const superTestQuestions = useMemo(() => {
+    if (selectedSubject.id === 'bio') {
+      return sectionTopics.flatMap((topic) => {
+        const question = biologySuperTest[topic.id];
+        return question ? [{ ...question, topicTitle: topic.title }] : [];
+      });
+    }
     return sectionTopics
       .flatMap((topic) =>
         topic.questions.map((question) => ({
@@ -7268,7 +7297,7 @@ export default function App() {
         }))
       )
       .slice(0, 12);
-  }, [sectionTopics]);
+  }, [selectedSubject.id, sectionTopics]);
 
   const superTestScore = useMemo(() => {
     const correct = superTestQuestions.filter((question, index) =>
@@ -7282,6 +7311,7 @@ export default function App() {
   const superTestPassed = superTestSubmitted && superTestScore === 100;
 
   function openSuperTest() {
+    if (!subjectSuperTestReady || !superTestQuestions.length) return;
     setSuperTestAnswers({});
     setSuperTestSubmitted(false);
     setView('superTest');
@@ -7349,17 +7379,13 @@ export default function App() {
 
   const score = useMemo(() => {
     const correct = selectedTopic.questions.filter(
-      (item, index) => answers[index] === item.answer
+      (item, index) => isQuizAnswerCorrect(item, answers[index])
     ).length;
     return Math.round((correct / selectedTopic.questions.length) * 100);
   }, [answers, selectedTopic]);
 
   const dailyScore = useMemo(() => {
-    const correct = dailyQuestions.filter((item, index) => {
-      if (item.type === 'written')
-        return isBroadAnswerCorrect(item, dailyAnswers[index]);
-      return dailyAnswers[index] === item.answer;
-    }).length;
+    const correct = dailyQuestions.filter((item, index) => isQuizAnswerCorrect(item, dailyAnswers[index])).length;
     return dailyQuestions.length
       ? Math.round((correct / dailyQuestions.length) * 100)
       : 0;
@@ -7543,7 +7569,6 @@ export default function App() {
     }
     setAnswers({});
     setSubmitted(false);
-    setStageTab('test');
     setView('topic');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -9197,7 +9222,11 @@ export default function App() {
           )}
 
           {(view === 'stages' || view === 'topic' || view === 'daily') && (
-            <section className={view === 'stages' ? 'mx-auto mt-6 max-w-3xl' : 'mt-6 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]'}>
+            <section className={{
+              stages: 'mx-auto mt-6 max-w-3xl',
+              topic: 'mt-6 grid gap-6 lg:grid-cols-[minmax(16rem,0.8fr)_minmax(0,2fr)]',
+              daily: 'mt-6 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]',
+            }[view]}>
               <aside
                 className={`${
                   view !== 'stages' ? 'hidden lg:block' : 'block'
@@ -9244,25 +9273,27 @@ export default function App() {
                   </div>
                 </button>
 
-                {subjectSuperTestReady && (
+                {(subjectSuperTestReady || (view === 'stages' && selectedSubject.id === 'bio' && sectionTopics.length > 0)) && (
                   <button
                     onClick={openSuperTest}
-                    className="w-full rounded-3xl border border-green-400/40 bg-green-500/10 p-5 text-left transition hover:bg-green-500/15 active:scale-[0.99]"
+                    disabled={!subjectSuperTestReady}
+                    className="w-full rounded-3xl border border-green-400/40 bg-green-500/10 p-5 text-left transition enabled:hover:bg-green-500/15 enabled:active:scale-[0.99] disabled:border-zinc-800 disabled:bg-zinc-900"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm font-bold uppercase tracking-widest text-green-300">
-                          Final Forge Ready
+                        <p className="text-sm font-bold uppercase tracking-widest text-zinc-400">
+                          {selectedSection}
                         </p>
                         <h3 className="mt-1 text-xl font-black text-white">
-                          All stages are unlocked — do the Super Test now
+                          {selectedSubject.id === 'bio' ? 'Biology' : selectedSubject.title} Super Test
                         </h3>
                         <p className="mt-2 text-sm text-zinc-400">
-                          Written answers only. You need 100% before you can
-                          reset this subject.
+                          {subjectSuperTestReady
+                            ? `Start the ${superTestQuestions.length}-question written test. Score 100% to reset this year’s stages.`
+                            : `Unlock all ${sectionTopics.length} stages to start. ${subjectUnlockedCount} of ${sectionTopics.length} unlocked.`}
                         </p>
                       </div>
-                      <Trophy className="h-6 w-6 text-green-300" />
+                      {subjectSuperTestReady ? <Trophy className="h-6 w-6 text-green-300" /> : <Lock className="h-6 w-6 text-zinc-400" />}
                     </div>
                   </button>
                 )}
@@ -9285,122 +9316,70 @@ export default function App() {
                 className={view === 'stages' ? 'hidden' : 'block'}
               >
                 {view === 'topic' && (
-                  <div className="grid gap-6 xl:grid-cols-2">
-                    <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="h-6 w-6 text-orange-400" />
-                          <h2 className="text-2xl font-black text-white">
-                            Stage
-                          </h2>
-                        </div>
-                        <div className="flex rounded-2xl border border-zinc-800 bg-zinc-950 p-1">
-                          <button
-                            onClick={() => submitted && setStageTab('notes')}
-                            disabled={!submitted}
-                            className={`rounded-xl px-3 py-2 text-sm font-bold ${
-                              stageTab === 'notes'
-                                ? 'bg-orange-500 text-white'
-                                : 'text-zinc-400'
-                            } disabled:cursor-not-allowed disabled:opacity-40`}
-                            title={
-                              !submitted
-                                ? 'Notes unlock after you click Strike the Anvil.'
-                                : 'Open notes'
-                            }
-                          >
-                            Notes
-                          </button>
-                          <button
-                            onClick={() => setStageTab('test')}
-                            className={`rounded-xl px-3 py-2 text-sm font-bold ${
-                              stageTab === 'test'
-                                ? 'bg-orange-500 text-white'
-                                : 'text-zinc-400'
-                            }`}
-                          >
-                            Test
-                          </button>
-                        </div>
+                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <p className="mb-1 flex items-center gap-2 text-sm font-bold text-orange-300">
+                          <Timer className="h-4 w-4" /> Stage test
+                        </p>
+                        <h2 className="text-2xl font-black text-white">
+                          {selectedTopic.title}
+                        </h2>
                       </div>
-                      <p className="mt-2 text-sm font-semibold uppercase tracking-widest text-zinc-500">
-                        {selectedTopic.title}
-                      </p>
-
-                      {stageTab === 'notes' && submitted ? (
-                        <div className="mt-5 space-y-3">
-                          {selectedTopic.notes.map((note, index) => (
-                            <div
-                              key={index}
-                              className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4 text-zinc-300"
-                            >
-                              <span className="mr-2 font-black text-orange-400">
-                                {index + 1}.
-                              </span>
-                              {note}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="mt-5 rounded-2xl border border-zinc-800 bg-zinc-950 p-4 text-zinc-300">
-                          Notes are locked while the test is active. Click
-                          Strike the Anvil to mark your answers and unlock the
-                          notes.
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <Timer className="h-6 w-6 text-orange-400" />
-                          <h2 className="text-2xl font-black text-white">
-                            Test
-                          </h2>
-                        </div>
-                        <ProgressRing
-                          value={submitted ? score : 0}
-                          label="Score"
-                        />
-                      </div>
-
-                      <QuizBlock
-                        questions={selectedTopic.questions}
-                        answers={answers}
-                        setAnswers={setAnswers}
-                        submitted={submitted}
+                      <ProgressRing
+                        value={submitted ? score : 0}
+                        label="Score"
                       />
-
-                      <div className="mt-5 flex flex-wrap gap-3">
-                        <button
-                          onClick={submitQuiz}
-                          className={`rounded-2xl px-5 py-3 font-bold text-white active:scale-[0.99] ${activeTheme.button}`}
-                        >
-                          Strike the Anvil
-                        </button>
-                        <button
-                          onClick={resetQuiz}
-                          className="inline-flex items-center rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-100 hover:bg-zinc-800 active:scale-[0.99]"
-                        >
-                          <RotateCcw className="mr-2 h-4 w-4" /> Retry
-                        </button>
-                      </div>
-
-                      {submitted && !passed && (
-                        <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm font-semibold text-red-200">
-                          Not forged yet. You need 100%. Re-read the notes and
-                          retry.
-                        </div>
-                      )}
-                      {passed && (
-                        <div className="mt-4 rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-sm font-semibold text-green-200">
-                          <div className="flex items-center gap-2">
-                            <Trophy className="h-5 w-5" /> Stage forged. Next
-                            stage unlocked.
-                          </div>
-                        </div>
-                      )}
                     </div>
+
+                    <QuizBlock
+                      questions={selectedTopic.questions}
+                      answers={answers}
+                      setAnswers={setAnswers}
+                      submitted={submitted}
+                    />
+
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      <button
+                        onClick={submitQuiz}
+                        className={`rounded-2xl px-5 py-3 font-bold text-white active:scale-[0.99] ${activeTheme.button}`}
+                      >
+                        Strike the Anvil
+                      </button>
+                      <button
+                        onClick={resetQuiz}
+                        className="inline-flex items-center rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-100 hover:bg-zinc-800 active:scale-[0.99]"
+                      >
+                        <RotateCcw className="mr-2 h-4 w-4" /> Retry
+                      </button>
+                    </div>
+
+                    {submitted && !passed && (
+                      <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm font-semibold text-red-200">
+                        Not forged yet. You need 100%. Re-read the notes and
+                        retry.
+                      </div>
+                    )}
+                    {passed && (
+                      <div className="mt-4 rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-sm font-semibold text-green-200">
+                        <div className="flex items-center gap-2">
+                          <Trophy className="h-5 w-5" /> {nextTopic ? 'Stage forged. Next stage unlocked.' : 'Final stage forged.'}
+                        </div>
+                        {!nextTopic && subjectSuperTestReady && (
+                          <button type="button" onClick={openSuperTest} className="mt-3 rounded-lg border border-green-400/40 px-3 py-2 font-bold">
+                            Start Super Test
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {submitted && (
+                      <details className="mt-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                        <summary className="cursor-pointer font-bold text-orange-300">Stage notes</summary>
+                        <ol className="mt-3 list-decimal space-y-2 pl-6 text-zinc-300 marker:font-bold marker:text-orange-400">
+                          {selectedTopic.notes.map((note, index) => <li key={index}>{note}</li>)}
+                        </ol>
+                      </details>
+                    )}
                   </div>
                 )}
 
@@ -9466,15 +9445,13 @@ export default function App() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">
-                      Final Forge
+                      Final Forge · {selectedSection}
                     </p>
                     <h2 className="mt-2 text-4xl font-black text-white">
-                      {selectedSubject.title} Super Test
+                      {selectedSubject.id === 'bio' ? 'Biology' : selectedSubject.title} Super Test
                     </h2>
                     <p className="mt-2 max-w-2xl text-zinc-400">
-                      This is the written-answer test for the whole subject.
-                      Write your answers properly, then submit to compare them
-                      with the suggested answers.
+                      Answer all {superTestQuestions.length} written questions, then submit to see your marks and suggested answers.
                     </p>
                   </div>
                   <button
@@ -9499,10 +9476,11 @@ export default function App() {
                           {question.topicTitle}
                         </p>
                       </div>
-                      <h3 className="mt-3 text-xl font-black text-white">
+                      <h3 id={`super-question-${index}`} className="mt-3 text-xl font-black text-white">
                         {question.q}
                       </h3>
                       <textarea
+                        aria-labelledby={`super-question-${index}`}
                         value={superTestAnswers[index] || ''}
                         onChange={(event) =>
                           setSuperTestAnswers({
@@ -9559,8 +9537,7 @@ export default function App() {
                           Ready to submit?
                         </h3>
                         <p className="mt-1 text-sm text-zinc-400">
-                          After submitting, you need 100% before the subject
-                          reset unlocks.
+                          A score of 100% unlocks the option to reset your {selectedSection} stages for {selectedSubject.title}.
                         </p>
                       </div>
                       <button
@@ -9578,8 +9555,8 @@ export default function App() {
                         </h3>
                         <p className="mt-1 text-sm text-zinc-400">
                           {superTestPassed
-                            ? '100% earned. You can now reset this subject and re-forge it from the beginning.'
-                            : 'Reset is locked. You need 100% on the Super Test first.'}
+                            ? `You can now reset your ${selectedSection} stages for ${selectedSubject.title}.`
+                            : 'Review the suggested answers and retry to earn 100%.'}
                         </p>
                       </div>
                       <div className="flex flex-wrap gap-3">
@@ -9600,7 +9577,7 @@ export default function App() {
                           disabled={!superTestPassed}
                           className="rounded-2xl border border-red-400/40 bg-red-500/15 px-6 py-3 font-black text-red-100 hover:bg-red-500/25 disabled:cursor-not-allowed disabled:opacity-40"
                         >
-                          Reset {selectedSubject.title} progress
+                          Reset {selectedSubject.title} {selectedSection} stages
                         </button>
                       </div>
                     </div>

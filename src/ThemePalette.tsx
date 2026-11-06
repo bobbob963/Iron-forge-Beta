@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { Lock } from 'lucide-react';
+import { Lock, RotateCcw } from 'lucide-react';
 import './themePalette.css';
 
 type Role = 'primary' | 'secondary';
@@ -86,8 +86,13 @@ export default function ThemePalette({ theme, unlocked, colours, onChange }: Pro
       <div ref={probes} hidden aria-hidden="true"><i className={theme.button} /><i className={theme.panel} /></div>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-xl font-bold text-white">Colour palette</h3>
-        {unlocked && Object.keys(colours).length > 0 &&
-          <button className="rounded-md px-2 py-1 text-sm font-semibold text-zinc-200 underline" onClick={() => onChange({})}>Restore theme colours</button>}
+        {unlocked && (
+          <button type="button" disabled={!colours.primary && !colours.secondary}
+            onClick={() => onChange({})} title={'Restore both default colours for ' + theme.name}
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-600 bg-zinc-900 px-3 py-2 text-sm font-bold text-white enabled:hover:bg-zinc-800 disabled:opacity-45">
+            <RotateCcw size={15} aria-hidden="true" /> Reset to default
+          </button>
+        )}
       </div>
       {unlocked ? <>
         <p className="mt-1 text-sm text-zinc-300">Personalise {theme.name}. Your colours are saved on this device.</p>
@@ -106,6 +111,13 @@ export default function ThemePalette({ theme, unlocked, colours, onChange }: Pro
                   aria-label={label + ' ' + name + ' ' + hex} title={name + ' · ' + hex}
                   aria-pressed={colours[role] === hex} style={{ backgroundColor: hex, color: ink(hex) }}
                   onClick={() => onChange({ ...colours, [role]: hex })}>{colours[role] === hex && '✓'}</button>)}
+                <button type="button" disabled={!colours[role]} aria-label={'Reset ' + role + ' to default'}
+                  className="rounded-md border border-zinc-700 px-2 py-1 text-sm text-zinc-200 enabled:hover:bg-zinc-800 disabled:opacity-45"
+                  onClick={() => {
+                    const next = { ...colours };
+                    delete next[role];
+                    onChange(next);
+                  }}>Default</button>
               </div>
             </fieldset>;
           })}
