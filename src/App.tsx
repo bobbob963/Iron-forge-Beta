@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CyberThemeBackground, GodThemeBackground, JapanCarOverlay, JapanThemeBackground, VolcanoThemeBackground } from './ForgeScenes';
 import StageTopicList from './StageTopicList';
 import BreakCountdown from './BreakCountdown';
+import CreatorAccessDialog from './CreatorAccessDialog';
 import { formatClock, isRevisionView, timerMinutes, useRevisionClock } from './revisionClock';
 import ThemePalette, { paletteStyle, useThemePalettes } from './ThemePalette';
 import { biologyTopic3Stages } from './biologyTopic3';
@@ -6926,6 +6927,7 @@ function QuizBlock({
 const STORAGE_KEY = 'ironForgeProgressV1';
 const PROGRESS_VERSION = 2;
 const YEAR_PREFERENCE_KEY = 'ironForgeRevisionYear';
+const TUTORIAL_STATUS_KEY = 'ironForgeTutorialStatus';
 const subjectSections = ['Year 10 EOYs', 'Year 11'];
 
 function initialRevisionYear(profileYear) {
@@ -6997,8 +6999,20 @@ export default function App() {
   const [saveEnabled, setSaveEnabled] = useState(
     savedProgress?.saveEnabled ?? false
   );
-  const [showSavePrompt, setShowSavePrompt] = useState(!savedProgress);
-  const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(false);
+  const [tutorialCompleted, setTutorialCompleted] = useState(() => {
+    try {
+      const status = localStorage.getItem(TUTORIAL_STATUS_KEY);
+      if (status !== null) return status === 'complete';
+      // Older guest visits saved the revision year even when progress saving was off.
+      if (localStorage.getItem(YEAR_PREFERENCE_KEY) !== null) return true;
+    } catch { /* Use the saved profile when device preferences are unavailable. */ }
+    // Profiles from before tutorials recorded completion can return straight to revision.
+    return Boolean(savedProgress);
+  });
+  const [savePrompt, setSavePrompt] = useState<'setup' | 'profile' | null>(
+    !savedProgress && !tutorialCompleted ? 'setup' : null
+  );
+  const [showSubjectSetupPrompt, setShowSubjectSetupPrompt] = useState(Boolean(savedProgress && !tutorialCompleted));
   const [showTutorialPrompt, setShowTutorialPrompt] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
   const [tutorialCanContinue, setTutorialCanContinue] = useState(false);
@@ -7027,15 +7041,13 @@ export default function App() {
   );
   const [superTestAnswers, setSuperTestAnswers] = useState({});
   const [superTestSubmitted, setSuperTestSubmitted] = useState(false);
-  const [themeUnlockCodeOpen, setThemeUnlockCodeOpen] = useState(false);
-  const [themeUnlockCode, setThemeUnlockCode] = useState('');
+  const [creatorAccessOpen, setCreatorAccessOpen] = useState(false);
   const [allThemesUnlocked, setAllThemesUnlocked] = useState(
     savedProgress?.allThemesUnlocked || false
   );
   const [themeActions, setThemeActions] = useState(
     savedProgress?.themeActions || {}
   );
-  const [themeUnlockError, setThemeUnlockError] = useState('');
   const { palettes, save: savePalette } = useThemePalettes();
   const [volcanoEruptionKey, setVolcanoEruptionKey] = useState(0);
 
@@ -7067,7 +7079,7 @@ export default function App() {
     {
       title: 'Welcome to Iron Forge',
       tag: 'Start here',
-      text: 'This tutorial is part of the setup and cannot be skipped. Pick your subjects, then work through the forge properly instead of jumping in blind.',
+      text: 'Learn how to choose subjects, unlock stages and review your answers.',
       icon: Hammer,
     },
     {
@@ -7111,7 +7123,7 @@ export default function App() {
       tag: 'Do not lose progress',
       text: `Click ${
         saveEnabled ? `${username || 'Student'}'s Forge` : 'Not saving'
-      } in the taskbar to reopen the saving panel. From there you can save your name again or replay this tutorial whenever you need it.`,
+      } in the taskbar to change your saving details. You can replay the tutorial from Settings.`,
       icon: ShieldCheck,
     },
     {
@@ -7123,16 +7135,29 @@ export default function App() {
   ];
 
   useEffect(() => {
-    if (!showTutorialPrompt) {
-      setTutorialCanContinue(false);
-      return;
-    }
+    try {
+      localStorage.setItem(TUTORIAL_STATUS_KEY, tutorialCompleted ? 'complete' : 'pending');
+    } catch { /* Completion still applies for this visit. */ }
+  }, [tutorialCompleted]);
 
+  useEffect(() => {
     setTutorialCanContinue(false);
+    if (!showTutorialPrompt || tutorialCompleted) return;
     const timer = window.setTimeout(() => setTutorialCanContinue(true), 7000);
-
     return () => window.clearTimeout(timer);
-  }, [showTutorialPrompt, tutorialStep]);
+  }, [showTutorialPrompt, tutorialStep, tutorialCompleted]);
+  const canAdvanceTutorial = tutorialCompleted || tutorialCanContinue;
+
+  useEffect(() => {
+    if (!(showTutorialPrompt && tutorialCompleted) && savePrompt !== 'profile') return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (showTutorialPrompt) setShowTutorialPrompt(false);
+      else setSavePrompt(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [savePrompt, showTutorialPrompt, tutorialCompleted]);
 
   const finishSubjectSetup = () => {
     const firstPickedSubject = subjectSlots.find(Boolean);
@@ -7142,7 +7167,7 @@ export default function App() {
     }
 
     setTutorialStep(0);
-    setShowTutorialPrompt(true);
+    setShowTutorialPrompt(!tutorialCompleted);
     setShowSubjectSetupPrompt(false);
   };
 
@@ -7223,14 +7248,13 @@ export default function App() {
     selectedSubject.topics[0];
 
   const [view, setView] = useState('home');
+  const canOpenCreatorAccess = view === 'home' || view === 'settings';
 
   useEffect(() => {
     if (view !== 'home') {
       setShowSubjectSetupPrompt(false);
     }
-    if (view !== 'settings') {
-      setThemeUnlockCodeOpen(false);
-    }
+    setCreatorAccessOpen(false);
   }, [view]);
   const [activeThemeId, setActiveThemeId] = useState(
     savedProgress?.activeThemeId || 'forge'
@@ -7632,14 +7656,18 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     setUsername(cleanName);
     setSaveEnabled(true);
-    setShowSavePrompt(false);
-    setShowSubjectSetupPrompt(true);
+    setSavePrompt(null);
+    if (savePrompt === 'setup') setShowSubjectSetupPrompt(true);
   }
 
-  function skipSavingProgress() {
-    setSaveEnabled(false);
-    setShowSavePrompt(false);
-    setShowSubjectSetupPrompt(true);
+  function closeSavingPanel() {
+    setSavePrompt(null);
+    if (savePrompt === 'setup') setShowSubjectSetupPrompt(true);
+  }
+
+  function openSavingPanel() {
+    setUsernameInput(username || '');
+    setSavePrompt('profile');
   }
 
   return (
@@ -7660,71 +7688,14 @@ export default function App() {
           onJumpUnlock={() => unlockThemeAction('japanCarJumped')}
         />
       )}
-      {themeUnlockCodeOpen && view === 'settings' && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black px-4 backdrop-blur-md"
-          style={{ zIndex: 99999 }}
-        >
-          <div className="forge-scroll-panel w-full max-w-md rounded-3xl border border-orange-400/30 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
-            <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">
-              Creator access
-            </p>
-            <h2 className="mt-2 text-3xl font-black text-white">
-              Theme unlock code
-            </h2>
-            <p className="mt-2 text-sm text-zinc-400">
-              Enter the creator code to unlock every theme and every stage.
-            </p>
-
-            <input
-              type="password"
-              value={themeUnlockCode}
-              onChange={(event) => {
-                setThemeUnlockCode(event.target.value);
-                setThemeUnlockError('');
-              }}
-              placeholder="Enter code..."
-              className="mt-5 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-orange-400"
-            />
-
-            {themeUnlockError && (
-              <p className="mt-3 text-sm font-bold text-red-300">
-                {themeUnlockError}
-              </p>
-            )}
-
-            <div className="mt-6 flex flex-wrap justify-end gap-3">
-              <button
-                onClick={() => {
-                  setThemeUnlockCodeOpen(false);
-                  setThemeUnlockCode('');
-                  setThemeUnlockError('');
-                }}
-                className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  if (themeUnlockCode === 'Tilly2025!') {
-                    setAllThemesUnlocked(true);
-                    setUnlocked(createUnlockedStagesMap());
-                    setSuperTestAnswers({});
-                    setSuperTestSubmitted(false);
-                    setThemeUnlockCodeOpen(false);
-                    setThemeUnlockCode('');
-                    setThemeUnlockError('');
-                  } else {
-                    setThemeUnlockError('Wrong code.');
-                  }
-                }}
-                className="rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600"
-              >
-                Unlock everything
-              </button>
-            </div>
-          </div>
-        </div>
+      {creatorAccessOpen && canOpenCreatorAccess && (
+        <CreatorAccessDialog onCancel={() => setCreatorAccessOpen(false)} onUnlock={() => {
+          setAllThemesUnlocked(true);
+          setUnlocked(createUnlockedStagesMap());
+          setSuperTestAnswers({});
+          setSuperTestSubmitted(false);
+          setCreatorAccessOpen(false);
+        }} />
       )}
 
       {breakEndsAt !== null && (
@@ -7780,13 +7751,13 @@ export default function App() {
         </div>
       )}
 
-      {showSavePrompt && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+      {savePrompt && (
+        <div role="dialog" aria-modal="true" aria-labelledby="saving-panel-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
           <div className="forge-scroll-panel relative w-full max-w-md rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             <button
-              onClick={skipSavingProgress}
+              onClick={closeSavingPanel}
               className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
-              aria-label="Skip saving progress"
+              aria-label={savePrompt === 'setup' ? 'Skip saving progress' : 'Close saving panel'}
             >
               X
             </button>
@@ -7795,18 +7766,19 @@ export default function App() {
               <ShieldCheck className="h-7 w-7" />
             </div>
 
-            <h2 className="text-3xl font-black text-white">
-              Save your progress?
+            <h2 id="saving-panel-title" className="text-3xl font-black text-white">
+              {savePrompt === 'profile' && saveEnabled ? 'Your Forge' : 'Save your progress?'}
             </h2>
             <p className="mt-2 text-sm leading-6 text-zinc-400">
               Enter a username so this device can remember your unlocked stages,
               selected theme and subject progress.
             </p>
 
-            <label className="mt-5 block text-xs font-bold uppercase tracking-widest text-orange-300">
+            <label htmlFor="forge-username" className="mt-5 block text-xs font-bold uppercase tracking-widest text-orange-300">
               Username
             </label>
             <input
+              id="forge-username"
               value={usernameInput}
               onChange={(event) => setUsernameInput(event.target.value)}
               onKeyDown={(event) => {
@@ -7820,26 +7792,14 @@ export default function App() {
               onClick={startSavingProgress}
               className="mt-5 w-full rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600 active:scale-[0.99]"
             >
-              Start Saving
+              {savePrompt === 'profile' && saveEnabled ? 'Save changes' : 'Start Saving'}
             </button>
 
             <button
-              onClick={skipSavingProgress}
+              onClick={closeSavingPanel}
               className="mt-3 w-full rounded-2xl border border-zinc-800 bg-zinc-900 px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-zinc-800"
             >
-              Continue without saving
-            </button>
-
-            <button
-              onClick={() => {
-                setShowSavePrompt(false);
-                setTutorialStep(0);
-                setShowTutorialPrompt(true);
-                setView('home');
-              }}
-              className="mt-3 w-full rounded-2xl border border-orange-400/30 bg-orange-400/10 px-5 py-3 text-sm font-black text-orange-200 hover:bg-orange-400/15"
-            >
-              Replay tutorial
+              {savePrompt === 'setup' ? 'Continue without saving' : 'Cancel'}
             </button>
           </div>
         </div>
@@ -7923,12 +7883,19 @@ export default function App() {
         </div>
       )}
 
-      {showTutorialPrompt && view === 'home' && (
+      {showTutorialPrompt && (
         <div
+          role="dialog" aria-modal="true" aria-labelledby="tutorial-slide-title"
           className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
           style={{ zIndex: 9999 }}
         >
           <div className="forge-scroll-panel relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+            {tutorialCompleted && (
+              <button type="button" autoFocus onClick={() => setShowTutorialPrompt(false)}
+                className="absolute right-4 top-4 rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-200 hover:bg-zinc-800">
+                Close tutorial
+              </button>
+            )}
             {(() => {
               const slide = tutorialSlides[tutorialStep];
               const Icon = slide.icon;
@@ -7943,7 +7910,7 @@ export default function App() {
                     {slide.tag}
                   </p>
 
-                  <h2 className="mt-2 text-3xl font-black text-white">
+                  <h2 id="tutorial-slide-title" className="mt-2 text-3xl font-black text-white">
                     {slide.title}
                   </h2>
 
@@ -7965,8 +7932,8 @@ export default function App() {
                   </div>
 
                   <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-                    <p className="rounded-2xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-bold text-zinc-400">
-                      Tutorial is locked in. Next unlocks after 7 seconds.
+                    <p className="text-sm font-bold text-zinc-400">
+                      Step {tutorialStep + 1} of {tutorialSlides.length}
                     </p>
 
                     <div className="flex gap-3">
@@ -7982,23 +7949,24 @@ export default function App() {
                       )}
 
                       <button
-                        disabled={!tutorialCanContinue}
+                        disabled={!canAdvanceTutorial}
                         onClick={() => {
-                          if (!tutorialCanContinue) return;
+                          if (!canAdvanceTutorial) return;
 
                           if (tutorialStep >= tutorialSlides.length - 1) {
+                            setTutorialCompleted(true);
                             setShowTutorialPrompt(false);
                           } else {
                             setTutorialStep((step) => step + 1);
                           }
                         }}
                         className={`rounded-2xl px-5 py-3 text-sm font-black text-white active:scale-[0.99] ${
-                          tutorialCanContinue
+                          canAdvanceTutorial
                             ? 'bg-orange-500 hover:bg-orange-600'
                             : 'cursor-not-allowed bg-zinc-700 opacity-60'
                         }`}
                       >
-                        {!tutorialCanContinue
+                        {!canAdvanceTutorial
                           ? 'Wait 7 seconds'
                           : tutorialStep >= tutorialSlides.length - 1
                           ? 'Start forging'
@@ -8748,10 +8716,7 @@ export default function App() {
               )}
               <div className="flex shrink-0 items-center gap-2">
                 <button
-                  onClick={() => {
-                    setUsernameInput(username || '');
-                    setShowSavePrompt(true);
-                  }}
+                  onClick={openSavingPanel}
                   className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-bold text-zinc-400 hover:bg-zinc-800"
                 >
                   {saveEnabled
@@ -8759,17 +8724,11 @@ export default function App() {
                     : 'Not saving'}
                 </button>
                 <button
-                  onClick={() => {
-                    if (view === 'settings') {
-                      setThemeUnlockCodeOpen(true);
-                      setThemeUnlockCode('');
-                      setThemeUnlockError('');
-                    }
-                  }}
-                  className="rounded-full border border-zinc-800 bg-zinc-950/60 px-2 py-1 text-[8px] font-black uppercase tracking-[0.06em] text-zinc-500 hover:border-orange-400/40 hover:text-orange-200"
-                  title={
-                    view === 'settings' ? 'Open creator code' : 'Creator mark'
-                  }
+                  type="button" disabled={!canOpenCreatorAccess}
+                  aria-haspopup={canOpenCreatorAccess ? 'dialog' : undefined}
+                  onClick={() => setCreatorAccessOpen(true)}
+                  className="rounded-full border border-zinc-800 bg-zinc-950/60 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-zinc-400 enabled:hover:border-orange-400/40 enabled:hover:text-orange-200"
+                  title={canOpenCreatorAccess ? 'Open creator access' : undefined}
                 >
                   made by tbam
                 </button>
@@ -9688,7 +9647,7 @@ export default function App() {
 
                     <div className="mt-5 flex flex-wrap gap-3">
                       <button
-                        onClick={() => setShowSavePrompt(true)}
+                        onClick={openSavingPanel}
                         className="rounded-2xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600"
                       >
                         {saveEnabled ? 'Change username' : 'Start saving'}
@@ -9702,6 +9661,16 @@ export default function App() {
                         className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-300 hover:bg-zinc-800"
                       >
                         Stop saving on this device
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTutorialStep(0);
+                          setShowTutorialPrompt(true);
+                        }}
+                        className="rounded-2xl border border-zinc-700 bg-zinc-900 px-5 py-3 font-bold text-zinc-200 hover:bg-zinc-800"
+                      >
+                        Replay tutorial
                       </button>
                     </div>
                   </div>
