@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import StageTopicList from './StageTopicList';
+import { biologyTopic3Stages } from './biologyTopic3';
 import {
   Flame,
   Hammer,
@@ -37,6 +39,7 @@ const subjects = [
     topics: [
       makeTopic(
         'lang-section-a-overview',
+        'Section A exam skills',
         'Language Section A Overview',
         'Foundation Forge',
         'Not forged',
@@ -74,6 +77,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-question-5-comparison',
+        'Section A exam skills',
         'Question 5 Comparative Paragraph',
         'Foundation Forge',
         'Not forged',
@@ -115,6 +119,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-danger-single-story',
+        'Non-fiction anthology',
         'The Danger of a Single Story',
         'Steel Forge',
         'Not forged',
@@ -155,6 +160,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-h-is-for-hawk',
+        'Non-fiction anthology',
         'H is for Hawk',
         'Steel Forge',
         'Not forged',
@@ -195,6 +201,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-passage-to-africa',
+        'Non-fiction anthology',
         'A Passage to Africa',
         'Iron Forge',
         'Not forged',
@@ -230,6 +237,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-chinese-cinderella',
+        'Non-fiction anthology',
         'Chinese Cinderella',
         'Iron Forge',
         'Not forged',
@@ -270,6 +278,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-explorers-daughter',
+        'Non-fiction anthology',
         "The Explorer's Daughter",
         'Steel Forge',
         'Not forged',
@@ -315,6 +324,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-bhutan',
+        'Non-fiction anthology',
         'Beyond the Sky and the Earth',
         'Iron Forge',
         'Not forged',
@@ -355,6 +365,7 @@ const subjects = [
       ),
       makeTopic(
         'lang-young-dyslexic',
+        'Non-fiction anthology',
         'Young and Dyslexic',
         'Foundation Forge',
         'Not forged',
@@ -407,6 +418,7 @@ const subjects = [
     topics: [
       makeTopic(
         'lit-my-last-duchess',
+        'Poetry anthology',
         'My Last Duchess',
         'Foundation Forge',
         'Not forged',
@@ -437,6 +449,7 @@ const subjects = [
       ),
       makeTopic(
         'lit-the-tyger',
+        'Poetry anthology',
         'The Tyger',
         'Foundation Forge',
         'Not forged',
@@ -472,6 +485,7 @@ const subjects = [
       ),
       makeTopic(
         'lit-la-belle-dame',
+        'Poetry anthology',
         'La Belle Dame',
         'Steel Forge',
         'Not forged',
@@ -502,6 +516,7 @@ const subjects = [
       ),
       makeTopic(
         'lit-war-photographer',
+        'Poetry anthology',
         'War Photographer',
         'Steel Forge',
         'Not forged',
@@ -547,6 +562,7 @@ const subjects = [
       ),
       makeTopic(
         'lit-prayer-before-birth',
+        'Poetry anthology',
         'Prayer Before Birth',
         'Iron Forge',
         'Not forged',
@@ -582,6 +598,7 @@ const subjects = [
       ),
       makeTopic(
         'lit-sonnet-116',
+        'Poetry anthology',
         'Sonnet 116',
         'Iron Forge',
         'Not forged',
@@ -634,6 +651,7 @@ const subjects = [
     topics: [
       makeTopic(
         'geo-exam-overview',
+        'Exam preparation',
         'Geography EOY Exam Overview',
         'Foundation Forge',
         'Not forged',
@@ -664,6 +682,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-coastal-processes',
+        'Coasts',
         'Coastal Processes',
         'Foundation Forge',
         'Not forged',
@@ -709,6 +728,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-sub-aerial-processes',
+        'Coasts',
         'Weathering and Mass Movement',
         'Steel Forge',
         'Not forged',
@@ -749,6 +769,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-coastal-landforms',
+        'Coasts',
         'Coastal Landforms',
         'Steel Forge',
         'Not forged',
@@ -784,6 +805,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-coastal-ecosystems',
+        'Coasts',
         'Coastal Ecosystems',
         'Iron Forge',
         'Not forged',
@@ -814,6 +836,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-hazard-basics',
+        'Natural hazards',
         'Hazard Characteristics and Distribution',
         'Foundation Forge',
         'Not forged',
@@ -854,6 +877,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-tectonic-hazards',
+        'Natural hazards',
         'Earthquakes and Volcanoes',
         'Iron Forge',
         'Not forged',
@@ -894,6 +918,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-tropical-cyclones',
+        'Natural hazards',
         'Tropical Cyclones',
         'Iron Forge',
         'Not forged',
@@ -934,6 +959,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-hazard-vulnerability',
+        'Natural hazards',
         'Hazard Impacts and Vulnerability',
         'Bronze Forge',
         'Not forged',
@@ -979,6 +1005,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-earthquake-management',
+        'Natural hazards',
         'Earthquake Management',
         'Gold Forge',
         'Not forged',
@@ -1019,6 +1046,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-urbanisation',
+        'Urban and economic geography',
         'Urbanisation and Megacities',
         'Foundation Forge',
         'Not forged',
@@ -1064,6 +1092,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-urban-land-use',
+        'Urban and economic geography',
         'Urban Land Use and Challenges',
         'Steel Forge',
         'Not forged',
@@ -1104,6 +1133,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-economic-activity',
+        'Urban and economic geography',
         'Economic Activity',
         'Iron Forge',
         'Not forged',
@@ -1144,6 +1174,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-rural-urban-fringe',
+        'Urban and economic geography',
         'Rural-Urban Fringe',
         'Gold Forge',
         'Not forged',
@@ -1184,6 +1215,7 @@ const subjects = [
       ),
       makeTopic(
         'geo-human-fieldwork',
+        'Fieldwork',
         'Human Fieldwork',
         'Master Forge',
         'Not forged',
@@ -1238,6 +1270,7 @@ const subjects = [
     topics: [
       makeTopic(
         'pe-skeletal-structure',
+        'Bones, joints and muscles',
         'Structure and Function of the Skeleton',
         'Foundation Forge',
         'Forged — 8/10',
@@ -1268,6 +1301,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-synovial-structure',
+        'Bones, joints and muscles',
         'Structure of a Synovial Joint',
         'Foundation Forge',
         'In progress',
@@ -1303,6 +1337,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-types-synovial-joint',
+        'Bones, joints and muscles',
         'Types of Synovial Joint',
         'Steel Forge',
         'Not forged',
@@ -1333,6 +1368,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-ranges-of-movement',
+        'Bones, joints and muscles',
         'Ranges of Movement Allowed by Joints',
         'Steel Forge',
         'Not forged',
@@ -1378,6 +1414,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-muscular-location',
+        'Bones, joints and muscles',
         'Location of Muscles',
         'Iron Forge',
         'Not forged',
@@ -1413,6 +1450,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-muscles-movement',
+        'Bones, joints and muscles',
         'Roles of Muscles in Movement',
         'Iron Forge',
         'Not forged',
@@ -1453,6 +1491,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-cardiovascular-system',
+        'Body systems and exercise',
         'Cardiovascular System',
         'Bronze Forge',
         'Not forged',
@@ -1493,6 +1532,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-respiratory-system',
+        'Body systems and exercise',
         'Respiratory System',
         'Bronze Forge',
         'Not forged',
@@ -1528,6 +1568,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-aerobic-anaerobic',
+        'Body systems and exercise',
         'Aerobic and Anaerobic Exercise',
         'Bronze Forge',
         'Not forged',
@@ -1558,6 +1599,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-short-term-effects',
+        'Body systems and exercise',
         'Short-Term Effects of Exercise',
         'Silver Forge',
         'Not forged',
@@ -1603,6 +1645,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-long-term-effects',
+        'Body systems and exercise',
         'Long-Term Effects of Exercise',
         'Silver Forge',
         'Not forged',
@@ -1643,6 +1686,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-components-fitness',
+        'Fitness and training',
         'Components of Fitness and Fitness Testing',
         'Gold Forge',
         'Not forged',
@@ -1673,6 +1717,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-spor-fitt',
+        'Fitness and training',
         'Principles of Training: SPOR and FITT',
         'Gold Forge',
         'Not forged',
@@ -1718,6 +1763,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-optimising-training',
+        'Fitness and training',
         'Optimising Training',
         'Gold Forge',
         'Not forged',
@@ -1763,6 +1809,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-warm-up-cool-down',
+        'Fitness and training',
         'Warm Up and Cool Down',
         'Gold Forge',
         'Not forged',
@@ -1808,6 +1855,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-injury-prevention',
+        'Safety in sport',
         'Prevention of Injury',
         'Platinum Forge',
         'Not forged',
@@ -1853,6 +1901,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-risk-assessment',
+        'Safety in sport',
         'Risk Assessment',
         'Platinum Forge',
         'Not forged',
@@ -1893,6 +1942,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-facep',
+        'Skills and goal setting',
         'Characteristics of Skilful Movement: FACEP',
         'Master Forge',
         'Not forged',
@@ -1933,6 +1983,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-classification-skills',
+        'Skills and goal setting',
         'Classification of Skills',
         'Master Forge',
         'Not forged',
@@ -1978,6 +2029,7 @@ const subjects = [
       ),
       makeTopic(
         'pe-smart-goals',
+        'Skills and goal setting',
         'Goal Setting: SMART',
         'Master Forge',
         'Not forged',
@@ -2032,6 +2084,7 @@ const subjects = [
     topics: [
       makeTopic(
         'bio-aerobic-respiration',
+        'Respiration',
         'Aerobic Respiration',
         'Foundation Forge',
         'Not forged',
@@ -2067,6 +2120,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-obtaining-nutrition',
+        'Nutrition and digestion',
         'Obtaining Nutrition',
         'Foundation Forge',
         'Not forged',
@@ -2107,6 +2161,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-biological-molecules',
+        'Nutrition and digestion',
         'Biological Molecules',
         'Foundation Forge',
         'Not forged',
@@ -2147,6 +2202,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-ingestion-mechanical-digestion',
+        'Nutrition and digestion',
         'Ingestion and Mechanical Digestion',
         'Steel Forge',
         'Not forged',
@@ -2192,6 +2248,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-chemical-digestion',
+        'Nutrition and digestion',
         'Chemical Digestion',
         'Steel Forge',
         'Not forged',
@@ -2227,6 +2284,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-absorption',
+        'Nutrition and digestion',
         'Absorption',
         'Steel Forge',
         'Not forged',
@@ -2267,6 +2325,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-obtaining-oxygen',
+        'Gas exchange, transport and excretion',
         'Obtaining Oxygen',
         'Bronze Forge',
         'Not forged',
@@ -2307,6 +2366,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-blood',
+        'Gas exchange, transport and excretion',
         'Blood',
         'Bronze Forge',
         'Not forged',
@@ -2342,6 +2402,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-cardiovascular-system',
+        'Gas exchange, transport and excretion',
         'Cardiovascular System',
         'Bronze Forge',
         'Not forged',
@@ -2377,6 +2438,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-removing-waste',
+        'Gas exchange, transport and excretion',
         'Removing Waste',
         'Silver Forge',
         'Not forged',
@@ -2412,6 +2474,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-life-without-transport-systems',
+        'Gas exchange, transport and excretion',
         'Life Without Transport Systems',
         'Silver Forge',
         'Not forged',
@@ -2457,6 +2520,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-exercise',
+        'Exercise and temperature regulation',
         'Exercise',
         'Silver Forge',
         'Not forged',
@@ -2497,6 +2561,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-thermoregulation',
+        'Exercise and temperature regulation',
         'Thermoregulation',
         'Gold Forge',
         'Not forged',
@@ -2542,6 +2607,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-lifestyle-diseases',
+        'Disease and immunity',
         'Lifestyle Diseases',
         'Gold Forge',
         'Not forged',
@@ -2587,6 +2653,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-infectious-diseases',
+        'Disease and immunity',
         'Infectious Diseases',
         'Master Forge',
         'Not forged',
@@ -2622,6 +2689,7 @@ const subjects = [
       ),
       makeTopic(
         'bio-immunity',
+        'Disease and immunity',
         'Immunity',
         'Master Forge',
         'Not forged',
@@ -2660,6 +2728,7 @@ const subjects = [
           ],
         ]
       ),
+      ...biologyTopic3Stages,
     ],
   },
   {
@@ -2671,6 +2740,7 @@ const subjects = [
     topics: [
       makeTopic(
         'dt-cam',
+        'Manufacturing and electronic systems',
         'Computer Aided Manufacture',
         'Foundation Forge',
         'Not forged',
@@ -2716,6 +2786,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-electronics-materials',
+        'Manufacturing and electronic systems',
         'Electronics: Conductors and Insulators',
         'Foundation Forge',
         'Not forged',
@@ -2756,6 +2827,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-systems-diagrams',
+        'Manufacturing and electronic systems',
         'Systems Diagrams',
         'Steel Forge',
         'Not forged',
@@ -2801,6 +2873,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-circuit-symbols',
+        'Manufacturing and electronic systems',
         'Circuit Symbols',
         'Steel Forge',
         'Not forged',
@@ -2841,6 +2914,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-units-prefixes',
+        'Manufacturing and electronic systems',
         'Units and Prefixes',
         'Steel Forge',
         'Not forged',
@@ -2867,6 +2941,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-structures-types',
+        'Structures and forces',
         'Types of Structure',
         'Bronze Forge',
         'Not forged',
@@ -2907,6 +2982,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-forces',
+        'Structures and forces',
         'Forces in Structures',
         'Bronze Forge',
         'Not forged',
@@ -2952,6 +3028,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-motion-types',
+        'Movement and mechanisms',
         'Conversion of Motion',
         'Silver Forge',
         'Not forged',
@@ -2997,6 +3074,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-friction',
+        'Movement and mechanisms',
         'Reduction of Friction',
         'Silver Forge',
         'Not forged',
@@ -3037,6 +3115,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-levers',
+        'Movement and mechanisms',
         'Levers',
         'Gold Forge',
         'Not forged',
@@ -3067,6 +3146,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-gear-trains',
+        'Movement and mechanisms',
         'Simple Gear Trains',
         'Gold Forge',
         'Not forged',
@@ -3112,6 +3192,7 @@ const subjects = [
       ),
       makeTopic(
         'dt-mechanisms',
+        'Movement and mechanisms',
         'Common Mechanisms',
         'Master Forge',
         'Not forged',
@@ -3166,6 +3247,7 @@ const subjects = [
     topics: [
       makeTopic(
         'chem-electronic-configuration',
+        'Atomic structure and bonding',
         'Electronic Configuration and Ions',
         'Foundation Forge',
         'Not forged',
@@ -3221,6 +3303,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-covalent-bonding',
+        'Atomic structure and bonding',
         'Covalent Bonding',
         'Foundation Forge',
         'Not forged',
@@ -3286,6 +3369,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-ionic-bonding',
+        'Atomic structure and bonding',
         'Ionic Bonding',
         'Steel Forge',
         'Not forged',
@@ -3336,6 +3420,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-crude-oil',
+        'Crude oil',
         'Crude Oil',
         'Steel Forge',
         'Not forged',
@@ -3396,6 +3481,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-energetics',
+        'Energetics',
         'Heat, Temperature and Energetics',
         'Bronze Forge',
         'Not forged',
@@ -3456,6 +3542,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-gas-tests',
+        'Chemical tests',
         'Gas Tests',
         'Bronze Forge',
         'Not forged',
@@ -3511,6 +3598,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-flame-tests',
+        'Chemical tests',
         'Flame Tests',
         'Silver Forge',
         'Not forged',
@@ -3551,6 +3639,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-cation-tests',
+        'Chemical tests',
         'Cation Tests',
         'Silver Forge',
         'Not forged',
@@ -3601,6 +3690,7 @@ const subjects = [
       ),
       makeTopic(
         'chem-anion-tests',
+        'Chemical tests',
         'Anion Tests',
         'Gold Forge',
         'Not forged',
@@ -3655,6 +3745,7 @@ const subjects = [
     topics: [
       makeTopic(
         'phys-motion-position',
+        'Forces and motion',
         'Movement and Position',
         'Foundation Forge',
         'Not forged',
@@ -3705,6 +3796,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-force-shape',
+        'Forces and motion',
         'Forces and Shape',
         'Foundation Forge',
         'Not forged',
@@ -3765,6 +3857,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-force-equations',
+        'Forces and motion',
         'Force Equations',
         'Steel Forge',
         'Not forged',
@@ -3805,6 +3898,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-energy-transfers',
+        'Energy and electricity',
         'Energy Sources and Transfers',
         'Steel Forge',
         'Not forged',
@@ -3860,6 +3954,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-electricity',
+        'Energy and electricity',
         'Energy and Voltage in Circuits',
         'Bronze Forge',
         'Not forged',
@@ -3905,6 +4000,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-radioactivity',
+        'Radioactivity',
         'Radioactivity',
         'Bronze Forge',
         'Not forged',
@@ -3960,6 +4056,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-astronomy-cosmology',
+        'Astronomy and cosmology',
         'Astronomy and Cosmology',
         'Silver Forge',
         'Not forged',
@@ -4020,6 +4117,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-states-of-matter',
+        'States of matter',
         'States of Matter and Gas Molecules',
         'Silver Forge',
         'Not forged',
@@ -4075,6 +4173,7 @@ const subjects = [
       ),
       makeTopic(
         'phys-magnetism-electromagnetism',
+        'Magnetism and electromagnetism',
         'Magnetism and Electromagnetism',
         'Gold Forge',
         'Not forged',
@@ -4144,6 +4243,7 @@ const subjects = [
     topics: [
       makeTopic(
         'hist-german-unification-1848-50',
+        'German unification',
         'Why Germany Was Not Unified, 1848–50',
         'Foundation Forge',
         'Not forged',
@@ -4199,6 +4299,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-zollverein-nationalism',
+        'German unification',
         'German Nationalism and the Zollverein',
         'Foundation Forge',
         'Not forged',
@@ -4254,6 +4355,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-bismarck-austria-1866',
+        'German unification',
         'How Bismarck Defeated Austria in 1866',
         'Steel Forge',
         'Not forged',
@@ -4299,6 +4401,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-bismarck-france-1870',
+        'German unification',
         'How Bismarck Defeated France in 1870',
         'Steel Forge',
         'Not forged',
@@ -4354,6 +4457,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-bismarck-responsibility',
+        'German unification',
         'How Far Was Bismarck Responsible for German Unification?',
         'Bronze Forge',
         'Not forged',
@@ -4409,6 +4513,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-france-1848',
+        'The 1848 revolutions',
         'France in 1848',
         'Silver Forge',
         'Not forged',
@@ -4474,6 +4579,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-italy-1848',
+        'The 1848 revolutions',
         'Italy in 1848',
         'Silver Forge',
         'Not forged',
@@ -4529,6 +4635,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-germany-1848',
+        'The 1848 revolutions',
         'Germany in 1848',
         'Gold Forge',
         'Not forged',
@@ -4589,6 +4696,7 @@ const subjects = [
       ),
       makeTopic(
         'hist-austrian-empire-1848',
+        'The 1848 revolutions',
         'Austrian Empire in 1848',
         'Gold Forge',
         'Not forged',
@@ -4657,6 +4765,7 @@ const subjects = [
     topics: [
       makeTopic(
         'rs-buddhist-dhamma',
+        'Buddhist beliefs and teachings',
         'Buddhist Beliefs: Dhamma and Dependent Arising',
         'Foundation Forge',
         'Not forged',
@@ -4702,6 +4811,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-three-marks',
+        'Buddhist beliefs and teachings',
         'The Three Marks of Existence',
         'Foundation Forge',
         'Not forged',
@@ -4737,6 +4847,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-human-personality',
+        'Buddhist beliefs and teachings',
         'Human Personality: Five Aggregates and Sunyata',
         'Steel Forge',
         'Not forged',
@@ -4772,6 +4883,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-buddhist-ideals',
+        'Buddhist beliefs and teachings',
         'Theravada and Mahayana Ideals',
         'Steel Forge',
         'Not forged',
@@ -4817,6 +4929,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-buddha-life-four-sights',
+        'Buddhist beliefs and teachings',
         'The Buddha’s Life and the Four Sights',
         'Iron Forge',
         'Not forged',
@@ -4862,6 +4975,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-four-noble-truths',
+        'Buddhist beliefs and teachings',
         'The Four Noble Truths',
         'Iron Forge',
         'Not forged',
@@ -4907,6 +5021,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-eightfold-path',
+        'Buddhist beliefs and teachings',
         'The Eightfold Path and Threefold Way',
         'Gold Forge',
         'Not forged',
@@ -4947,6 +5062,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-existence-of-god',
+        'Philosophy of religion',
         'Arguments for and against God',
         'Gold Forge',
         'Not forged',
@@ -4992,6 +5108,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-revelation-divine',
+        'Philosophy of religion',
         'Revelation and the Nature of the Divine',
         'Platinum Forge',
         'Not forged',
@@ -5037,6 +5154,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-christian-nature-god',
+        'Christian beliefs and teachings',
         'Christian Beliefs: God, Trinity and Creation',
         'Master Forge',
         'Not forged',
@@ -5082,6 +5200,7 @@ const subjects = [
       ),
       makeTopic(
         'rs-christian-salvation',
+        'Christian beliefs and teachings',
         'Christian Beliefs: Jesus, Afterlife and Salvation',
         'Master Forge',
         'Not forged',
@@ -5597,9 +5716,10 @@ function shuffleOptions(options) {
     .map(({ option }) => option);
 }
 
-function makeTopic(id, title, level, status, notes, rawQuestions) {
+function makeTopic(id, topicGroup, title, level, status, notes, rawQuestions) {
   return {
     id,
+    topicGroup,
     title,
     section: 'Year 10 EOYs',
     level,
@@ -7202,6 +7322,7 @@ const defaultUnlockedStages = {
   'geo-exam-overview': true,
   'pe-skeletal-structure': true,
   'bio-aerobic-respiration': true,
+  [biologyTopic3Stages[0].id]: true,
   'dt-cam': true,
   'chem-electronic-configuration': true,
   'phys-motion-position': true,
@@ -7843,6 +7964,13 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function changeSection(section) {
+    setSelectedSection(section);
+    if (view === 'topic' || view === 'daily' || view === 'superTest') {
+      goToStages();
+    }
+  }
+
   function submitQuiz() {
     setSubmitted(true);
     if (score === 100 && nextTopic) {
@@ -7957,7 +8085,7 @@ export default function App() {
           className="fixed inset-0 flex items-center justify-center bg-black px-4 backdrop-blur-md"
           style={{ zIndex: 99999 }}
         >
-          <div className="w-full max-w-md rounded-3xl border border-orange-400/30 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+          <div className="forge-scroll-panel w-full max-w-md rounded-3xl border border-orange-400/30 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             <p className="text-xs font-black uppercase tracking-[0.32em] text-orange-300">
               Creator access
             </p>
@@ -8022,7 +8150,7 @@ export default function App() {
       {breakAlarm && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/78 px-4 backdrop-blur-sm">
           <div className="absolute inset-0 break-burst" />
-          <div className="relative w-full max-w-lg rounded-3xl border border-orange-300/40 bg-zinc-950/92 p-8 text-center shadow-2xl shadow-orange-950/50">
+          <div className="forge-scroll-panel relative w-full max-w-lg rounded-3xl border border-orange-300/40 bg-zinc-950/92 p-8 text-center shadow-2xl shadow-orange-950/50">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/20 text-orange-200">
               <Flame className="h-10 w-10" />
             </div>
@@ -8078,7 +8206,7 @@ export default function App() {
 
       {showSavePrompt && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+          <div className="forge-scroll-panel relative w-full max-w-md rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             <button
               onClick={skipSavingProgress}
               className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
@@ -8146,7 +8274,7 @@ export default function App() {
           className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
           style={{ zIndex: 9999 }}
         >
-          <div className="relative max-h-[86vh] w-full max-w-3xl overflow-y-auto rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+          <div className="relative max-h-[86dvh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             <button
               onClick={finishSubjectSetup}
               className="absolute right-4 top-4 rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-sm font-black text-zinc-400 hover:bg-zinc-800 hover:text-white"
@@ -8221,7 +8349,7 @@ export default function App() {
           className="fixed inset-0 flex items-center justify-center bg-black/80 px-4 backdrop-blur-md"
           style={{ zIndex: 9999 }}
         >
-          <div className="relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
+          <div className="forge-scroll-panel relative w-full max-w-2xl rounded-3xl border border-orange-400/40 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/40">
             {(() => {
               const slide = tutorialSlides[tutorialStep];
               const Icon = slide.icon;
@@ -10234,7 +10362,8 @@ export default function App() {
               </button>
               <select
                 value={selectedSection}
-                onChange={(event) => setSelectedSection(event.target.value)}
+                aria-label="Revision year"
+                onChange={(event) => changeSection(event.target.value)}
                 className="inline-flex shrink-0 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-black text-zinc-200 outline-none focus:border-orange-400"
               >
                 {subjectSections.map((section) => (
@@ -10286,7 +10415,7 @@ export default function App() {
             </div>
 
             {subjectsOpen && (
-              <div className="absolute left-20 top-14 z-50 w-72 rounded-3xl border border-orange-400/30 bg-zinc-950 p-3 shadow-2xl shadow-black/60">
+              <div className="absolute left-0 top-14 z-50 max-h-[calc(100dvh-6rem)] w-72 max-w-full overflow-y-auto overscroll-contain rounded-3xl border border-orange-400/30 bg-zinc-950 p-3 shadow-2xl shadow-black/60 sm:left-20">
                 <div className="mb-2 px-3 py-2">
                   <p className="text-xs font-bold uppercase tracking-widest text-orange-300">
                     Choose Subject
@@ -10456,7 +10585,7 @@ export default function App() {
                                 onMouseDown={(event) => event.stopPropagation()}
                                 onChange={(event) => {
                                   event.stopPropagation();
-                                  setSelectedSection(event.target.value);
+                                  changeSection(event.target.value);
                                 }}
                                 className="w-full rounded-2xl border border-pink-200/30 bg-zinc-950/70 px-4 py-3 text-sm font-black text-white outline-none backdrop-blur-md focus:border-pink-200"
                               >
@@ -10691,61 +10820,15 @@ export default function App() {
               </div>
 
               <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 md:p-6">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-2xl font-black text-white">
-                      Year 10 EOYs
-                    </h3>
-                    <p className="mt-1 text-sm text-zinc-400">
-                      Focused learning. One stage at a time.
-                    </p>
-                  </div>
-                  <button
-                    onClick={goToStages}
-                    className="rounded-2xl border border-orange-400/40 px-4 py-2 text-sm font-black text-orange-200 hover:bg-orange-400/10"
-                  >
-                    View All Stages -
-                  </button>
-                </div>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {selectedSubject.topics.slice(0, 6).map((topic, index) => {
-                    const isLocked = !unlocked[topic.id];
-                    return (
-                      <button
-                        key={topic.id}
-                        onClick={() => openTopic(topic)}
-                        className={`rounded-2xl border p-4 text-left transition active:scale-[0.99] ${
-                          isLocked
-                            ? 'border-zinc-800 bg-zinc-950 opacity-60'
-                            : activeTheme.border + ' ' + activeTheme.soft
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <div
-                            className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
-                              isLocked
-                                ? 'border-zinc-700 text-zinc-500'
-                                : activeTheme.border + ' ' + activeTheme.accent
-                            }`}
-                          >
-                            {index + 1}
-                          </div>
-                          {isLocked ? (
-                            <Lock className="h-4 w-4 text-zinc-500" />
-                          ) : (
-                            <ShieldCheck className="h-4 w-4 text-orange-300" />
-                          )}
-                        </div>
-                        <p className="mt-3 text-xs font-bold uppercase tracking-widest text-orange-300">
-                          {topic.level}
-                        </p>
-                        <h4 className="mt-1 text-base font-black text-white">
-                          {topic.title}
-                        </h4>
-                      </button>
-                    );
-                  })}
-                </div>
+                <h3 className="mb-4 text-2xl font-black text-white">
+                  {selectedSubject.title} stages · {selectedSection}
+                </h3>
+                <StageTopicList
+                  key={`${selectedSubject.id}:${selectedSection}`}
+                  stages={sectionTopics}
+                  unlocked={unlocked}
+                  onOpenStage={openTopic}
+                />
               </div>
             </section>
           )}
@@ -10795,7 +10878,7 @@ export default function App() {
           )}
 
           {(view === 'stages' || view === 'topic' || view === 'daily') && (
-            <section className="mt-6 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+            <section className={view === 'stages' ? 'mx-auto mt-6 max-w-3xl' : 'mt-6 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]'}>
               <aside
                 className={`${
                   view !== 'stages' ? 'hidden lg:block' : 'block'
@@ -10868,46 +10951,17 @@ export default function App() {
                   {selectedSubject.title} Stages
                 </h2>
 
-                {sectionTopics.map((topic) => {
-                  const isLocked = !unlocked[topic.id];
-                  const isSelected = selectedTopic.id === topic.id;
-                  return (
-                    <button
-                      key={topic.id}
-                      onClick={() => openTopic(topic)}
-                      className={`w-full rounded-3xl border p-5 text-left transition active:scale-[0.99] ${
-                        isSelected
-                          ? 'border-orange-400 bg-orange-400/10'
-                          : 'border-zinc-800 bg-zinc-900 hover:bg-zinc-800'
-                      } ${isLocked ? 'cursor-not-allowed opacity-50' : ''}`}
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-bold text-orange-300">
-                            {topic.level}
-                          </p>
-                          <h3 className="mt-1 text-lg font-black text-white md:text-xl">
-                            {topic.title}
-                          </h3>
-                          <p className="mt-2 text-sm text-zinc-500">
-                            {isLocked
-                              ? 'Locked — forge the stage before it'
-                              : 'Tap to open test'}
-                          </p>
-                        </div>
-                        {isLocked ? (
-                          <Lock className="h-5 w-5 text-zinc-500" />
-                        ) : (
-                          <ShieldCheck className="h-5 w-5 text-orange-400" />
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
+                <StageTopicList
+                  key={`${selectedSubject.id}:${selectedSection}`}
+                  stages={sectionTopics}
+                  unlocked={unlocked}
+                  onOpenStage={openTopic}
+                  activeStageId={view === 'topic' ? selectedTopic.id : undefined}
+                />
               </aside>
 
               <main
-                className={`${view === 'stages' ? 'hidden lg:block' : 'block'}`}
+                className={view === 'stages' ? 'hidden' : 'block'}
               >
                 {view === 'topic' && (
                   <div className="grid gap-6 xl:grid-cols-2">

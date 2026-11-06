@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+.forge-scroll-panel {
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
+@media (forced-colors: none) {
+  :root {
+    --scroll-thumb: #dd8e55;
+    --scroll-track: #272321;
+  }
+
+  :root:has(.cherry-theme, .valentine-theme) { --scroll-thumb: #ed9ac0; }
+  :root:has(.royal-theme) { --scroll-thumb: #b7a0ed; }
+  :root:has(.gold-theme, .god-theme) { --scroll-thumb: #e9bc68; }
+  :root:has(.japan-theme, .volcano-theme) { --scroll-thumb: #f99788; }
+  :root:has(.cyber-theme) { --scroll-thumb: #72caa2; }
+  :root:has(.arctic-theme, .ocean-theme) { --scroll-thumb: #7ac8df; }
+
+  @supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+      background-color: var(--scroll-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      min-height: 32px;
+      min-width: 32px;
+      border: 3px solid var(--scroll-track);
+      border-radius: 999px;
+      background-color: var(--scroll-thumb);
+    }
+
+    ::-webkit-scrollbar-thumb:hover,
+    ::-webkit-scrollbar-thumb:active {
+      background-color: color-mix(in srgb, var(--scroll-thumb) 75%, white);
+    }
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    :root { scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
+  }
+}
